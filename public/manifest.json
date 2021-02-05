@@ -1,0 +1,26 @@
+{
+  "short_name": "Loocode社区",
+  "name": "Loocode 程序员基础教程社区",
+  "icons": [
+    {
+      "src": "//static.loocode.com/assets/images/main-64.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "//static.loocode.com/assets/images/main-128.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "//static.loocode.com/assets/images/main-512.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "index.php?homescreen=true",
+  "display": "standalone",
+  "gcm_sender_id": "836576006886",
+  "theme_color": "#f4645f",
+  "background_color": "#FFFFFF"
+}

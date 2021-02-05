@@ -1,0 +1,9 @@
+@import "~highlight.js/styles/monokai-sublime.css";
+@import "~toastr/build/toastr.css";
+
+.p-lg-30 {
+    padding: 1.875rem;
+}
+.card {
+    border: none;
+}
