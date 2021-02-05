@@ -26,27 +26,27 @@ mix.webpackConfig({
 mix.setPublicPath('dist');
 
 //合并文件，分离库和页面JS
-mix.js('resources/js/app.js', "dist/assets/js/app.js")
-    .js('resources/js/posts.js', "dist/assets/js/article.js")
-    .js('resources/js/user.js', "dist/assets/js/user.js")
+mix.js('resources/js/app.js', "./dist/assets/js/app.js")
+    .js('resources/js/posts.js', "./dist/assets/js/article.js")
+    .js('resources/js/user.js', "./dist/assets/js/user.js")
     .styles([
         "node_modules/bootstrap/dist/css/bootstrap.css",
         "node_modules/social-share.js/dist/css/share.min.css",
         "resources/css/app.css",
-    ], "public/assets/css/app.css")
+    ], "./dist/assets/css/app.css")
     .css("resources/css/article.css", "dist/assets/css/article.css")
     .styles([
         "node_modules/filepond/dist/filepond.css",
-    ], "dist/assets/css/filepond.css")
+    ], "./dist/assets/css/filepond.css")
     .copyDirectory(
         ['resources/images/'],
-        'dist/assets/images/'
+        './dist/assets/images/'
     )
     .copyDirectory(
         [
             "node_modules/social-share.js/dist/fonts",
         ],
-        'dist/assets/fonts/'
+        './dist/assets/fonts/'
     )
     .extract(['jquery', 'popper.js', 'bootstrap', 'superagent', 'social-share.js'])
     .autoload({
