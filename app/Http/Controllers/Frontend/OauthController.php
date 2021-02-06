@@ -20,6 +20,16 @@ use Laravel\Socialite\Facades\Socialite;
  */
 class OauthController extends Controller
 {
+
+    /**
+     * @return RedirectResponse
+     */
+    public function logout(): RedirectResponse
+    {
+        Auth::logout();
+        return redirect("/");
+    }
+
     /**
      * @param Request $request
      * @param string $endpoint

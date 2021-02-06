@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
@@ -72,6 +73,17 @@ EOF;
             'hotPosts' => $this->getHot(),
             'seo'   => $this->getSeo(),
         ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function search(Request $request): RedirectResponse
+    {
+        $q = $request->query('q');
+        $url = 'https://www.google.com/search?q=site:%s %s';
+        return redirect(sprintf($url, $request->getHttpHost(), $q));
     }
 
     /**

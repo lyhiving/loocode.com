@@ -1,11 +1,10 @@
 <?php
 
+use App\Http\Controllers\Frontend\DeprecatedController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\OauthController;
 use App\Http\Controllers\Frontend\PostsController;
 use App\Http\Controllers\Frontend\UserController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,10 +32,7 @@ Route::get("/oauth/{endpoint}", [OauthController::class, "endpoint"])
 Route::get("/oauth/callback/{endpoint}", [OauthController::class, "callback"])
     ->where("endpoint", "qq|weixinweb|github");
 
-Route::get('/logout', function () {
-    Auth::logout();
-    return redirect("/");
-});
+Route::get('/logout', [OauthController::class, 'logout']);
 
 Route::prefix("user")->middleware(["auth"])->group(function() {
     Route::get("/setting", [UserController::class, 'setting']);
@@ -44,15 +40,11 @@ Route::prefix("user")->middleware(["auth"])->group(function() {
     Route::post("/upload", [UserController::class, 'upload']);
 });
 
-Route::get("/search", function (Request $request) {
-    $q = $request->query('q');
-    $url = 'https://www.google.com/search?q=site:%s %s';
-    return redirect(sprintf($url, $request->getHttpHost(), $q));
-});
-Route::get("/taxonomies/{page?}", function () {
-    return redirect("/");
-});
-Route::get("/post/{subject}/{page?}", function () {
-    return redirect("/");
-})
+Route::get("/search", [HomeController::class, 'search']);
+
+/**
+ * @deprecated
+ */
+Route::get("/taxonomies/{page?}", [DeprecatedController::class, 'redirect']);
+Route::get("/post/{subject}/{page?}", [DeprecatedController::class, 'redirect'])
     ->where(['subject' => 'tutorial|question', 'page' => '[0-9]+']);

@@ -121,9 +121,16 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
-                                <picture class="rounded-circle mr-3"><img
-                                        src="{{ $posts->author->avatar ?? ""  }}" alt="avatar"
-                                        class="rounded-circle" width="64" height="64"></picture>
+                                <picture class="rounded-circle mr-3">
+                                    <img
+                                        @if(isset($posts->author->avatar) && $posts->author->avatar)
+                                        src="{{ $posts->author->avatar }}"
+                                        @else
+                                        src="{{ $station_domain }}/assets/images/default_avatar.png"
+                                        @endif
+                                        alt="avatar"
+                                        class="rounded-circle" width="64" height="64">
+                                </picture>
                                 <div><h5 class="mb-0"><a href="javascript:" class="text-body">{{ $posts->author->name ?? ""  }}</a></h5></div>
                             </div>
                             <p class="text-secondary text-truncate-2">全栈工程师</p>
