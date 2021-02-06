@@ -224,13 +224,15 @@ EOF;
             return $response;
         }
         $meta = DB::selectOne('SELECT id FROM postmeta WHERE post_id = ? AND post_key = ?', [$id, $metaKey]);
+        $bindValues = [$id, $metaKey];
         if ($meta == null) {
             $sql = 'INSERT INTO postmeta (post_id, post_key, post_value) VALUE (?, ?, ?)';
+            $bindValues[] = 1;
         } else {
             $sql = 'UPDATE postmeta SET post_value = `post_value` + 1 WHERE post_id = ? AND post_key = ?';
         }
         $data['code'] = 200;
-        DB::statement($sql, [$id, $metaKey, 1]);
+        DB::statement($sql, $bindValues);
         return $response->setData($data);
     }
 
