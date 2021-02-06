@@ -126,7 +126,7 @@
                                         @if(isset($posts->author->avatar) && $posts->author->avatar)
                                         src="{{ $posts->author->avatar }}"
                                         @else
-                                        src="{{ $station_domain }}/assets/images/default_avatar.png"
+                                        src="{{ $static_domain }}/assets/images/default_avatar.png"
                                         @endif
                                         alt="avatar"
                                         class="rounded-circle" width="64" height="64">
