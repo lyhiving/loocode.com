@@ -22,12 +22,17 @@ class OauthController extends Controller
 {
 
     /**
+     * @param Request $request
      * @return RedirectResponse
      */
-    public function logout(): RedirectResponse
+    public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
-        return redirect("/");
+        $redirectUri = $request->query->get('redirect');
+        if (empty($redirectUri)) {
+            $redirectUri = $request->server->get('HTTP_REFERER');
+        }
+        return redirect($redirectUri ? : '/');
     }
 
     /**
