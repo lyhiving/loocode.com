@@ -58,11 +58,10 @@ class PostsController extends FrontendController
             );
         }
         $sql = <<<EOF
-SELECT t1.taxonomy, t2.object_id, t3.slug FROM term_taxonomy as t1 LEFT JOIN term_relationships as t2
-ON (t1.term_taxonomy_id=t2.term_taxonomy_id)
-LEFT JOIN terms as t3
-ON (t1.term_id=t3.term_id)
-WHERE t2.object_id = ?
+SELECT t1.taxonomy, t2.object_id, t3.slug FROM term_taxonomy as t1
+    LEFT JOIN term_relationships as t2 ON (t1.term_taxonomy_id=t2.term_taxonomy_id)
+    LEFT JOIN terms as t3 ON (t1.term_id=t3.term_id)
+    WHERE t2.object_id = ?
 EOF;
         $taxonomy = DB::select($sql, [$id]);
 
@@ -124,7 +123,7 @@ SELECT
 FROM term_relationships as t2
 JOIN posts as t3 ON (t2.object_id=t3.id)
 JOIN users as t4 ON (t4.ID=t3.post_author)
-WHERE t2.term_taxonomy_id = ? ORDER BY t3.id DESC
+WHERE t2.term_taxonomy_id = ? AND t3.post_status = 'publish' AND t3.post_type = 'post' ORDER BY t3.id DESC
 EOF;
         $posts = DB::select($sql, [$taxonomy->term_taxonomy_id]);
         if ($posts) {
