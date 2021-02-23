@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Frontend;
 
 
+use Corcel\Services\PasswordService;
 use Exception;
 use Illuminate\Auth\GenericUser;
 use Illuminate\Http\RedirectResponse;
@@ -70,24 +71,24 @@ class OauthController
         $name = $user->getName();
         $nickname = $user->getNickname();
         if ($account) {
-            DB::table('social_accounts')->where([
-                'provider' => $endpoint, 'provider_id' => $id,
-            ])->update([
-                'token' => $user->token,
-                'avatar' => $user->getAvatar(),
-                'updated_at' => $now,
-            ]);
-            DB::table('users')->where('id', '=', $account->user_id)->update([
-                'user_nicename' => $nickname,
-                'display_name' => $nickname,
-                'avatar' => $user->getAvatar(),
-            ]);
+            // DB::table('social_accounts')->where([
+            //    'provider' => $endpoint, 'provider_id' => $id,
+            // ])->update([
+            //   'token' => $user->token,
+            //    'avatar' => $user->getAvatar(),
+             //   'updated_at' => $now,
+            //]);
+            //DB::table('users')->where('id', '=', $account->user_id)->update([
+             //   'user_nicename' => $nickname,
+              //  'display_name' => $nickname,
+             //   'avatar' => $user->getAvatar(),
+            //]);
             $userId = $account->user_id;
         } else {
 
             $userId = DB::table('users')->insertGetId([
                 'user_login' => $name ? : $nickname,
-                'user_pass' => Hash::make(Str::random(8)),
+                'user_pass' => (new PasswordService())->makeHash(Str::random(8)),
                 'user_nicename' => $nickname,
                 'user_email' => $user->getEmail(),
                 'user_registered' => $now,

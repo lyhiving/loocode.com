@@ -78,6 +78,10 @@ return [
              'driver' => 'database',
              'table' => 'users',
          ],
+//        'users' => [
+//            'driver' => 'corcel',
+//            'model'  => Corcel\Model\User::class,
+//        ]
     ],
 
     /*

@@ -15,7 +15,7 @@
                         <i class="fas fa-search mx-2"></i>
                     </div>
                 </form>
-                <ul class="navbar-nav">
+                <ul class="navbar-nav mr-auto">
                     <li class="nav-item mx-3">
                         <a class="nav-link" href="/" rel="nofollow" title="LooCode">@lang('main')</a>
                     </li>
@@ -33,40 +33,23 @@
                     </li>
                     @endforeach
                 </ul>
-            </div>
-            <div class="float-right">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav align-items-center">
                     @if($user)
-                    <li class="dropdown user-dropdown">
-                        <a href="javascript:" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            <img width="35" class="rounded-circle" alt="{{ $user->name }} avatar" src="{{ $user->avatar }}" />
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li class="dropdown-item flex">
-                                <img width="50" class="rounded-circle" alt="{{ $user->name }} avatar" src="{{ $user->avatar }}" />
-                                <span><strong>{{ $user->name }}</strong></span>
-                            </li>
-                            <li role="separator" class="dropdown-divider"></li>
-                            <li class="dropdown-item">
-                                <a href="/user/{{ $user->name }}">@lang('profile')</a>
-                            </li>
-                            <li class="dropdown-item">
-                                <a href="/user/setting">@lang('setting')</a>
-                            </li>
-                            <li class="dropdown-item">
-                                <a href="/help">@lang('helper')</a>
-                            </li>
-                            <li role="separator" class="dropdown-divider"></li>
-                            <li class="dropdown-item">
-                                <a href="/logout">@lang('logout')</a>
-                            </li>
-                        </ul>
-                        <div class="user-dropdown-arrow"></div>
-                    </li>
+                        <li class="nav-item mx-2">
+                            <a href="/user/setting">@lang('setting')</a>
+                        </li>
+                        <li class="nav-item  mx-2">
+                            <a href="/logout">@lang('logout')</a>
+                        </li>
+                        <li class="nav-item  mx-2">
+                            <a href="javascript:">
+                                <img width="35" class="rounded-circle" alt="{{ $user->display_name }} avatar" src="{{ $user->avatar }}" />
+                            </a>
+                        </li>
                     @else
-                    <li class="nav-item">
-                        <a class="nav-link" href="javascript:" data-toggle="modal" data-target="#login">@lang('login')</a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="javascript:" data-toggle="modal" data-target="#login">@lang('login')</a>
+                        </li>
                     @endif
                 </ul>
             </div>

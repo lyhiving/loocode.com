@@ -249,3 +249,4 @@ create table social_accounts
   COLLATE = utf8mb4_unicode_520_ci;
 
 alter table `users` add column `avatar` varchar(255) COLLATE utf8mb4_unicode_520_ci  NOT NULL DEFAULT '' after `display_name`;
+alter table `users` add column `remember_token` varchar(255) COLLATE utf8mb4_unicode_520_ci  NOT NULL DEFAULT '' after `avatar`;

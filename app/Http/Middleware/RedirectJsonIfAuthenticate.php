@@ -23,9 +23,9 @@ class RedirectJsonIfAuthenticate
     {
         $guards = empty($guards) ? [null] : $guards;
         foreach ($guards as $guard) {
-            if (Auth::guard($guard)->check()) {
+            if (!Auth::guard($guard)->check()) {
                 if ($request->isXmlHttpRequest()) {
-                    return new JsonResponse(Result::err(401, "Un"));
+                    return new JsonResponse(Result::err(401, "Unauthenticate"));
                 } else {
                     return redirect(RouteServiceProvider::HOME);
                 }

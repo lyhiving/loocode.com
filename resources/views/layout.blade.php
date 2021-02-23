@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_338218_4wxwv706rhb.css" />
     <link rel="stylesheet" type="text/css" href="{{ mix("/assets/css/app.css")  }}"/>
     @if($user)
-    <meta name="Authorization" content="{{ $user->id }}">
+    <meta name="Authorization" content="{{ $user->ID }}">
     @endif
     <!-- in your header -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.9.0/devicon.min.css">

@@ -39,9 +39,6 @@
                         <a href="/oauth/qq" class="login-icon login-icon-qq"></a>
                     </li>
                     <li class="list-inline-item m-3">
-                        <a href="/oauth/weixinweb" class="login-icon login-icon-wx"></a>
-                    </li>
-                    <li class="list-inline-item m-3">
                         <a href="/oauth/github" class="login-icon login-icon-git"></a>
                     </li>
                 </ul>

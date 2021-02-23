@@ -44,7 +44,7 @@
                             <div class="mt-3 d-flex">
                                 <label class="form-label">
                                     <input class="form-control border-0" disabled id="email-text" placeholder="example@gmail.com"
-                                           type="email" value="{{ $user->email }}"/>
+                                           type="email" value="{{ $user->user_email }}"/>
                                 </label>
                                 <div class="email-btn-container">
                                     <button class="btn btn-pink ml-2" id="btn-email">修改邮箱</button>
