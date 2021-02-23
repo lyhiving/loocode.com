@@ -112,7 +112,7 @@ class OauthController
             $redirectUrl = $url;
         }
         $user = DB::table('users')->select([
-            'ID as id', 'display_name AS name', 'user_pass AS password', 'user_email AS email', 'avatar'
+            'ID AS id', 'display_name AS name', 'user_pass AS password', 'user_email AS email', 'avatar'
         ])->where('id', '=', $userId)->first();
         Auth::login(new GenericUser((array) $user), false);
         return redirect($redirectUrl);
