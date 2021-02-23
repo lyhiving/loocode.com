@@ -191,7 +191,7 @@ EOF;
         $comment = [
             'comment_post_ID' => $id,
             'comment_parent' => 0,
-            'comment_author' => $user->id,
+            'comment_author' => $user->ID,
             'comment_author_ip' => $request->getClientIp(),
             'comment_date' => now(),
             'comment_content' => $content,
