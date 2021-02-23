@@ -73,8 +73,7 @@ ON (t1.comment_author=t2.ID)
 WHERE t1.comment_post_ID = ? AND (t1.comment_approved = 1 OR comment_author = ?) ORDER BY t1.comment_ID
 EOF;
         $user = $request->user();
-        $userId = $user->id ?? 0;
-        $comments = DB::select($sql, [$id, $userId]);
+        $comments = DB::select($sql, [$id, $user->ID ?? 0]);
         $author = DB::selectOne('SELECT display_name as name, avatar FROM users WHERE id = ?', [$posts->post_author]);
         $metas = DB::select('SELECT meta_key, meta_value FROM usermeta WHERE user_id = ?', [$posts->post_author]);
         if (!$author) {
