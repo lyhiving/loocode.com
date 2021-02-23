@@ -4,9 +4,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Frontend;
 
 
-use App\Http\Controllers\Controller;
 use Illuminate\Container\Container;
-use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -18,13 +17,13 @@ use Illuminate\View\View;
  * Class HomeController
  * @package App\Http\Controllers\Frontend
  */
-class HomeController extends Controller
+class HomeController extends FrontendController
 {
 
     /**
      * @param Request $request
-     * @return View|Factory
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|View
+     * @throws BindingResolutionException
      */
     public function index(Request $request): View
     {
@@ -32,7 +31,7 @@ class HomeController extends Controller
 SELECT
     COUNT(t1.id) AS cnt
 FROM posts as t1 LEFT JOIN users as t2 ON(t1.post_author=t2.id)
-WHERE t1.post_status = 0 AND t1.post_type != 'menu' ORDER BY t1.post_modified DESC, t1.id DESC
+WHERE t1.post_status = 'publish' AND t1.post_type != 'menu' ORDER BY t1.post_date DESC, t1.id DESC
 EOF;
         $total = DB::selectOne($sql)->cnt ?? 0;
         $items = [];
@@ -41,9 +40,9 @@ EOF;
         if ($total > 0) {
             $sql = <<<EOF
     SELECT
-        t1.id, t1.post_title, t1.post_author, t1.post_modified, t2.name, t2.avatar, t1.post_excerpt, t1.post_type
+        t1.id, t1.post_title, t1.post_author, t1.post_modified, t2.display_name as name, t2.avatar, t1.post_excerpt, t1.post_type
     FROM posts as t1 LEFT JOIN users as t2 ON(t1.post_author=t2.id)
-    WHERE t1.post_status = 0 AND t1.post_type != 'menu' ORDER BY t1.post_modified DESC, t1.id DESC LIMIT ?, ?
+    WHERE t1.post_status = 'publish' AND t1.post_type != 'menu' ORDER BY t1.post_date DESC, t1.id DESC LIMIT ?, ?
     EOF;
             $items = DB::select($sql, [$currentPage * $prePage - $prePage, $prePage]);
             if ($items) {
@@ -92,7 +91,7 @@ EOF;
     private function getHot(): array
     {
         $sql = <<<EOF
-SELECT post_id FROM postmeta WHERE post_key = ? ORDER BY post_value DESC LIMIT 10
+SELECT post_id FROM postmeta WHERE meta_key = ? ORDER BY meta_value DESC LIMIT 10
 EOF;
         $result = DB::select($sql, ['_lc_post_views']);
         if (empty($result)) {

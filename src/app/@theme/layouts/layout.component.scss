@@ -1,0 +1,34 @@
+@import '../styles/themes';
+@import '../../../../node_modules/bootstrap/scss/mixins/breakpoints';
+@import '../../../../node_modules/@nebular/theme/styles/global/breakpoints';
+
+@include nb-install-component() {
+
+  ::ng-deep nb-window nb-card-body {
+    max-height: 680px;
+    overflow-y: scroll;
+  }
+  ::ng-deep nb-dialog-container {
+    width: 100%;
+  }
+
+  ::ng-deep nb-dialog-container nb-card-body {
+    max-height: 680px;
+    overflow-y: scroll;
+  }
+  .menu-sidebar ::ng-deep .scrollable {
+    padding-top: nb-theme(layout-padding-top);
+  }
+
+  ::ng-deep .form-inline [fullWidth] {
+    flex: 1;
+  }
+
+  ::ng-deep .form-inline > * {
+    margin: 0 1.5rem 1.5rem 0;
+  }
+
+  ::ng-deep nb-card.inline-form-card nb-card-body {
+    padding-bottom: 0;
+  }
+}

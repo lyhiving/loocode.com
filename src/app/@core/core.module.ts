@@ -1,0 +1,117 @@
+import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {NbAuthJWTToken, NbAuthModule, NbPasswordAuthStrategy} from '@nebular/auth';
+import {NbRoleProvider, NbSecurityModule} from '@nebular/security';
+
+import { of as observableOf } from 'rxjs';
+import {StateService} from './services/state.service';
+import {environment} from '../../environments/environment';
+import {AUTHORIZE_LOGIN, AUTHORIZE_LOGOUT} from './app.interface.data';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import {HttpRequestInterceptor} from './http.request.interceptor';
+
+
+export class NbSimpleRoleProvider extends NbRoleProvider {
+    getRole() {
+        // here you could provide any role based on any auth flow
+        return observableOf('guest');
+    }
+}
+
+export const NB_CORE_PROVIDERS = [
+  StateService,
+  ...NbAuthModule.forRoot({
+    strategies: [
+      NbPasswordAuthStrategy.setup({
+        name: 'email',
+        token: {
+          class: NbAuthJWTToken,
+          key: 'data.token'
+        },
+        baseEndpoint: environment.gateway,
+        login: {
+          endpoint: AUTHORIZE_LOGIN,
+          method: 'post',
+          redirect: {
+            success: '/',
+            failure: null,
+          },
+          defaultErrors: ['用户不存在', '用户密码验证失败.'],
+          defaultMessages: ['登录成功'],
+        },
+        register: {
+          // ...
+          endpoint: '/authorize/register',
+          method: 'post',
+          redirect: {
+            success: '/',
+            failure: null,
+          },
+          defaultErrors: ['Login/Email combination is not correct, please try again.'],
+          defaultMessages: ['You have been successfully logged in.'],
+        },
+        logout: {
+          endpoint: AUTHORIZE_LOGOUT,
+          method: 'post',
+          redirect: {
+            success: '/',
+            failure: null,
+          },
+          defaultErrors: ['Login/Email combination is not correct, please try again.'],
+          defaultMessages: ['You have been successfully logged in.'],
+        },
+      }),
+    ],
+    forms: {
+    },
+  }).providers,
+  NbSecurityModule.forRoot({
+    accessControl: {
+      guest: {
+        view: '*',
+      },
+      user: {
+        parent: 'guest',
+        create: '*',
+        edit: '*',
+        remove: '*',
+      },
+    },
+  }).providers,
+  {
+    provide: NbRoleProvider, useClass: NbSimpleRoleProvider,
+  },
+  {
+    provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true
+  }
+];
+
+function throwIfAlreadyLoaded(parentModule: any, moduleName: string) {
+  if (parentModule) {
+    throw new Error(`${moduleName} has already been loaded. Import Core modules in the AppModule only.`);
+  }
+}
+
+@NgModule({
+  declarations: [],
+  imports: [
+    CommonModule
+  ],
+  exports: [
+    NbAuthModule
+  ]
+})
+export class CoreModule {
+  constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
+    throwIfAlreadyLoaded(parentModule, 'CoreModule');
+  }
+
+  static forRoot(): ModuleWithProviders<CoreModule> {
+    return {
+      ngModule: CoreModule,
+      providers: [
+        ...NB_CORE_PROVIDERS,
+      ],
+    };
+  }
+}

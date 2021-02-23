@@ -8,7 +8,7 @@
     ],
     "license": "MIT",
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.0",
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-pdo": "*",
@@ -16,9 +16,11 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "jgrossi/corcel": "^5.0",
         "laravel/framework": "^8.12",
         "laravel/socialite": "^5.1",
         "laravel/tinker": "^2.5",
+        "lcobucci/jwt": "^4.1.0",
         "socialiteproviders/google": "^4.1",
         "socialiteproviders/qq": "^4.1",
         "socialiteproviders/weixin-web": "^4.1"

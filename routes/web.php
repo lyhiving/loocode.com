@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\Frontend\DeprecatedController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\OauthController;

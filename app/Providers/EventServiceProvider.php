@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\Posts;
+use App\Listeners\PostsListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -25,6 +27,7 @@ class EventServiceProvider extends ServiceProvider
             QqExtendSocialite::class . '@handle',
             WeixinWebExtendSocialite::class . '@handle',
         ],
+        Posts::class => [PostsListener::class],
     ];
 
     /**

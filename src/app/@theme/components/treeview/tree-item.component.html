@@ -1,0 +1,29 @@
+<div *ngIf="item" class="tree-view-item">
+  <div class="form-inline">
+    <nb-icon
+      [class.disabled]="!item[options.childrenField] || item[options.childrenField].length < 1"
+      [icon]="item.collapsed ? 'arrow-right' : 'arrow-down'"
+      (click)="onCollapseExpand()">
+    </nb-icon>
+    <div class="form-check">
+      <ng-container [ngSwitch]="options.mode">
+        <div *ngSwitchCase="0">
+          <span>{{ item[options.textField] }}</span>
+        </div>
+        <div *ngSwitchCase="1">
+          <nb-checkbox [indeterminate]="indeterminate" [(checked)]="item.checked" (checkedChange)="onCheckedChange($event)">{{ item[options.textField] }}</nb-checkbox>
+        </div>
+        <div *ngSwitchCase="2">
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div *ngIf="!item.collapsed">
+    <app-tree-item
+      (checkedChange)="onChildCheckedChange(child, $event)"
+      *ngFor="let child of item[options.childrenField]"
+      [item]="child"
+      [options]="options">
+    </app-tree-item>
+  </div>
+</div>

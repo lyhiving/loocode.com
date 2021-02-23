@@ -1,0 +1,72 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card class="inline-form-card">
+      <nb-card-header>用户详细资料</nb-card-header>
+      <nb-card-body>
+        <form class="form-inline">
+          <input
+            type="text"
+            name="searchValue"
+            [(ngModel)]="searchValue"
+            nbInput
+            [placeholder]="items.options ? items.options[0][1]['value'] : 'ID、手机号'"
+          >
+          <button type="submit" nbButton status="primary" (click)="find(searchValue)">搜索</button>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+<div class="row" *ngIf="items.groups">
+  <div class="col-md-6" *ngFor="let group of items.groups; index as i;">
+    <nb-card>
+      <nb-card-header>{{ group }}</nb-card-header>
+      <nb-card-body>
+        <form>
+          <div class="form-group row" *ngFor="let item of items.options[i]; index as j;">
+            <label for="input{{ item.property }}" class="label col-sm-3 col-form-label">{{ item.name }}</label>
+            <div class="col-sm-9 {{ item.type == 'editor' || item.type == 'create' ? 'form-inline' : '' }}">
+              <input *ngIf="item.type != 'html'; else elseBlock" type="text" nbInput fullWidth  [value]="item.value" disabled id="input{{ item.property }}">
+              <ng-template #elseBlock>
+                <div [innerHTML]="item.value"></div>
+              </ng-template>
+              <button
+                *ngIf="item.type == 'editor' || (item.type == 'create' && item.value == '')"
+                nbButton
+                size="small"
+                status="{{ item.value ? 'danger' : 'success' }}"
+                (click)="this.dialogService.open(dialog, {context: {data: item, index: [i, j]}})"
+              >
+                {{ item.value ? '更新' : '初始化' }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+<ng-template #dialog let-data let-ref="dialogRef">
+  <nb-card>
+    <nb-card-header>{{ data.data.name }}</nb-card-header>
+    <nb-card-body>
+      <input
+        #propertyValue
+        nbInput
+        type="text"
+        fullWidth
+      />
+    </nb-card-body>
+    <nb-card-footer>
+      <button
+        status="{{ data.data.value ? 'danger' : 'success' }}"
+        nbButton
+        fullWidth
+        (click)="update(data.data, propertyValue.value, data.index);ref.close()">
+        {{ data.data.value ? '更新' : '初始化' }}
+      </button>
+    </nb-card-footer>
+  </nb-card>
+</ng-template>

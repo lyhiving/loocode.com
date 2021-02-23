@@ -1,0 +1,127 @@
+<nb-card>
+  <nb-card-header>
+    {{ title }}
+  </nb-card-header>
+
+  <nb-card-body>
+    <ng2-smart-table
+            [settings]="settings"
+            [source]="source"
+            (create)="create()"
+            (edit)="edit($event)"
+    >
+    </ng2-smart-table>
+  </nb-card-body>
+</nb-card>
+
+<ng-template #storeWindow>
+  <div class="row">
+    <div class="col-lg-12">
+      <form (ngSubmit)="action()" #form="ngForm">
+        <div class="form-group row">
+          <label for="inputNickname" class="label col-sm-3 col-form-label">昵称</label>
+          <div class="col-sm-9">
+            <input
+              type="text"
+              nbInput
+              [(ngModel)]="user.name"
+              #nickname="ngModel"
+              fullWidth
+              required
+              id="inputNickname"
+              placeholder="昵称"
+              name="nickname"
+              minlength="4"
+              maxlength="24"
+              [status]="nickname.dirty ? (nickname.invalid  ? 'danger' : 'success') : 'basic'"
+            >
+            <ng-container *ngIf="nickname.invalid && nickname.touched">
+              <p class="caption status-danger" *ngIf="nickname.errors?.required">
+                用户昵称不能为空!
+              </p>
+              <p class="caption status-danger" *ngIf="nickname.errors?.minlength || nickname.errors?.maxlength">
+                用户昵称长度为4-24位字符!
+              </p>
+            </ng-container>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="inputEmail" class="label col-sm-3 col-form-label">邮箱</label>
+          <div class="col-sm-9">
+            <input
+              type="text"
+              nbInput
+              fullWidth
+              [(ngModel)]="user.email"
+              #mobile="ngModel"
+              name="mobile"
+              [disabled]="currentMode == 'editor'"
+              required
+              id="inputEmail"
+              placeholder="邮箱"
+              [status]="mobile.dirty ? (mobile.invalid  ? 'danger' : 'success') : 'basic'"
+            >
+            <ng-container *ngIf="mobile.invalid && mobile.touched">
+              <p class="caption status-danger" *ngIf="password.errors?.required">
+                邮箱不能为空!
+              </p>
+            </ng-container>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="inputPassword" class="label col-sm-3 col-form-label">密码</label>
+          <div class="col-sm-9">
+            <input
+              type="password"
+              nbInput
+              fullWidth
+              [(ngModel)]="user.password"
+              #password="ngModel"
+              name="password"
+              [required]="currentMode == 'create'"
+              id="inputPassword"
+              pattern="\w+"
+              minlength="6"
+              maxlength="24"
+              [placeholder]="currentMode == 'editor' ? '不修改密码，保持为空即可' : '密码'"
+              [status]="password.dirty ? (password.invalid  ? 'danger' : 'success') : 'basic'"
+            >
+            <ng-container *ngIf="password.invalid && password.touched">
+              <p class="caption status-danger" *ngIf="currentMode == 'create' && password.errors?.required">
+                密码不能为空!
+              </p>
+              <p class="caption status-danger" *ngIf="password.errors?.minlength || password.errors?.maxlength">
+                密码长度为6-24位!
+              </p>
+            </ng-container>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="label col-sm-3 col-form-label">头像</label>
+          <div class="col-sm-9">
+            <div class="row">
+              <div class="col-6">
+                <img alt="" width="50" class="d-inline" src="{{ user.avatar }}"/>
+              </div>
+              <div class="col-6">
+                <button nbButton type="button" status="primary" (click)="openCKFinderPopup(null);">浏览</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="offset-sm-3 col-sm-9">
+            <button
+              type="submit"
+              nbButton
+              status="primary"
+              [disabled]="submitted || !form.valid"
+            >
+              {{ operationName() }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-template>

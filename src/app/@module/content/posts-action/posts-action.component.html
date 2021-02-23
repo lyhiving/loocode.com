@@ -1,0 +1,126 @@
+<div class="row">
+  <div class="col-lg-8 col-12">
+    <nb-card>
+      <nb-card-header>内容</nb-card-header>
+      <nb-card-body>
+        <form #form="ngForm">
+          <div class="form-group">
+            <label for="inputTitle" class="label col-12 col-form-label">标题</label>
+            <div class="col-12">
+              <input
+                type="text"
+                nbInput
+                fullWidth
+                [(ngModel)]="posts.post_title"
+                #title="ngModel"
+                name="title"
+                id="inputTitle"
+                required="required"
+                placeholder="标题"
+                [status]="title.dirty ? (title.invalid  ? 'danger' : 'success') : 'basic'"
+              >
+              <ng-container *ngIf="title.invalid && title.touched">
+                <p class="caption status-danger" *ngIf="title.errors?.required">
+                  标题不能为空!
+                </p>
+              </ng-container>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="editorContent" class="label col-12 col-form-label">内容</label>
+            <div class="col-12">
+              <ckeditor id="editorContent"
+                        [editor]="Editor"
+                        [config]="editorOptions" (ready)="onReady($event)"
+                        [(ngModel)]="posts.post_content"
+                        name="content"
+              ></ckeditor>
+            </div>
+          </div>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div class="col-lg-4 col-12">
+    <div class="row">
+      <div class="col-12">
+        <nb-card>
+          <nb-card-header>发布</nb-card-header>
+          <nb-card-body>
+            <div class="col-12">
+              <div class="font-weight-bold">
+                <nb-icon icon="paper-plane"></nb-icon>
+                状态：<strong id="currentStatus">发布</strong>&nbsp;<a href="javascript:" id="editStatus">编辑</a>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="font-weight-bold">
+                <nb-icon icon="eye"></nb-icon>
+                可见度：<strong id="currentEyeStatus">公开</strong>&nbsp;<a href="javascript:" id="editEyeStatus">编辑</a>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="font-weight-bold">
+                <nb-icon icon="calendar"></nb-icon>
+                立即发布&nbsp;<a href="javascript:" id="editPublishStatus">编辑</a>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-12 text-right">
+                <button
+                  (click)="action()"
+                  type="button"
+                  [nbSpinner]="loading"
+                  nbSpinnerSize="small"
+                  nbSpinnerStatus="danger"
+                  nbButton
+                  size="small"
+                  status="primary"
+                  [disabled]="submitted || !form.valid"
+                >
+                  发布
+                </button>
+              </div>
+            </div>
+          </nb-card-body>
+        </nb-card>
+      </div>
+      <div class="col-12">
+        <nb-card>
+          <nb-card-header>标签</nb-card-header>
+          <nb-card-body>
+            <nb-form-field>
+              <nb-tag-list (tagRemove)="onTagRemove($event)">
+                <nb-tag *ngFor="let tag of tags" [text]="tag" removable></nb-tag>
+                <input type="text"
+                       placeholder="添加标签"
+                       nbTagInput
+                       [formControl]="inputFormControl"
+                       (tagAdd)="onTagAdd($event.value)"
+                       [nbAutocomplete]="autocomplete" fullWidth>
+              </nb-tag-list>
+              <nb-icon nbSuffix icon="search" pack="eva"></nb-icon>
+            </nb-form-field>
+            <nb-autocomplete #autocomplete (selectedChange)="onTagAdd($event)">
+              <nb-option *ngFor="let option of options" [value]="option">{{ option }}</nb-option>
+            </nb-autocomplete>
+          </nb-card-body>
+        </nb-card>
+      </div>
+      <div class="col-12">
+        <nb-card>
+          <nb-card-header>分类</nb-card-header>
+          <nb-card-body>
+            <div class="form-group">
+              <div class="col-12">
+                <nb-select>
+                  <nb-option></nb-option>
+                </nb-select>
+              </div>
+            </div>
+          </nb-card-body>
+        </nb-card>
+      </div>
+    </div>
+  </div>
+</div>

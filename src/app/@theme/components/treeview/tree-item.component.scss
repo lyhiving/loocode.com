@@ -1,0 +1,26 @@
+
+@import '../../../@theme/styles/themes';
+
+@include nb-install-component {
+  .form-inline > * {
+    margin: 0 0.5rem 0.5rem 0;
+  }
+
+  nb-icon {
+    cursor: pointer;
+    color: nb-theme(color-primary-default)
+  }
+
+  nb-icon.disabled {
+    cursor: no-drop;
+    color: nb-theme(color-primary-disabled)
+  }
+
+  .tree-view-item {
+    white-space: nowrap;
+    .tree-view-item {
+      margin-left: 2rem;
+    }
+  }
+}
+

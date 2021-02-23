@@ -17,7 +17,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/home';
+    public const HOME = '/';
 
     /**
      * The controller namespace for the application.
@@ -38,6 +38,7 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
+            $dashboardDomain = config("app.dashboard_domain");
             Route::prefix('api')
                 ->middleware('api')
                 ->namespace($this->namespace)
@@ -46,6 +47,10 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
+            Route::domain($dashboardDomain)
+                ->prefix("backend")
+                ->namespace($this->namespace)
+                ->group(base_path('routes/dashboard.php'));
         });
     }
 

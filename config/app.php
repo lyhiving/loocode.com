@@ -54,6 +54,8 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'dashboard_domain' => env('DASHBOARD_DOMAIN', 'localhost'),
+
     'asset_url' => env('ASSET_URL', null),
 
     'mix_url' => env('ASSET_URL', null),
@@ -171,9 +173,9 @@ return [
         /*
          * Application Service Providers...
          */
-        // App\Providers\AppServiceProvider::class,
-        // App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\AppServiceProvider::class,
+        App\Providers\AuthServiceProvider::class,
+//         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         SocialiteProviders\Manager\ServiceProvider::class,

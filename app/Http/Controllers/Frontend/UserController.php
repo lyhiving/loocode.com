@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Http\Controllers\Frontend;
 
 
-use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
-class UserController extends Controller
+class UserController extends FrontendController
 {
 
     /**
@@ -26,7 +26,11 @@ class UserController extends Controller
         ]);
     }
 
-    public function upload(Request $request)
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function upload(Request $request): JsonResponse
     {
         $files = $request->allFiles();
         $data = ['code' => 500, 'message' => 'error', 'data' => null];
@@ -80,11 +84,11 @@ class UserController extends Controller
         if ($user == null || empty($meta)) {
             return $response;
         }
-        $map = ['email'];
+        $map = ['email' => 'user_email'];
         $value = [];
-        foreach ($map as $key) {
+        foreach ($map as $key => $v) {
             if (isset($meta[$key])) {
-                $value[$key] = $meta[$key];
+                $value[$v] = $meta[$key];
             }
         }
         DB::table('users')->where('id', '=', $user->id)->update($value);

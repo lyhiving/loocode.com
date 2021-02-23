@@ -2,10 +2,11 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\EncryptCookies;
+use App\Http\Middleware\RedirectJsonIfAuthenticate;
 use App\Http\Middleware\ShareVariable;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 
 class Kernel extends HttpKernel
@@ -58,7 +59,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth' => RedirectJsonIfAuthenticate::class,
         // 'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         // 'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         // 'can' => \Illuminate\Auth\Middleware\Authorize::class,

@@ -19,48 +19,8 @@ use stdClass;
  * Class PostsController
  * @package App\Http\Controllers\Frontend
  */
-class PostsController extends Controller
+class PostsController extends FrontendController
 {
-
-
-    /**
-     * @param Request $request
-     * @param string $name
-     * @return View|Factory
-     */
-    public function taxonomy(Request $request, string $name): View
-    {
-        $sql = <<<EOF
-SELECT term_taxonomy.taxonomy_id FROM terms JOIN term_taxonomy ON (terms.id = term_taxonomy.term_id) WHERE terms.slug = ? LIMIT 1
-EOF;
-        $taxonomy = DB::selectOne($sql, [$name]);
-        if ($taxonomy == null) {
-            abort(404);
-        }
-        $sql = <<<EOF
-SELECT
-       t3.id, t3.post_title, t3.post_date, t3.post_excerpt, t3.post_type, t4.name, t4.avatar, t3.post_modified
-FROM term_relation as t2
-JOIN posts as t3 ON (t2.object_id=t3.id)
-JOIN users as t4 ON (t4.id=t3.post_author)
-WHERE t2.term_taxonomy_id = ? ORDER BY t3.id DESC
-EOF;
-        $posts = DB::select($sql, [$taxonomy->taxonomy_id]);
-        if ($posts) {
-            $objectIdSets = array_map(function ($item) {return $item->id;}, $posts);
-            [$postMeta, $postTag] = $this->getIdSetsMetesAndTaxonomy($objectIdSets);
-            foreach ($posts as  $item) {
-                $item->tags = $postTag[$item->id] ?? [];
-                $item->metas = $postMeta[$item->id] ?? [];
-            }
-        }
-        return view("taxonomy", [
-            'taxonomy' => $name,
-            'posts' => $posts,
-            'seo' => $this->getSeo($name),
-            'hotPosts' => [],
-        ]);
-    }
 
     /**
      * @param Request $request
@@ -73,11 +33,11 @@ EOF;
         if ($posts == null) {
             abort(404);
         }
-        $sql = 'SELECT post_key, post_value FROM postmeta WHERE post_id = ?';
+        $sql = 'SELECT meta_key, meta_value FROM postmeta WHERE post_id = ?';
         $metas = DB::select($sql, [$id]);
         $posts->metas = [];
         foreach ($metas as $item) {
-            $posts->metas[$item->post_key] = $item->post_value;
+            $posts->metas[$item->meta_key] = $item->meta_value;
         }
         if (!isset($posts->metas['_lc_post_views'])) {
             $posts->metas['_lc_post_views'] = 0;
@@ -98,25 +58,25 @@ EOF;
             );
         }
         $sql = <<<EOF
-SELECT t1.taxonomy, t2.object_id, t3.slug FROM term_taxonomy as t1 LEFT JOIN term_relation as t2
-ON (t1.taxonomy_id=t2.term_taxonomy_id)
+SELECT t1.taxonomy, t2.object_id, t3.slug FROM term_taxonomy as t1 LEFT JOIN term_relationships as t2
+ON (t1.term_taxonomy_id=t2.term_taxonomy_id)
 LEFT JOIN terms as t3
-ON (t1.term_id=t3.id)
+ON (t1.term_id=t3.term_id)
 WHERE t2.object_id = ?
 EOF;
         $taxonomy = DB::select($sql, [$id]);
 
         $sql = <<<EOF
 SELECT
-       t2.name, t2.avatar, t1.comment_author, t1.id, t1.comment_date, t1.comment_content
+       t2.display_name as name, t2.avatar, t1.comment_author, t1.comment_ID, t1.comment_date, t1.comment_content
 FROM comments AS t1 LEFT JOIN users AS t2
-ON (t1.comment_author=t2.id)
-WHERE t1.post_id = ? AND (t1.comment_approved = 1 OR comment_author = ?) ORDER BY t1.id
+ON (t1.comment_author=t2.ID)
+WHERE t1.comment_post_ID = ? AND (t1.comment_approved = 1 OR comment_author = ?) ORDER BY t1.comment_ID
 EOF;
         $user = $request->user();
         $userId = $user->id ?? 0;
         $comments = DB::select($sql, [$id, $userId]);
-        $author = DB::selectOne('SELECT name, avatar FROM users WHERE id = ?', [$posts->post_author]);
+        $author = DB::selectOne('SELECT display_name as name, avatar FROM users WHERE id = ?', [$posts->post_author]);
         $metas = DB::select('SELECT meta_key, meta_value FROM usermeta WHERE user_id = ?', [$posts->post_author]);
         if (!$author) {
             $author = new stdClass();
@@ -140,6 +100,46 @@ EOF;
             'posts' => $posts,
             'comments' => $comments,
             'seo' => $this->getSeo($posts->post_title),
+        ]);
+    }
+
+
+    /**
+     * @param Request $request
+     * @param string $name
+     * @return View|Factory
+     */
+    public function taxonomy(Request $request, string $name): View
+    {
+        $sql = <<<EOF
+SELECT term_taxonomy.term_taxonomy_id FROM terms JOIN term_taxonomy ON (terms.term_id = term_taxonomy.term_id) WHERE terms.slug = ? LIMIT 1
+EOF;
+        $taxonomy = DB::selectOne($sql, [$name]);
+        if ($taxonomy == null) {
+            abort(404);
+        }
+        $sql = <<<EOF
+SELECT
+       t3.id, t3.post_title, t3.post_date, t3.post_excerpt, t3.post_type, t4.display_name as name, t4.avatar, t3.post_modified
+FROM term_relationships as t2
+JOIN posts as t3 ON (t2.object_id=t3.id)
+JOIN users as t4 ON (t4.ID=t3.post_author)
+WHERE t2.term_taxonomy_id = ? ORDER BY t3.id DESC
+EOF;
+        $posts = DB::select($sql, [$taxonomy->term_taxonomy_id]);
+        if ($posts) {
+            $objectIdSets = array_map(function ($item) {return $item->id;}, $posts);
+            [$postMeta, $postTag] = $this->getIdSetsMetesAndTaxonomy($objectIdSets);
+            foreach ($posts as  $item) {
+                $item->tags = $postTag[$item->id] ?? [];
+                $item->metas = $postMeta[$item->id] ?? [];
+            }
+        }
+        return view("taxonomy", [
+            'taxonomy' => $name,
+            'posts' => $posts,
+            'seo' => $this->getSeo($name),
+            'hotPosts' => [],
         ]);
     }
 
@@ -190,15 +190,15 @@ EOF;
         }
         $content = Str::markdown($contents['content']);
         $comment = [
-            'post_id' => $id,
+            'comment_post_ID' => $id,
             'comment_parent' => 0,
             'comment_author' => $user->id,
-            'comment_ip' => $request->getClientIp(),
+            'comment_author_ip' => $request->getClientIp(),
             'comment_date' => now(),
             'comment_content' => $content,
             'comment_approved' => 0,
             'comment_agent' => $request->userAgent(),
-            'comment_type'  => 'normal'
+            'comment_type'  => 'comment'
         ];
         $id = DB::table('comments')->insertGetId($comment);
         if (empty($id)) {
@@ -223,13 +223,13 @@ EOF;
         if ($p == null) {
             return $response;
         }
-        $meta = DB::selectOne('SELECT id FROM postmeta WHERE post_id = ? AND post_key = ?', [$id, $metaKey]);
         $bindValues = [$id, $metaKey];
+        $meta = DB::selectOne('SELECT meta_id FROM postmeta WHERE post_id = ? AND meta_key = ?', $bindValues);
         if ($meta == null) {
-            $sql = 'INSERT INTO postmeta (post_id, post_key, post_value) VALUE (?, ?, ?)';
+            $sql = 'INSERT INTO postmeta (post_id, meta_key, meta_value) VALUE (?, ?, ?)';
             $bindValues[] = 1;
         } else {
-            $sql = 'UPDATE postmeta SET post_value = `post_value` + 1 WHERE post_id = ? AND post_key = ?';
+            $sql = 'UPDATE postmeta SET meta_value = `meta_value` + 1 WHERE post_id = ? AND meta_key = ?';
         }
         $data['code'] = 200;
         DB::statement($sql, $bindValues);
@@ -246,9 +246,8 @@ EOF;
         $sql = <<<EOF
 SELECT
    id, post_author, post_date, post_title, post_content,
-   post_excerpt, post_status, comment_status, ping_status,
-   post_password, post_name, post_modified, post_type,
-   post_parent, post_order, post_mime_type, comment_count
+   post_excerpt, post_status, post_name, post_modified, post_type,
+   post_parent, comment_count
 FROM posts WHERE id = ?
 EOF;
         return DB::selectOne($sql, [$id]);

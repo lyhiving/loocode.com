@@ -1,0 +1,22 @@
+<nb-card>
+  <nb-card-header>
+    {{ title }}
+    <div class="float-right">
+      <button size="small" status="success" (click)="create(null)" nbButton>
+        发布主题<nb-icon icon="plus"></nb-icon>
+      </button>
+    </div>
+  </nb-card-header>
+
+  <nb-card-body>
+    <ng2-smart-table
+      [settings]="settings"
+      [source]="source"
+      (create)="create($event)"
+      (edit)="edit($event)"
+      (delete)="delete($event)"
+    >
+    </ng2-smart-table>
+  </nb-card-body>
+</nb-card>
+

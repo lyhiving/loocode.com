@@ -1,0 +1,131 @@
+<nb-card>
+  <nb-card-header>
+    {{ title }}
+  </nb-card-header>
+  <nb-card-body>
+    <ng2-smart-table
+      [settings]="settings"
+      [source]="source"
+      (create)="create()"
+      (edit)="edit($event)"
+    >
+    </ng2-smart-table>
+  </nb-card-body>
+</nb-card>
+
+<ng-template #storeWindow>
+  <div class="row">
+    <div class="col-lg-12">
+      <form>
+        <div class="form-group row">
+          <label for="inputName" class="label col-lg-2 col-form-label">名称</label>
+          <div class="col-lg-6">
+            <input type="text" nbInput fullWidth [(ngModel)]="itemConfigure.option_name" [disabled]="editable" required="required" placeholder="必填" name="name"  id="inputName">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="inputType" class="label col-lg-2 col-form-label">值类型</label>
+          <div class="col-lg-3">
+            <nb-select class="col-lg-1 px-0" status="primary" name="dataType" [disabled]="editable" placeholder="--请选择--" [(ngModel)]="itemConfigure.type"  (selectedChange)="selectValueType($event)" id="inputType">
+              <nb-option *ngFor="let typeItem of dataType" [value]="typeItem.t">{{ typeItem.n }}</nb-option>
+            </nb-select>
+          </div>
+        </div>
+        <ng-template [ngIf]="itemConfigure.type == 1">
+          <div class="form-group row">
+            <label for="inputValue" class="label col-lg-2 col-form-label">值</label>
+            <div class="col-lg-6">
+              <nb-radio-group id="inputValue" status="primary" [(value)]="itemConfigure.option_value" [(ngModel)]="itemConfigure.option_value" name="value">
+                <nb-radio class="d-inline-block" [value]="'true'">开启</nb-radio>
+                <nb-radio class="d-inline-block" [value]="'false'">关闭</nb-radio>
+              </nb-radio-group>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template [ngIf]="itemConfigure.type == 2">
+          <div class="form-group row" *ngFor="let map of itemConfigure.option_value; let i = index; trackBy:trackByFn">
+            <label for="inputValue" class="label col-lg-2 col-form-label">{{ i > 0 ? '' : '值'}}</label>
+            <div class="col-lg-8">
+              <input type="text" nbInput fullWidth [(ngModel)]="itemConfigure.option_value[i]" value="{{ map }}" required="required" placeholder="必填" name="value{{ i }}">
+            </div>
+            <div class="col-lg-1" [ngTemplateOutlet]="i==0 ? createRowTpl : closeRowTpl" [ngTemplateOutletContext]="{i:i, j: -1}"></div>
+          </div>
+        </ng-template>
+        <ng-template [ngIf]="itemConfigure.type == 3">
+          <div class="form-group row" *ngFor="let map of itemConfigure.option_value; let i = index; trackBy:trackByFn">
+            <label for="inputValue" class="label col-lg-2 col-form-label">{{ i > 0 ? '' : '值'}}</label>
+            <div class="col-lg-4">
+              <input type="text" nbInput fullWidth [(ngModel)]="itemConfigure.option_value[i]['name']" [disabled]="editable && !itemConfigure.option_value[i]['create']" value="{{ itemConfigure.option_value[i]['name'] }}" required="required" placeholder="键" name="valueName{{ i }}">
+            </div>
+            <div class="col-lg-4">
+              <input type="text" nbInput fullWidth [(ngModel)]="itemConfigure.option_value[i]['value']" value="{{ itemConfigure.option_value[i]['value'] }}"  placeholder="值" name="mapValue{{ i }}">
+            </div>
+            <div class="col-lg-1" [ngTemplateOutlet]="i==0 ? createRowTpl : (editable && itemConfigure.option_value[i]['create']) || !editable ? closeRowTpl : null" [ngTemplateOutletContext]="{i:i, j: -1}"></div>
+          </div>
+        </ng-template>
+        <ng-template [ngIf]="itemConfigure.type == 4">
+          <ng-container *ngFor="let maps of itemConfigure.option_value; let i = index;">
+            <div class="form-group row" *ngFor="let map of maps; let j = index; trackBy:trackByFn">
+              <label for="inputValue" class="label col-lg-2 col-form-label">{{ j > 0 ? '' : '键值'}}</label>
+              <div class="col-lg-4">
+                <input type="text" nbInput fullWidth [(ngModel)]="itemConfigure.option_value[i][j]['name']" [disabled]="editable && !itemConfigure.option_value[i][j]['create']" value="{{ itemConfigure.option_value[i][j]['name'] }}" required="required" placeholder="键" name="valueName{{ i }}{{ j }}">
+              </div>
+              <div class="col-lg-4">
+                <input type="text" nbInput fullWidth [(ngModel)]="itemConfigure.option_value[i][j]['value']" value="{{ itemConfigure.option_value[i][j]['value'] }}"  placeholder="值" name="mapValue{{ i }}{{ j }}">
+              </div>
+              <ng-container [ngTemplateOutlet]="j==0 ? createRowTpl : (editable && itemConfigure.option_value[i][j]['create']) || !editable ? closeRowTpl : null" [ngTemplateOutletContext]="{i:i, j:j}"></ng-container>
+            </div>
+          </ng-container>
+        </ng-template>
+
+
+        <ng-template [ngIf]="itemConfigure.type == 5">
+          <div class="form-group row">
+            <label for="inputValue" class="label col-lg-2 col-form-label">值</label>
+            <div class="col-lg-6">
+              <input type="text" nbInput fullWidth [(ngModel)]="itemConfigure.option_value" value="{{ itemConfigure.option_value }}" required="required" placeholder="必填" name="value">
+            </div>
+          </div>
+        </ng-template>
+
+        <ng-template [ngIf]="itemConfigure.type == 6">
+          <div class="form-group row">
+            <label for="inputTextValue" class="label col-lg-2 col-form-label">值</label>
+            <div class="col-lg-6">
+              <textarea rows="5" nbInput fullWidth shape="round" id="inputTextValue" required="required" placeholder="必填" name="value" [(ngModel)]="itemConfigure.option_value">{{ itemConfigure.option_value }}</textarea>
+            </div>
+          </div>
+        </ng-template>
+
+        <div class="form-group row">
+          <label for="inputDescription" class="label col-lg-2 col-form-label">描述</label>
+          <div class="col-lg-6">
+            <input type="text" nbInput fullWidth [(ngModel)]="itemConfigure.description" required="required" placeholder="必填" name="description"  id="inputDescription">
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="offset-lg-3 col-lg-9">
+            <button type="submit" class="btn btn-primary" (click)="store()">{{ operationName() }}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #createRowTpl let-i="i" let-j="j">
+  <button nbButton status="success" size="tiny" (click)="createRow(i, j)">
+    <nb-icon icon="plus-outline"></nb-icon>
+  </button>
+  <button class="ml-1" nbButton status="success"  *ngIf="i == 0 && j == 0" size="small" (click)="createRow(i, -1)">
+    <nb-icon icon="plus-outline"></nb-icon>
+  </button>
+  <button class="ml-1" nbButton status="danger" *ngIf="i > 0 && j == 0" size="small" (click)="deleteRow(i, -1)">
+    <nb-icon icon="close-outline"></nb-icon>
+  </button>
+</ng-template>
+<ng-template #closeRowTpl let-i="i" let-j="j">
+  <button nbButton status="danger" size="tiny" (click)="deleteRow(i, j)">
+    <nb-icon icon="close-outline"></nb-icon>
+  </button>
+</ng-template>

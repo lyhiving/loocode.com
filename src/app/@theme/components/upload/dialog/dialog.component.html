@@ -1,0 +1,41 @@
+<input type="file" #file style="display: none"  (change)="onFilesAdded()" [multiple]="multiple"/>
+<nb-card>
+  <nb-card-header>
+    上传文件
+  </nb-card-header>
+  <nb-card-body>
+    <div class="text-right pb-3">
+      <button [disabled]="uploading || uploadSuccessful" nbButton status="primary" (click)="addFiles()">
+        Add Files
+      </button>
+    </div>
+    <nb-list>
+      <nb-list-item *ngFor="let file of files">
+        <div class="row flex-grow-1">
+          <div class="col-1">
+            <nb-icon status="primary" icon="file"></nb-icon>
+          </div>
+          <div class="col-5">
+            {{file.name}}
+          </div>
+          <div class="col-6">
+            <nb-progress-bar *ngIf="progress" [status]="messages[file.name] ? 'danger' : 'success'"  [displayValue]="!messages[file.name]" [value]="progress[file.name].progress | async">
+              {{messages[file.name]}}
+            </nb-progress-bar>
+          </div>
+        </div>
+      </nb-list-item>
+    </nb-list>
+  </nb-card-body>
+  <nb-card-footer class="actions">
+    <div class="row">
+      <div class="col-6 text-danger">
+        {{ errorMessage }}
+      </div>
+      <div class="col-6">
+        <button *ngIf="showCancelButton" nbButton status="control" (click)="dialogRef.close();" class="mr-2">取消</button>
+        <button nbButton status="primary" [disabled]="!canBeClosed" (click)="closeDialog()">{{primaryButtonText}}</button>
+      </div>
+    </div>
+  </nb-card-footer>
+</nb-card>
