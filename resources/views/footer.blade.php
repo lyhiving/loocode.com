@@ -4,7 +4,7 @@
             <div class="col-12">
                 <ul class="list-inline text-center m-0 p-0">
                     <li class="list-inline-item">
-                        <a href="http://www.miibeian.gov.cn/" target="_blank">浙ICP备17018093号-2</a>
+                        <a href="https://beian.miit.gov.cn" target="_blank">浙ICP备17018093号-2</a>
                     </li>
                     <li class="list-inline-item">
                         Copyright &copy;2017 | Powered by <a href="https://laraval.com">Laravel</a>

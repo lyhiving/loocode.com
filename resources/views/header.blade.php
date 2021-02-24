@@ -19,12 +19,6 @@
                     <li class="nav-item mx-3">
                         <a class="nav-link" href="/" rel="nofollow" title="LooCode">@lang('main')</a>
                     </li>
-                    <li class="nav-item mx-3">
-                        <a class="nav-link" href="/post/tutorial">@lang('tutorial')</a>
-                    </li>
-                    <li class="nav-item mx-3">
-                        <a class="nav-link" href="/post/question">@lang('question')</a>
-                    </li>
                     @foreach($menu as $item)
                     <li class="nav-item mx-3">
                         <a class="nav-link" href="@if($item['type'] == 'category')/category/{{ $item['name'] }}@elseif($item['type'] == 'post_tag')/tag/{{ $item['name'] }}@else{{ $item['uri'] }}@endif">

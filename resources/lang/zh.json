@@ -1,6 +1,6 @@
 {
-    "top_question": "热门问答",
-    "related_question": "相关问答",
+    "top_question": "热门文章",
+    "related_question": "相关文章",
     "more": "更多",
     "top_tags": "热门标签",
     "prev": "上一页",
@@ -23,7 +23,7 @@
     "login_tips": "目前不支持自助注册，请选择任意第三方登录",
     "posts.like": "赞",
     "posts.donation": "打赏",
-    "posts.comment": "评论",
+    "posts.comment": "留言",
     "posts.comment_placeholder": "你想说点什么?",
     "posts.prev": "上一篇",
     "posts.next": "下一篇",
