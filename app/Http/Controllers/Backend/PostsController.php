@@ -8,9 +8,9 @@ namespace App\Http\Controllers\Backend;
 use App\Attributes\Route;
 use App\Events\Posts;
 use App\Http\Result;
-use App\Models\Post;
-use App\Models\Term;
-use App\Models\TermTaxonomy;
+use Corcel\Model\Post;
+use Corcel\Model\Taxonomy;
+use Corcel\Model\Term;
 use Illuminate\Http\Request;
 
 /**
@@ -103,7 +103,7 @@ class PostsController extends BackendController
              */
             $term = Term::firstOrCreate(['slug' => $value], ['name' => $value]);
             if ($term->taxonomy == null) {
-                $taxonomy = new TermTaxonomy();
+                $taxonomy = new Taxonomy();
                 $taxonomy->taxonomy = $type;
                 $taxonomy->description = '';
                 $taxonomy->parent = 0;

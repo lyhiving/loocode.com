@@ -1,4 +1,5 @@
 export const AUTHORIZE_LOGIN: string  = '/authorize/login';
+export const AUTHORIZE_REGISTER: string  = '/authorize/register';
 export const AUTHORIZE_LOGOUT: string  = '/authorize/logout';
 
 export const CONFIGURATION: string = '/open/configuration';
@@ -18,11 +19,12 @@ export const USER_FILTER_QUERY: string = '/user/filter/query';
 export const UPLOAD_FILE: string = '/open/upload';
 
 
-export const SYSTEM_CONFIGURE: string = '/setting/configuration';
+export const SYSTEM_CONFIGURE: string = '/settings';
+export const SYSTEM_CONFIGURE_STORE: string = '/setting/store';
+export const SYSTEM_CONFIGURE_UPDATE: string = '/setting/update/{id}';
+export const SYSTEM_CONFIGURE_INIT: string = '/setting/initialize';
 
 export const DASHBOARD: string = '/dashboard';
-export const SYSTEM_CONFIGURE_INIT: string = '/configure/initialize';
-export const SYSTEM_CONFIGURE_STORE: string = '/configure/store';
 
 export const SYSTEM_MANAGER: string = '/system/managers';
 export const USER_MANAGER_STORE: string = '/system/manager/store';

@@ -1,5 +1,5 @@
 import {Component, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {SYSTEM_CONFIGURE, SYSTEM_CONFIGURE_INIT, SYSTEM_CONFIGURE_STORE} from '../../../@core/app.interface.data';
+import {SYSTEM_CONFIGURE, SYSTEM_CONFIGURE_INIT, SYSTEM_CONFIGURE_STORE, SYSTEM_CONFIGURE_UPDATE} from '../../../@core/app.interface.data';
 import {AppResponseDataOptions, SystemConfigure} from '../../../@core/app.data.options';
 import {TableSourceService} from '../../../@core/services/table.source.service';
 import {NbWindowRef} from '@nebular/theme';
@@ -62,12 +62,6 @@ export class ConfigureComponent extends BaseComponent {
         title: '名称',
         sort: false,
       },
-      description: {
-        type: 'html',
-        title: '描述',
-        sort: false,
-        filter: false,
-      },
       option_value: {
         type: 'html',
         title: '配置',
@@ -120,10 +114,10 @@ export class ConfigureComponent extends BaseComponent {
       this.toastService.showToast('danger', '保存配置', '配置名称不能为空');
       return ;
     }
-    if (this.itemConfigure.description.trim() === '') {
-      this.toastService.showToast('danger', '保存配置', '配置描述不能为空');
-      return ;
-    }
+    // if (this.itemConfigure.description.trim() === '') {
+    //   this.toastService.showToast('danger', '保存配置', '配置描述不能为空');
+    //   return ;
+    // }
     if (this.itemConfigure.option_name.match(/\W/)) {
       this.toastService.showToast('danger', '保存配置', '名称只能是英文数字组合');
       return ;
@@ -154,9 +148,13 @@ export class ConfigureComponent extends BaseComponent {
         data.option_value = maps;
       }
     }
-    this.http.request('post', SYSTEM_CONFIGURE_STORE, {body: data})
+    let url = SYSTEM_CONFIGURE_STORE
+    if (data.option_id > 0) {
+      url = SYSTEM_CONFIGURE_UPDATE.replace("{id}", data.option_id.toString());
+    }
+    this.http.request('post', url, {body: data})
       .subscribe((res: AppResponseDataOptions) => {
-      this.toastService.showResponseToast(res.code, '创建配置', res.message);
+      this.toastService.showResponseToast(res.code, '配置操作', res.message);
       if (res.code !== 200) {
         return ;
       }

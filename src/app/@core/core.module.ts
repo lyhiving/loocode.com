@@ -6,7 +6,7 @@ import {NbRoleProvider, NbSecurityModule} from '@nebular/security';
 import { of as observableOf } from 'rxjs';
 import {StateService} from './services/state.service';
 import {environment} from '../../environments/environment';
-import {AUTHORIZE_LOGIN, AUTHORIZE_LOGOUT} from './app.interface.data';
+import {AUTHORIZE_LOGIN, AUTHORIZE_LOGOUT, AUTHORIZE_REGISTER} from './app.interface.data';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {HttpRequestInterceptor} from './http.request.interceptor';
 
@@ -33,7 +33,7 @@ export const NB_CORE_PROVIDERS = [
           endpoint: AUTHORIZE_LOGIN,
           method: 'post',
           redirect: {
-            success: '/',
+            success: '/#app',
             failure: null,
           },
           defaultErrors: ['用户不存在', '用户密码验证失败.'],
@@ -41,7 +41,7 @@ export const NB_CORE_PROVIDERS = [
         },
         register: {
           // ...
-          endpoint: '/authorize/register',
+          endpoint: AUTHORIZE_REGISTER,
           method: 'post',
           redirect: {
             success: '/',

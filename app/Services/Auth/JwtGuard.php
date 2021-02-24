@@ -4,18 +4,28 @@
 namespace App\Services\Auth;
 
 
-use Illuminate\Contracts\Auth\Authenticatable;
+use DateTimeZone;
+use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Http\Request;
+use Lcobucci\Clock\SystemClock;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\UnencryptedToken;
+use Lcobucci\JWT\Validation\Constraint\IdentifiedBy;
+use Lcobucci\JWT\Validation\Constraint\LooseValidAt;
+use Lcobucci\JWT\Validation\Constraint\SignedWith;
 
 class JwtGuard implements Guard
 {
+    use GuardHelpers;
 
     /**
-     * @var UserProvider
+     * @var Request
      */
-    private UserProvider $provider;
+    private Request $request;
 
     public function __construct(
         UserProvider $provider,
@@ -23,43 +33,60 @@ class JwtGuard implements Guard
     )
     {
         $this->provider = $provider;
+        $this->request = $request;
     }
 
-    public function check()
-    {
-        // TODO: Implement check() method.
-    }
-
-    public function guest()
-    {
-        // TODO: Implement guest() method.
-    }
 
     public function user()
     {
         // TODO: Implement user() method.
-    }
+        if (!is_null($this->user)) {
+            return $this->user;
+        }
+        $tokenStr = $this->getTokenForRequest();
+        if (empty($tokenStr)) {
+            return null;
+        }
+        $config = Configuration::forSymmetricSigner(
+            new Sha256(),
+            InMemory::file(base_path() . '/key.pem')
+        );
+        $config->setValidationConstraints(
+            new IdentifiedBy(explode(':', config('app.key'))[1]),
+            new SignedWith($config->signer(), $config->signingKey()),
+            new LooseValidAt(new SystemClock(new DateTimeZone("Asia/Shanghai")))
+        );
 
-    public function id()
-    {
-        // TODO: Implement id() method.
+        $token = $config->parser()->parse($tokenStr);
+        assert($token instanceof UnencryptedToken);
+
+        $constraints = $config->validationConstraints();
+
+        try {
+            $config->validator()->assert($token, ...$constraints);
+        } catch (\Exception $e) {
+            return null;
+        }
+        $id = $token->claims()->get('id');
+        return $this->user = $this->provider->retrieveById($id);
     }
 
     public function validate(array $credentials = [])
     {
         // TODO: Implement validate() method.
-    }
-
-    public function setUser(Authenticatable $user)
-    {
-        // TODO: Implement setUser() method.
+        return $this->provider->validateCredentials($this->user(), $credentials);
     }
 
     /**
-     * @return UserProvider
+     * Get the token for the current request.
+     *
+     * @return string
      */
-    public function getProvider(): UserProvider
+    public function getTokenForRequest(): string
     {
-        return $this->provider;
+        if ($this->request->hasHeader('Authorization')) {
+            return $this->request->header('Authorization');
+        }
+        return "";
     }
 }

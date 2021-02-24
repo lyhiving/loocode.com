@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Attributes\Route;
 use App\Http\Result;
-use App\Models\User;
+use Corcel\Model\User;
 
 /**
  * Class UserController

@@ -18,18 +18,17 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/authorize/login', [AuthorizeController::class, 'authenticate']);
+Route::get('/open/configuration', [OpenController::class, 'configuration']);
 
 Route::middleware('auth:backend')->group(function() {
     Route::get('/dashboard', [DashboardController::class, 'main']);
-    Route::get('/open/configuration', [OpenController::class, 'configuration']);
     Route::get('/open/menu', [OpenController::class, 'menu']);
-
     Route::get('/user/members', [UserController::class, 'members']);
-
-    Route::get('/setting/configuration', [SettingController::class, 'options']);
+    Route::get('/settings', [SettingController::class, 'options']);
+    Route::post('/setting/store', [SettingController::class, 'store']);
+    Route::post('/setting/update/{id}', [SettingController::class, 'update']);
 
     Route::get('/content/posts', [PostsController::class, 'posts']);
-
     Route::post('/content/posts/store', [PostsController::class, 'store']);
     Route::post('/content/posts/update', [PostsController::class, 'update']);
 });

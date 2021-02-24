@@ -122,13 +122,13 @@ export class UserMemberComponent  extends BaseComponent {
       },
       mode: 'external',
       columns: {
-        id: {
+        ID: {
           title: 'ID',
           type: 'number',
           sort: true,
           filter: true,
         },
-        name: {
+        user_nicename: {
           title: '用户昵称',
           type: 'string',
           sort: false,

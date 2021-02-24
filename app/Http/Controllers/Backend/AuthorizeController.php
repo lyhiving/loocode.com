@@ -8,6 +8,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Result;
 use App\Services\Auth\JwtGuard;
 use DateTimeImmutable;
+use DateTimeZone;
 use Illuminate\Auth\GenericUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,7 @@ class AuthorizeController
     /**
      * @param Request $request
      * @return Result
+     * @throws \Exception
      */
     public function authenticate(Request $request): Result
     {
@@ -47,16 +49,16 @@ class AuthorizeController
             new Sha256(),
             Key\InMemory::file(base_path() . '/key.pem')
         );
-        $now = new DateTimeImmutable();
+        $now = new DateTimeImmutable("now", new DateTimeZone("Asia/Shanghai"));
         $token = $config->builder()
             ->issuedBy(config('app.url'))
             ->identifiedBy(explode(':', config('app.key'))[1])
             ->issuedAt($now)
             ->canOnlyBeUsedAfter($now->modify('+1 minute'))
             // Configures the expiration time of the token (exp claim)
-            ->expiresAt($now->modify('+1 hour'))
+            ->expiresAt($now->modify('+24 hour'))
             // Configures a new claim, called "uid"
-            ->withClaim('id', $user->id)
+            ->withClaim('id', $user->ID)
             ->withClaim('email', $body['email'])
             ->withClaim('avatar', $user->avatar)
             ->getToken($config->signer(), $config->signingKey());

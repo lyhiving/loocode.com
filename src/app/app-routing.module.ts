@@ -46,8 +46,8 @@ const routes: Routes = [
       },
     ],
   },
-  { path: '', redirectTo: 'code', pathMatch: 'full' },
-  { path: '**', redirectTo: 'code' },
+  { path: '', redirectTo: 'app', pathMatch: 'full' },
+  { path: '**', redirectTo: 'app' },
 ];
 
 const config: ExtraOptions = {

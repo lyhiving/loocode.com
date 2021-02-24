@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Attributes\Route;
 use App\Http\Result;
-use App\Models\TermTaxonomy;
+use Corcel\Model\Taxonomy;
 
 /**
  * Class CategoryController
@@ -27,6 +27,6 @@ class CategoryController extends BackendController
 
     public function index()
     {
-        return TermTaxonomy::category()->where('parent', 0)->orderBy('taxonomy_id', 'desc')
+        return Taxonomy::category()->where('parent', 0)->orderBy('taxonomy_id', 'desc');
     }
 }
