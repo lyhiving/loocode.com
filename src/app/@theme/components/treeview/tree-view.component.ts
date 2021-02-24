@@ -11,7 +11,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {Mode, TreeViewItem, TreeViewOptions} from './tree-view';
-import {isArray, isNil, isBoolean, concat} from 'lodash';
+import {isArray, isNil, isBoolean} from 'lodash';
 
 @Component({
   selector: 'app-tree',

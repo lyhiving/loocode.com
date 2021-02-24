@@ -7,8 +7,6 @@ import { of as observableOf } from 'rxjs';
 import {StateService} from './services/state.service';
 import {environment} from '../../environments/environment';
 import {AUTHORIZE_LOGIN, AUTHORIZE_LOGOUT, AUTHORIZE_REGISTER} from './app.interface.data';
-import {HTTP_INTERCEPTORS} from '@angular/common/http';
-import {HttpRequestInterceptor} from './http.request.interceptor';
 
 
 export class NbSimpleRoleProvider extends NbRoleProvider {
@@ -81,9 +79,6 @@ export const NB_CORE_PROVIDERS = [
   {
     provide: NbRoleProvider, useClass: NbSimpleRoleProvider,
   },
-  {
-    provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true
-  }
 ];
 
 function throwIfAlreadyLoaded(parentModule: any, moduleName: string) {

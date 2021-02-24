@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {DialogComponent} from './dialog/dialog.component';
-import {NbDialogService, NbWindowService} from '@nebular/theme';
+import {NbDialogService} from '@nebular/theme';
 
 @Component({
   selector: 'app-upload',
