@@ -26,7 +26,7 @@ export const NB_CORE_PROVIDERS = [
           class: NbAuthJWTToken,
           key: 'data.token'
         },
-        baseEndpoint: environment.gateway,
+        baseEndpoint: "",
         login: {
           endpoint: AUTHORIZE_LOGIN,
           method: 'post',
