@@ -29,9 +29,11 @@
                             <a href="javascript:" id="btn-like" class="btn btn-outline-pink rounded-1 px-4">
                                 <i class="fas fa-thumbs-up"></i>@lang('posts.like')
                             </a>
+                            @if(isset($posts->metas['_donation']))
                             <a href="javascript:" class="ml-2 btn btn-outline-green rounded-1 px-4" data-toggle="modal" data-target="#appreciate">
                                 @lang('posts.donation')
                             </a>
+                            @endif
                         </div>
                         <div class="social-share text-right" data-initialized="true">
                             <a href="javascript:" class="social-share-icon icon-weibo"></a>

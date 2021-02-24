@@ -21,11 +21,10 @@ class HomeController extends FrontendController
 {
 
     /**
-     * @param Request $request
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|View
      * @throws BindingResolutionException
      */
-    public function index(Request $request): View
+    public function index(): View
     {
         $sql = <<<EOF
 SELECT

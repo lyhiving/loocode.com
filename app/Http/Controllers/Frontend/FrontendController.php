@@ -29,8 +29,8 @@ class FrontendController extends Controller
             self::$options = $this->getSystemOptions();
         }
         $title = $t ? $t . ' - ' . self::$options['site_title']
-            : self::$options['site_title'] . ' - ' . self::$options['site_append_title'];
-
+            : self::$options['site_title'] .
+            (isset(self::$options['site_append_title']) ? ' - ' . self::$options['site_append_title'] : '');
         $seo = new stdClass();
         $seo->title = $title;
         $seo->keyword = $k ? : self::$options['site_keyword'];
