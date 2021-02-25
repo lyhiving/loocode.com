@@ -44,57 +44,57 @@
                         </div>
                     </div>
                 </div>
+                @if($globalComment)
                 <div class="tutorial-comment">
                     @if($comments)
-                        <div class="tutorial-comment-tree">
-                            @foreach($comments as $item)
-                                <div class="media">
-                                    <div class="p-3 pt-0">
-                                        <a href="/user/{{ $item->name }}">
-                                            <img width="50" class="rounded-circle border-custom-white border"
-                                                 @if($item->avatar)
-                                                 src="{{ $item->avatar }}"
-                                                 @else
-                                                 src="{{ $static_domain }}/assets/images/default_avatar.png"
-                                                 @endif
-                                                 alt="{{ $item->name }} avatar">
-                                        </a>
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="media-heading">
-                                            <a href="/user/{{ $item->name }}">{{ $item->name }}</a>
-                                            @if(isset($item->saying))
+                    <div class="tutorial-comment-tree">
+                        @foreach($comments as $item)
+                            <div class="media">
+                                <div class="p-3 pt-0">
+                                    <a href="/user/{{ $item->name }}">
+                                        <img width="50" class="rounded-circle border-custom-white border"
+                                             @if($item->avatar)
+                                             src="{{ $item->avatar }}"
+                                             @else
+                                             src="{{ $static_domain }}/assets/images/default_avatar.png"
+                                             @endif
+                                             alt="{{ $item->name }} avatar">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <div class="media-heading">
+                                        <a href="/user/{{ $item->name }}">{{ $item->name }}</a>
+                                        @if(isset($item->saying))
+                                        <span>·</span>
+                                        <span>最重要的事，永远只有一件</span>
+                                        @endif
+                                        <div class="meta">
+                                            <a name="reply{{ $loop->index + 1 }}"
+                                               id="reply{{ $loop->index +1 }}"
+                                               href="#reply{{ $loop->index + 1 }}">#{{ $loop->index + 1 }}</a>
                                             <span>·</span>
-                                            <span>最重要的事，永远只有一件</span>
-                                            @endif
-                                            <div class="meta">
-                                                <a name="reply{{ $loop->index + 1 }}"
-                                                   id="reply{{ $loop->index +1 }}"
-                                                   href="#reply{{ $loop->index + 1 }}">#{{ $loop->index + 1 }}</a>
-                                                <span>·</span>
-                                                <abbr
-                                                    data-toggle="tooltip"
-                                                    data-placement="top"
-                                                    title="{{ $item->comment_date }}"
-                                                    data-content="{{ $item->comment_date }}"
-                                                    data-original-title="{{ $item->comment_date }}">
-                                                    {{ $item->comment_date }}
-                                                </abbr>
-                                            </div>
-                                        </div>
-                                        <div class="content">
-                                            {!! $item->comment_content !!}
+                                            <abbr
+                                                data-toggle="tooltip"
+                                                data-placement="top"
+                                                title="{{ $item->comment_date }}"
+                                                data-content="{{ $item->comment_date }}"
+                                                data-original-title="{{ $item->comment_date }}">
+                                                {{ $item->comment_date }}
+                                            </abbr>
                                         </div>
                                     </div>
-                                    <div class="text-center justify-content-center">
-                                        <a class="fas fa-reply text-custom-white" href="javascript:" title="回复"></a>
+                                    <div class="content">
+                                        {!! $item->comment_content !!}
                                     </div>
                                 </div>
-                            @endforeach
-                        </div>
-                        <hr>
+                                <div class="text-center justify-content-center">
+                                    <a class="fas fa-reply text-custom-white" href="javascript:" title="回复"></a>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    <hr>
                     @endif
-
                     <div class="tutorial-comment-form">
                         <form>
                             <textarea placeholder="@lang('posts.comment_placeholder')" ></textarea>
@@ -117,6 +117,7 @@
                     </div>
                     <div class="clearfix"></div>
                 </div>
+                @endif
             </div>
             <div class="col-12 col-xl-3 col mt-4 mt-xl-0">
                 <div class="author">

@@ -94,10 +94,12 @@ EOF;
             }, $taxonomy)
             : [];
         $posts->author = $author;
+        $seo = $this->getSeo($posts->post_title);
         return view("show", [
             'posts' => $posts,
             'comments' => $comments,
-            'seo' => $this->getSeo($posts->post_title),
+            'seo' => $seo,
+            'globalComment' => isset(self::$options['open_comment']) && self::$options['open_comment'] == "true"
         ]);
     }
 
