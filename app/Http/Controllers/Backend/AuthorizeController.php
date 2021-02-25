@@ -54,7 +54,7 @@ class AuthorizeController
             ->issuedBy(config('app.url'))
             ->identifiedBy(explode(':', config('app.key'))[1])
             ->issuedAt($now)
-            ->canOnlyBeUsedAfter($now->modify('+1 minute'))
+            ->canOnlyBeUsedAfter($now)
             // Configures the expiration time of the token (exp claim)
             ->expiresAt($now->modify('+24 hour'))
             // Configures a new claim, called "uid"
