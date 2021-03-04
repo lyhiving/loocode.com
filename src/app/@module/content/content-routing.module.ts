@@ -13,22 +13,22 @@ const routes: Routes = [{
     {
       path: 'posts',
       component: PostsComponent,
-      data: {'name': '主题管理'}
+      data: {'name': '文章'}
     },
     {
-      path: 'posts-action',
+      path: 'post-new',
       component: PostsActionComponent,
-      data: {'name': '创建更新主题'}
+      data: {'name': '写文章'}
     },
     {
       path: 'category',
       component: CategoryComponent,
-      data: {'name': '分类管理'}
+      data: {'name': '分类目录'}
     },
     {
       path: 'tag',
       component: TagComponent,
-      data: {'name': '标签管理'}
+      data: {'name': '标签'}
     }
   ],
 }];

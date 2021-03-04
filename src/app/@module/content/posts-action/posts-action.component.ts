@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 
 import '@ckeditor/ckeditor5-build-decoupled-document/build/translations/zh-cn';
 import * as DocumentEditor from '@ckeditor/ckeditor5-build-decoupled-document';
@@ -16,12 +16,12 @@ import {AppResponseDataOptions} from "../../../@core/app.data.options";
 })
 export class PostsActionComponent extends BaseComponent {
 
+  @ViewChild('accordionComponent') accordion;
+
   posts: any = {
     post_title: "",
     post_content: ""
   };
-
-
 
   Editor = DocumentEditor;
 
@@ -49,6 +49,7 @@ export class PostsActionComponent extends BaseComponent {
     this.inputFormControl.valueChanges.subscribe(value => {
 
     });
+
   }
 
 

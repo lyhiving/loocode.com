@@ -12,14 +12,14 @@ use Corcel\Model\Taxonomy;
  * Class CategoryController
  * @package App\Http\Controllers\Backend
  */
-#[Route(title: "内容", icon: "file")]
+#[Route(title: "文章", icon: "file")]
 class CategoryController extends BackendController
 {
 
     /**
      * @return Result
      */
-    #[Route(title: "分类管理", link: "/code/content/category")]
+    #[Route(title: "分类目录", link: "/code/content/category")]
     public function anchor(): Result
     {
         return Result::ok();

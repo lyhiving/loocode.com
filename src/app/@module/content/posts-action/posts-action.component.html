@@ -42,85 +42,107 @@
     </nb-card>
   </div>
   <div class="col-lg-4 col-12">
-    <div class="row">
-      <div class="col-12">
-        <nb-card>
-          <nb-card-header>发布</nb-card-header>
-          <nb-card-body>
-            <div class="col-12">
-              <div class="font-weight-bold">
-                <nb-icon icon="paper-plane"></nb-icon>
-                状态：<strong id="currentStatus">发布</strong>&nbsp;<a href="javascript:" id="editStatus">编辑</a>
+    <nb-accordion #accordionComponent multi>
+      <nb-accordion-item>
+        <nb-accordion-item-header>
+          <button nbButton status="basic">预览</button>
+          <button nbButton status="success">发布</button>
+        </nb-accordion-item-header>
+      </nb-accordion-item>
+      <nb-accordion-item>
+        <nb-accordion-item-header>
+          状态与可见性
+        </nb-accordion-item-header>
+        <nb-accordion-item-body>
+          <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between my-4">
+              <span>
+              <nb-icon icon="eye"></nb-icon>
+               可见性
+              </span>
+              <div>
+                <button nbButton size="small" status="primary">公开</button>
               </div>
             </div>
-            <div class="col-12">
-              <div class="font-weight-bold">
-                <nb-icon icon="eye"></nb-icon>
-                可见度：<strong id="currentEyeStatus">公开</strong>&nbsp;<a href="javascript:" id="editEyeStatus">编辑</a>
+          </div>
+          <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between my-4">
+              <span>
+              <nb-icon icon="calendar"></nb-icon>
+               发布
+              </span>
+              <div>
+                <button nbButton size="small" status="primary">立即</button>
               </div>
             </div>
-            <div class="col-12">
-              <div class="font-weight-bold">
-                <nb-icon icon="calendar"></nb-icon>
-                立即发布&nbsp;<a href="javascript:" id="editPublishStatus">编辑</a>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="col-12 text-right">
-                <button
-                  (click)="action()"
-                  type="button"
-                  [nbSpinner]="loading"
-                  nbSpinnerSize="small"
-                  nbSpinnerStatus="danger"
-                  nbButton
-                  size="small"
-                  status="primary"
-                  [disabled]="submitted || !form.valid"
-                >
-                  发布
-                </button>
-              </div>
-            </div>
-          </nb-card-body>
-        </nb-card>
-      </div>
-      <div class="col-12">
-        <nb-card>
-          <nb-card-header>标签</nb-card-header>
-          <nb-card-body>
-            <nb-form-field>
-              <nb-tag-list (tagRemove)="onTagRemove($event)">
-                <nb-tag *ngFor="let tag of tags" [text]="tag" removable></nb-tag>
-                <input type="text"
-                       placeholder="添加标签"
-                       nbTagInput
-                       [formControl]="inputFormControl"
-                       (tagAdd)="onTagAdd($event.value)"
-                       [nbAutocomplete]="autocomplete" fullWidth>
-              </nb-tag-list>
-              <nb-icon nbSuffix icon="search" pack="eva"></nb-icon>
-            </nb-form-field>
-            <nb-autocomplete #autocomplete (selectedChange)="onTagAdd($event)">
-              <nb-option *ngFor="let option of options" [value]="option">{{ option }}</nb-option>
-            </nb-autocomplete>
-          </nb-card-body>
-        </nb-card>
-      </div>
-      <div class="col-12">
-        <nb-card>
-          <nb-card-header>分类</nb-card-header>
-          <nb-card-body>
-            <div class="form-group">
-              <div class="col-12">
-                <nb-select>
-                  <nb-option></nb-option>
+          </div>
+          <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between my-4">
+              <span>
+              <nb-icon icon="paper-plane"></nb-icon>
+               文章格式
+              </span>
+              <div>
+                <nb-select status="primary" size="small">
+                  <nb-option>标准</nb-option>
                 </nb-select>
               </div>
             </div>
-          </nb-card-body>
-        </nb-card>
-      </div>
-    </div>
+          </div>
+        </nb-accordion-item-body>
+      </nb-accordion-item>
+      <nb-accordion-item>
+        <nb-accordion-item-header>
+          分类目录
+        </nb-accordion-item-header>
+        <nb-accordion-item-body>
+          <div class="form-group">
+            <div class="col-12">
+              <nb-select>
+                <nb-option></nb-option>
+              </nb-select>
+              <button nbButton size="small" outline status="primary">添加新分类目录</button>
+            </div>
+          </div>
+        </nb-accordion-item-body>
+      </nb-accordion-item>
+      <nb-accordion-item>
+        <nb-accordion-item-header>
+          标签
+        </nb-accordion-item-header>
+        <nb-accordion-item-body>
+          <nb-form-field>
+            <nb-tag-list (tagRemove)="onTagRemove($event)">
+              <nb-tag *ngFor="let tag of tags" [text]="tag" removable></nb-tag>
+              <input type="text"
+                     placeholder="添加标签"
+                     nbTagInput
+                     [formControl]="inputFormControl"
+                     (tagAdd)="onTagAdd($event.value)"
+                     [nbAutocomplete]="autocomplete" fullWidth>
+            </nb-tag-list>
+          </nb-form-field>
+          <nb-autocomplete #autocomplete (selectedChange)="onTagAdd($event)">
+            <nb-option *ngFor="let option of options" [value]="option">{{ option }}</nb-option>
+          </nb-autocomplete>
+        </nb-accordion-item-body>
+      </nb-accordion-item>
+      <nb-accordion-item>
+        <nb-accordion-item-header>
+          特色图像
+        </nb-accordion-item-header>
+        <nb-accordion-item-body>
+
+        </nb-accordion-item-body>
+      </nb-accordion-item>
+      <nb-accordion-item>
+        <nb-accordion-item-header>
+          SEO
+        </nb-accordion-item-header>
+        <nb-accordion-item-body>
+
+        </nb-accordion-item-body>
+      </nb-accordion-item>
+    </nb-accordion>
   </div>
 </div>

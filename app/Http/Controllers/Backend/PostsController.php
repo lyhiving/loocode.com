@@ -17,24 +17,24 @@ use Illuminate\Http\Request;
  * Class PostsController
  * @package App\Http\Controllers\Backend
  */
-#[Route(title: "内容", icon: "file")]
+#[Route(title: "文章", icon: "file")]
 class PostsController extends BackendController
 {
 
-    #[Route(title: "主题管理", link: "/app/content/posts")]
+    #[Route(title: "所有文章", link: "/app/content/posts")]
     public function managerAnchor(): Result
     {
         return Result::ok();
     }
 
-    #[Route(title: "创建更新主题", link: "/app/content/posts-action")]
+    #[Route(title: "写文章", link: "/app/content/post-new")]
     public function postsActionAnchor(): Result
     {
         return Result::ok();
     }
 
 
-    #[Route(title: "主题列表", parent: "主题管理")]
+    #[Route(title: "文章列表", parent: "所有文章")]
     public function posts(): Result
     {
         $posts = Post::select('id','post_author', 'post_title', 'post_status', 'post_modified', 'comment_count')
@@ -47,9 +47,10 @@ class PostsController extends BackendController
      * @param Request $request
      * @return Result
      */
+    #[Route(title: "创建文章", parent: "所有文章")]
     public function store(Request $request): Result
     {
-        $data = $request->all();
+        $data = $request->json()->all();
         $requestTime = date('Y-m-d H:i:s', $request->server('REQUEST_TIME'));
         $posts = new Post([
             'post_modified' => $requestTime
@@ -60,9 +61,9 @@ class PostsController extends BackendController
         $posts->post_content = $data['post_content'] ?? '';
         $posts->post_excerpt = $data['post_desc'] ?? '';
         if (strtotime($data['post_date']) > time()) {
-            $posts->post_status = Post::STATUS_DELAY;
+            $posts->post_status = 'delay';
         } else {
-            $posts->post_status  = $data['post_status'] ?? Post::STATUS_PUBLISH;
+            $posts->post_status  = 'publish';
         }
         $posts->comment_status = $data['comment_status'] ?? 0;
         $posts->ping_status = $data['ping_status'] ?? 0;
@@ -83,7 +84,12 @@ class PostsController extends BackendController
         return Result::ok();
     }
 
-    public function update()
+    /**
+     * @param int $id
+     * @param Request $request
+     */
+    #[Route(title: "更新文章", parent: "所有文章")]
+    public function update(int $id, Request $request)
     {
 
     }
