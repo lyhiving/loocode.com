@@ -62,6 +62,16 @@ class AuthorizeController
             ->withClaim('email', $body['email'])
             ->withClaim('avatar', $user->avatar)
             ->getToken($config->signer(), $config->signingKey());
+        cookie('token', $token->toString(), 24 * 60, sameSite: 'None');
         return Result::ok(['token' => $token->toString()]);
+    }
+
+
+    /**
+     * @return Result
+     */
+    public function logout()
+    {
+        return Result::ok();
     }
 }

@@ -20,12 +20,12 @@ import { PostsActionComponent } from './posts-action/posts-action.component';
     TagComponent,
     PostsActionComponent,
   ],
-  imports: [
-    CommonModule,
-    ContentRoutingModule,
-    ThemeModule,
-    Ng2SmartTableModule,
-    CKEditorModule,
-  ]
+    imports: [
+        CommonModule,
+        ContentRoutingModule,
+        ThemeModule,
+        Ng2SmartTableModule,
+        CKEditorModule,
+    ]
 })
 export class ContentModule { }

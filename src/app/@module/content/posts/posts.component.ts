@@ -1,9 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
 import {BaseComponent} from "../../../@core/base.component";
 import {TableSourceService} from "../../../@core/services/table.source.service";
-import {CONTENT_POSTS} from "../../../@core/app.interface.data";
-import {ComponentType} from "@angular/cdk/overlay";
-import {PostsActionComponent} from "../posts-action/posts-action.component";
+import {POSTS} from "../../../@core/app.interface.data";
 
 @Component({
   selector: 'app-posts',
@@ -11,13 +9,10 @@ import {PostsActionComponent} from "../posts-action/posts-action.component";
   styleUrls: ['./posts.component.scss']
 })
 export class PostsComponent extends BaseComponent {
-
-  storeWindow: ComponentType<PostsActionComponent> = PostsActionComponent;
-
   settings = {
     actions: {
       position: 'right',
-      add: true,
+      add: false,
       columnTitle: '操作',
     },
     add: {
@@ -73,11 +68,11 @@ export class PostsComponent extends BaseComponent {
   };
 
   init() {
-    this.serviceSourceConf.next(TableSourceService.getServerSourceConf(CONTENT_POSTS));
+    this.serviceSourceConf.next(TableSourceService.getServerSourceConf(POSTS));
   }
 
   create($event: any) {
-    this.popupOperationDialog('create', 'col-12');
+    this.router.navigateByUrl("/app/content/post-new");
   }
 
   edit($event: any) {

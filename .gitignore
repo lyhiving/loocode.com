@@ -16,5 +16,7 @@ yarn-error.log
 /public/mix-manifest.json
 /public/assets
 /dist
+/dashboard
 key.pem
 cert.pem
+/src/ckeditor5/node_modules

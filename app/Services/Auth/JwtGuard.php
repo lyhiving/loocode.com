@@ -87,6 +87,9 @@ class JwtGuard implements Guard
         if ($this->request->hasHeader('Authorization')) {
             return $this->request->header('Authorization');
         }
+        if ($this->request->hasCookie('token')) {
+            return $this->request->cookie('token');
+        }
         return "";
     }
 }

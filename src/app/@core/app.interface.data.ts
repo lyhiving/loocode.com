@@ -5,7 +5,20 @@ export const AUTHORIZE_LOGOUT: string  = '/authorize/logout';
 export const CONFIGURATION: string = '/open/configuration';
 
 
-export const CONTENT_POSTS: string = '/content/posts';
+export const POSTS: string = '/posts';
+export const POST_STORE: string = '/post/store';
+export const POST_UPDATE: string = '/post/update/{id}';
+
+export const TAGS: string = '/tags';
+export const TAG_STORE: string = '/tag/store';
+export const TAG_UPDATE: string = '/tag/update/{id}';
+export const TAG_DELETE: string = '/tag/delete/{id}';
+
+
+export const CATEGORIES: string = '/categories';
+export const CATEGORY_STORE: string = '/category/store';
+export const CATEGORY_UPDATE: string = '/category/update/{id}';
+export const CATEGORY_DELETE: string = '/category/delete/{id}';
 
 
 
@@ -37,7 +50,4 @@ export const ROLE_DELETE: string = '/system/role/{id}/delete';
 
 export const MENUS: string = '/system/menus';
 export const MENU_REFRESH: string = '/system/menu/refresh';
-
-export const POSTS_STORE: string = '/content/posts/store';
-export const POSTS_UPDATE: string = '/content/posts/update/{id}';
 

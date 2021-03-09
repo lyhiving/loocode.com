@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  gateway: "http://localhost:8080/backend",
+  gateway: "http://dashboard.loocode.local",
   project_name: "",
 };
 

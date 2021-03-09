@@ -29,7 +29,8 @@
             "assets": [
               "src/index.php",
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/ckfinder"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.css",

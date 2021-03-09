@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import {APP_INITIALIZER, NgModule} from '@angular/core';
+import {APP_INITIALIZER, LOCALE_ID, NgModule} from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -29,6 +29,7 @@ const declarations = [
   ],
   bootstrap: [AppComponent],
   providers: [
+    { provide: LOCALE_ID, useValue: 'zh' },
     {
       provide: HTTP_INTERCEPTORS, useClass: HttpRequestInterceptor, multi: true
     },

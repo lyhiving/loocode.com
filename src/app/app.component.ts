@@ -3,6 +3,8 @@ import {Title} from "@angular/platform-browser";
 import {NbThemeService} from "@nebular/theme";
 import {CookieService} from "ngx-cookie-service";
 import {environment} from "../environments/environment";
+import {registerLocaleData} from "@angular/common";
+import zh from "@angular/common/locales/zh";
 
 @Component({
   selector: 'app-root',
@@ -21,5 +23,6 @@ export class AppComponent {
     if (theme !== '' && theme !== 'default') {
       this.themeService.changeTheme(theme);
     }
+    registerLocaleData(zh)
   }
 }

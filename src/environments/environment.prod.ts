@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  gateway: "/backend",
+  gateway: "",
   project_name: "LooCode",
 };

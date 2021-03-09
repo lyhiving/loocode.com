@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse
 } from '@angular/common/http';
-import {NbAuthJWTToken, NbAuthService, NbAuthToken} from '@nebular/auth';
+import {NbAuthService, NbAuthToken} from '@nebular/auth';
 
 import {Observable} from 'rxjs';
 import {tap} from 'rxjs/operators';
@@ -28,7 +28,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     console.log('interceptor: ' + req.url);
 
     req = req.clone({
-      url: req.url.indexOf('http') == 0 ? req.url : environment.gateway + req.url,
+      url: req.url.indexOf('http') == 0 ? req.url : environment.gateway + "/backend" + req.url,
       withCredentials: false,
       setHeaders: {
         'X-Requested-With': 'XMLHttpRequest',

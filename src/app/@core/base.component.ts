@@ -1,7 +1,16 @@
-import {Component, Directive, EventEmitter, Injectable, OnInit, Output, TemplateRef} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ChangeDetectorRef, Component, Directive, EventEmitter, Inject, Injectable, OnInit, Output, TemplateRef} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
-import {NbComponentType, NbDialogService, NbWindowRef, NbWindowService, NbWindowState} from '@nebular/theme';
+import {
+  NB_DATE_ADAPTER,
+  NbComponentType,
+  NbDatepickerAdapter,
+  NbDialogService,
+  NbSidebarService,
+  NbWindowRef,
+  NbWindowService,
+  NbWindowState
+} from '@nebular/theme';
 import {ToastService} from './services/toast.service';
 import {UploadService} from './services/upload.service';
 import {DomSanitizer, Title} from '@angular/platform-browser';
@@ -9,7 +18,6 @@ import {environment} from '../../environments/environment';
 import {FormBuilder} from '@angular/forms';
 import {WindowContent, AppConfiguration} from './app.data.options';
 import {ServerDataSource} from './services/server.data.source';
-import {LocalDataSource} from 'ng2-smart-table';
 import {ReplaySubject} from 'rxjs';
 import {DynamicScriptLoaderService} from './services/dynamic.script.loader.service';
 import {ConfigurationService} from './services/configuration.service';
@@ -28,7 +36,7 @@ export abstract class BaseComponent implements OnInit {
 
   currentMode = 'create';
 
-  source: ServerDataSource | LocalDataSource;
+  source: ServerDataSource;
 
   protected nbWindowRef: NbWindowRef;
 
@@ -52,14 +60,16 @@ export abstract class BaseComponent implements OnInit {
       public domSanitizer: DomSanitizer,
       public loadScript: DynamicScriptLoaderService,
       public dialogService: NbDialogService,
-      private config: ConfigurationService
+      private config: ConfigurationService,
+      public cd: ChangeDetectorRef,
+      public sidebarService: NbSidebarService,
+      public router: Router,
+      @Inject(NB_DATE_ADAPTER) protected datepickerAdapters: NbDatepickerAdapter<any>[]
   ) {
   }
 
   ngOnInit(): void {
     this.appConfig = this.config.appConfig;
-    this.loadScript.loadCKfinder();
-    this.init();
     this.serviceSourceConf.subscribe((serviceSourceConf) => {
       this.source = new ServerDataSource(this.http, serviceSourceConf);
     });
@@ -71,6 +81,7 @@ export abstract class BaseComponent implements OnInit {
         environment.project_name
       );
     });
+    this.init();
   }
 
   /**
@@ -150,14 +161,14 @@ export abstract class BaseComponent implements OnInit {
       this.onCloseDialogCallback();
     });
   }
-  openCKFinderPopup(element: string, resourceType = 'Images') {
+  openCKFinderPopup(element: string, resourceType = 'Images', multi: boolean = true) {
     const _this = this;
     // @ts-ignore
     window.CKFinder.modal({
       language: 'zh-cn',
       resourceType: resourceType,
       chooseFiles: true,
-      selectMultiple: true,
+      selectMultiple: multi,
       onInit: function (finder) {
         finder.on('files:choose', function (evt) {
           const files: {name: string, url: string, pixel: string, size: number, extension: string}[] = [];

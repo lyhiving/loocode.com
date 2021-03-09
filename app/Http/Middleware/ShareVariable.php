@@ -36,20 +36,4 @@ class ShareVariable
         }
         return $next($request);
     }
-
-    /**
-     * @param string $language
-     * @return string
-     */
-    private function getLanguage(string $language): string
-    {
-        if (strpos($language, "zh") !== false) {
-            return "zh-CN";
-        }
-        if (strpos($language, "ja") !== false) {
-            return "ja";
-        }
-        return "en";
-    }
-
 }
