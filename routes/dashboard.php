@@ -23,9 +23,9 @@ use Illuminate\Support\Facades\Route;
 Route::post('/authorize/login', [AuthorizeController::class, 'authenticate']);
 Route::post('/authorize/logout', [AuthorizeController::class, 'logout']);
 Route::get('/open/configuration', [OpenController::class, 'configuration']);
-Route::any('/ckfinder/connector', [CKFinderController::class, 'request']);
 
 Route::middleware('auth:backend')->group(function() {
+    Route::any('/ckfinder/connector', [CKFinderController::class, 'request']);
     Route::get('/dashboard', [DashboardController::class, 'main']);
     Route::get('/open/menu', [OpenController::class, 'menu']);
     Route::get('/user/members', [UserController::class, 'members']);
