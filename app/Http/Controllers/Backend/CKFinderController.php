@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
+/**
+ * Class CKFinderController
+ * @package App\Http\Controllers\Backend
+ */
 class CKFinderController extends BackendController
 {
     /**

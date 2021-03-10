@@ -44,7 +44,7 @@ class OpenController extends BackendController
         /**
          * @var $routes Route[]
          */
-        $routes = [];
+        $routes = $routeSorts = [];
         foreach ($files as $file) {
             if (!$file->isFile()) {
                 continue;
@@ -56,7 +56,7 @@ class OpenController extends BackendController
                 continue;
             }
             $arguments = $attributes[0]->getArguments();
-            if (!isset($arguments['title']) || empty($arguments['title'])) {
+            if (empty($arguments['title'])) {
                 continue;
             }
             /**
@@ -64,6 +64,9 @@ class OpenController extends BackendController
              */
             if (isset($routes[$arguments['title']])) {
                 $route = $routes[$arguments['title']];
+                if (isset($arguments['sort']) && $route->sort != $arguments['sort']) {
+                    $route->sort = $arguments['sort'];
+                }
             } else {
                 $route = $attributes[0]->newInstance();
             }
@@ -74,7 +77,7 @@ class OpenController extends BackendController
                     continue;
                 }
                 $args = $attr[0]->getArguments();
-                if (!isset($args['title']) || empty($args['title'])) {
+                if (empty($args['title'])) {
                     continue;
                 }
                 /**
@@ -89,7 +92,9 @@ class OpenController extends BackendController
         }
         foreach ($routes as $route) {
             $this->traverseChildren($route);
+            $routeSorts[] = $route->sort;
         }
+        array_multisort($routeSorts, SORT_ASC, $routes);
         return array_values($routes);
     }
 
@@ -104,6 +109,10 @@ class OpenController extends BackendController
             if (isset($children[$parent])) {
                 $children[$parent]->appendChild($childRoute);
             }
+            $routeSorts[] = $childRoute->sort;
+        }
+        if ($children) {
+            array_multisort($routeSorts, SORT_ASC, $children);
         }
         foreach ($children as $name => $childRoute) {
             if (!empty($childRoute->getParent())) {

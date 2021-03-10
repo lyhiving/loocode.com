@@ -23,7 +23,7 @@ class TaxonomyController extends BackendController
     /**
      * @return Result
      */
-    #[Route(title: "分类目录", link: "/app/content/category")]
+    #[Route(title: "分类目录", sort: 3, link: "/app/content/category")]
     public function category(): Result
     {
         return Result::ok();
@@ -32,7 +32,7 @@ class TaxonomyController extends BackendController
     /**
      * @return Result
      */
-    #[Route(title: "标签", link: "/app/content/tag")]
+    #[Route(title: "标签", sort: 4, link: "/app/content/tag")]
     public function tag(): Result
     {
         return Result::ok();

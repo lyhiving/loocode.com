@@ -17,17 +17,17 @@ use Illuminate\Http\Request;
  * Class PostsController
  * @package App\Http\Controllers\Backend
  */
-#[Route(title: "文章", icon: "file")]
+#[Route(title: "文章", sort: 1, icon: "file")]
 class PostController extends BackendController
 {
 
-    #[Route(title: "所有文章", link: "/app/content/posts")]
+    #[Route(title: "所有文章", sort: 0, link: "/app/content/posts")]
     public function managerAnchor(): Result
     {
         return Result::ok();
     }
 
-    #[Route(title: "写文章", link: "/app/content/post-new")]
+    #[Route(title: "写文章", sort: 1, link: "/app/content/post-new")]
     public function postsActionAnchor(): Result
     {
         return Result::ok();

@@ -12,14 +12,14 @@ use Corcel\Model\User;
  * Class UserController
  * @package App\Http\Controllers\Backend
  */
-#[Route(title: "账户", icon: "person")]
+#[Route(title: "账户", sort: 100, icon: "person")]
 class UserController extends BackendController
 {
 
     /**
      * @return Result
      */
-    #[Route(title: "会员管理", link: "/app/user/members")]
+    #[Route(title: "会员管理", sort: 0, link: "/app/user/members")]
     public function anchor(): Result
     {
         return Result::ok();

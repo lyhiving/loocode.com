@@ -9,13 +9,13 @@ use Corcel\Model\Option;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-#[Route(title: "设置", icon: "settings-2")]
+#[Route(title: "设置", sort: 111, icon: "settings-2")]
 class SettingController extends BackendController
 {
     /**
      * @return Result
      */
-    #[Route(title: "站点配置", link: "/app/system/configuration")]
+    #[Route(title: "站点配置", sort: 0, link: "/app/system/configuration")]
     public function anchor(): Result
     {
         return Result::ok();

@@ -12,15 +12,15 @@ use Attribute;
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]
 class Route implements \JsonSerializable
 {
-    public string $title;
-    public string $parent;
-    public int $sort;
-    public string $icon;
-    public string $link;
+    public string $title = "";
+    public string $parent = "";
+    public int $sort = 0;
+    public string $icon = "";
+    public string $link = "";
     public bool $hidden = false;
     public bool $home = false;
 
-    public array $children;
+    public array $children = [];
 
     /**
      * Route constructor.
@@ -30,6 +30,7 @@ class Route implements \JsonSerializable
      * @param string $icon
      * @param string $link
      * @param bool $hidden
+     * @param bool $home
      */
     public function __construct(
         string $title,
@@ -38,6 +39,7 @@ class Route implements \JsonSerializable
         string $icon = '',
         string $link = '',
         bool $hidden = false,
+        bool $home = false,
     )
     {
         $this->title = $title;
@@ -46,7 +48,7 @@ class Route implements \JsonSerializable
         $this->icon = $icon;
         $this->link = $link;
         $this->hidden = $hidden;
-        $this->children = [];
+        $this->home = $home;
     }
 
     /**

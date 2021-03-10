@@ -70,14 +70,6 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function setupForV4Kernel(CKFinder $ckfinder)
     {
-//        $ckfinder['resolver'] = function () use ($ckfinder) {
-//            $commandResolver = new \CKSource\CKFinderBridge\Polyfill\CommandResolver($ckfinder);
-//            $commandResolver->setCommandsNamespace(CKFinder::COMMANDS_NAMESPACE);
-//            $commandResolver->setPluginsNamespace(CKFinder::PLUGINS_NAMESPACE);
-//
-//            return $commandResolver;
-//        };
-
         $ckfinder['kernel'] = function () use ($ckfinder) {
             return new HttpKernel(
                 $ckfinder['dispatcher'],
