@@ -10,7 +10,7 @@ export interface WindowContent {
 }
 
 export interface AppConfiguration {
-
+  timestamp?: number
 }
 
 export interface AppMenuItem {

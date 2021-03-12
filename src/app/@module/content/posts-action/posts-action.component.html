@@ -7,7 +7,11 @@
           <div class="mx-2"></div>
           <button nbButton status="basic" (click)="preview()">预览</button>
           <div class="mx-2"></div>
-          <button nbButton status="success" type="submit" (click)="form.onSubmit($event)">发布</button>
+          <button nbButton status="success" type="submit" [disabled]="submitted || !form.valid" (click)="form.onSubmit($event)">{{ id > 0 ? "更新" : "发布" }}</button>
+          <div class="mx-2"></div>
+          <button nbButton status="primary" type="button" (click)="onSetting()">
+            <nb-icon icon="settings-2"></nb-icon>
+          </button>
         </div>
       </nb-card-body>
     </nb-card>
@@ -38,22 +42,29 @@
               </ng-container>
             </div>
           </div>
+
           <div class="form-group">
             <div class="col-12">
-              <ckeditor
-                id="editorContent"
-                [editor]="Editor"
-                [config]="editorOptions" (ready)="onReady($event)"
-                [(ngModel)]="post.post_content"
-                name="content"
-              ></ckeditor>
+              <ng-container *ngIf="editorMode==='markdown';then markdown else ckeditor"></ng-container>
             </div>
           </div>
+          <ng-template #markdown>
+            <app-markdown-editor name="markdown" [(ngModel)]="post.post_content"></app-markdown-editor>
+          </ng-template>
+          <ng-template #ckeditor>
+            <ckeditor
+              id="editorContent"
+              [editor]="Editor"
+              [config]="editorOptions" (ready)="onReady($event)"
+              [(ngModel)]="post.post_content"
+              name="content"
+            ></ckeditor>
+          </ng-template>
         </form>
       </nb-card-body>
     </nb-card>
   </div>
-  <div class="col-12 col-xl-auto">
+  <div class="col-auto" *ngIf="setting">
     <nb-accordion class="interface-complementary-area" #accordionComponent multi="true">
       <nb-accordion-item>
         <nb-accordion-item-header>

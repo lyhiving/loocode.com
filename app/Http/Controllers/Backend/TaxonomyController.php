@@ -9,6 +9,7 @@ use App\Http\Result;
 use Corcel\Model\Tag;
 use Corcel\Model\Taxonomy;
 use Corcel\Model\Term;
+use Corcel\Model\TermRelationship;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
@@ -129,6 +130,16 @@ class TaxonomyController extends BackendController
     }
 
     /**
+     * @param int $id
+     * @return Result
+     */
+    #[Route(title: "删除分类", parent: "分类目录")]
+    public function deleteCategory(int $id): Result
+    {
+        return $this->delete($id);
+    }
+
+    /**
      * @param Request $request
      * @return Result
      */
@@ -147,6 +158,16 @@ class TaxonomyController extends BackendController
     public function updateTag(int $id, Request $request): Result
     {
         return $this->update($id, $request);
+    }
+
+    /**
+     * @param int $id
+     * @return Result
+     */
+    #[Route(title: "删除标签", parent: "标签")]
+    public function deleteTag(int $id): Result
+    {
+        return $this->delete($id);
     }
 
     /**
@@ -201,6 +222,23 @@ class TaxonomyController extends BackendController
         $taxonomy->description = $body['description'] ?? "";
         $taxonomy->parent = $body['parent'] ?? 0;
         $taxonomy->update();
+        return Result::ok();
+    }
+
+    /**
+     * @param int $id
+     * @return Result|void
+     */
+    private function delete(int $id): Result
+    {
+        $taxonomy = Taxonomy::find($id);
+        if ($taxonomy == null) {
+            return Result::err(404);
+        }
+        TermRelationship::where("term_taxonomy_id", $id)->delete();
+        $taxonomy->meta()->delete();
+        $taxonomy->term()->delete();
+        $taxonomy->delete();
         return Result::ok();
     }
 

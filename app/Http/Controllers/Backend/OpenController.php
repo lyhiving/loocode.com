@@ -21,7 +21,9 @@ class OpenController extends BackendController
      */
     public function configuration(): Result
     {
-        return Result::ok([]);
+        return Result::ok([
+            'timestamp' => time(),
+        ]);
     }
 
     /**

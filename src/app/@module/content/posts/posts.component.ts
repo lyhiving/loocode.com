@@ -1,7 +1,8 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {BaseComponent} from "../../../@core/base.component";
 import {TableSourceService} from "../../../@core/services/table.source.service";
 import {POSTS} from "../../../@core/app.interface.data";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-posts',
@@ -66,6 +67,11 @@ export class PostsComponent extends BaseComponent {
       }
     },
   };
+  constructor(
+    private router: Router
+  ) {
+    super();
+  }
 
   init() {
     this.serviceSourceConf.next(TableSourceService.getServerSourceConf(POSTS));

@@ -4,22 +4,19 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Frontend;
 
 
-use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Mail\Markdown;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
-use Psy\Util\Json;
 use stdClass;
 
 /**
  * Class PostsController
  * @package App\Http\Controllers\Frontend
  */
-class PostsController extends FrontendController
+class PostController extends FrontendController
 {
 
     /**
@@ -29,32 +26,32 @@ class PostsController extends FrontendController
      */
     public function show(Request $request, int $id): View
     {
-        $posts = $this->getPosts($id);
-        if ($posts == null) {
+        $post = $this->getPost($id);
+        if ($post == null) {
             abort(404);
         }
         $sql = 'SELECT meta_key, meta_value FROM postmeta WHERE post_id = ?';
         $metas = DB::select($sql, [$id]);
-        $posts->metas = [];
+        $post->metas = [];
         foreach ($metas as $item) {
-            $posts->metas[$item->meta_key] = $item->meta_value;
+            $post->metas[$item->meta_key] = $item->meta_value;
         }
-        if (!isset($posts->metas['_lc_post_views'])) {
-            $posts->metas['_lc_post_views'] = 0;
+        if (!isset($post->metas['_lc_post_views'])) {
+            $post->metas['_lc_post_views'] = 0;
         }
-        if (!isset($posts->metas['_lc_post_like'])) {
-            $posts->metas['_lc_post_like'] = 0;
+        if (!isset($post->metas['_lc_post_like'])) {
+            $post->metas['_lc_post_like'] = 0;
         }
-        if ($posts->metas['_lc_post_views'] >= 1000) {
-            $posts->metas['_lc_post_views'] = sprintf(
+        if ($post->metas['_lc_post_views'] >= 1000) {
+            $post->metas['_lc_post_views'] = sprintf(
                 "%.1fk",
-                (int)$posts->metas['_lc_post_views'] / 1000
+                (int)$post->metas['_lc_post_views'] / 1000
             );
         }
-        if ($posts->metas['_lc_post_like'] >= 1000) {
-            $posts->metas['_lc_post_like'] = sprintf(
+        if ($post->metas['_lc_post_like'] >= 1000) {
+            $post->metas['_lc_post_like'] = sprintf(
                 "%.1fk",
-                (int)$posts->metas['_lc_post_like'] / 1000
+                (int)$post->metas['_lc_post_like'] / 1000
             );
         }
         $sql = <<<EOF
@@ -74,8 +71,8 @@ WHERE t1.comment_post_ID = ? AND (t1.comment_approved = 1 OR comment_author = ?)
 EOF;
         $user = $request->user();
         $comments = DB::select($sql, [$id, $user->ID ?? 0]);
-        $author = DB::selectOne('SELECT display_name as name, avatar FROM users WHERE id = ?', [$posts->post_author]);
-        $metas = DB::select('SELECT meta_key, meta_value FROM usermeta WHERE user_id = ?', [$posts->post_author]);
+        $author = DB::selectOne('SELECT display_name as name, avatar FROM users WHERE id = ?', [$post->post_author]);
+        $metas = DB::select('SELECT meta_key, meta_value FROM usermeta WHERE user_id = ?', [$post->post_author]);
         if (!$author) {
             $author = new stdClass();
         }
@@ -85,7 +82,7 @@ EOF;
                 $author->metas[$meta->meta_key] = $meta->meta_value;
             }
         }
-        $posts->tags = count($taxonomy) > 0
+        $post->tags = count($taxonomy) > 0
             ? array_map(function ($item) {
                 if ($item->taxonomy == 'post_tag') {
                     return $item->slug;
@@ -93,10 +90,13 @@ EOF;
                 return "";
             }, $taxonomy)
             : [];
-        $posts->author = $author;
-        $seo = $this->getSeo($posts->post_title);
+        $post->author = $author;
+        if ($id >= 10195) {
+            $post->post_content = Str::markdown($post->post_content);
+        }
+        $seo = $this->getSeo($post->post_title);
         return view("show", [
-            'posts' => $posts,
+            'post' => $post,
             'comments' => $comments,
             'seo' => $seo,
             'globalComment' => isset(self::$options['open_comment']) && self::$options['open_comment'] == "true"
@@ -105,11 +105,10 @@ EOF;
 
 
     /**
-     * @param Request $request
      * @param string $name
-     * @return View|Factory
+     * @return View
      */
-    public function taxonomy(Request $request, string $name): View
+    public function taxonomy(string $name): View
     {
         $sql = <<<EOF
 SELECT term_taxonomy.term_taxonomy_id FROM terms JOIN term_taxonomy ON (terms.term_id = term_taxonomy.term_id) WHERE terms.slug = ? LIMIT 1
@@ -179,7 +178,7 @@ EOF;
             return $response->setData($data);
         }
         $contents = $request->request->all();
-        $posts = $this->getPosts($id);
+        $posts = $this->getPost($id);
         if (empty($posts)) {
             $data['code'] = 404;
             return $response->setData($data);
@@ -217,7 +216,7 @@ EOF;
      */
     private function updatePostsMeta(int $id, string $metaKey): JsonResponse
     {
-        $p = $this->getPosts($id);
+        $p = $this->getPost($id);
         $data = ['code' => 500, 'data' => null, 'message' => ''];
         $response = new JsonResponse($data);
         if ($p == null) {
@@ -238,9 +237,9 @@ EOF;
 
     /**
      * @param int $id
-     * @return mixed
+     * @return stdClass|null
      */
-    private function getPosts(int $id)
+    private function getPost(int $id): ?stdClass
     {
 
         $sql = <<<EOF

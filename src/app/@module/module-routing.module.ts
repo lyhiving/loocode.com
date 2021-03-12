@@ -11,7 +11,7 @@ const routes: Routes = [{
     {
       path: 'dashboard',
       component: DashboardComponent,
-      data: {'name': 'Dashboard'},
+      data: {'title': 'Dashboard'},
     },
     {
       path: 'system',
@@ -23,7 +23,7 @@ const routes: Routes = [{
     },
     {
       path: 'content',
-      loadChildren: () => import('./content/content.module').then(m => m.ContentModule),
+      loadChildren: () => import('./content/content.module').then(m => m.ContentModule.forRoot().ngModule),
     }
   ],
 }];

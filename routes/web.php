@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\Frontend\DeprecatedController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\OauthController;
-use App\Http\Controllers\Frontend\PostsController;
+use App\Http\Controllers\Frontend\PostController;
 use App\Http\Controllers\Frontend\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,12 +21,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, "index"])->name("index");
-Route::get("/tag/{name}", [PostsController::class, "taxonomy"]);
-Route::get("/category/{name}", [PostsController::class, "taxonomy"]);
-Route::get("/post/{id}", [PostsController::class, "show"])
+Route::get("/tag/{name}", [PostController::class, "taxonomy"]);
+Route::get("/category/{name}", [PostController::class, "taxonomy"]);
+Route::get("/post/{id}", [PostController::class, "show"])
     ->where("id", "[0-9]+");
-Route::post('/post/like/{id}', [PostsController::class, "like"])->where('id', '[0-9]+');
-Route::post('/post/comment/{id}', [PostsController::class, "comment"])->where('id', '[0-9]+');
+Route::post('/post/like/{id}', [PostController::class, "like"])->where('id', '[0-9]+');
+Route::post('/post/comment/{id}', [PostController::class, "comment"])->where('id', '[0-9]+');
 
 Route::get("/oauth/{endpoint}", [OauthController::class, "endpoint"])
     ->where("endpoint", "qq|weixinweb|github");

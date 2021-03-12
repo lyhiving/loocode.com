@@ -1,13 +1,21 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, ViewChild} from '@angular/core';
-
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Inject, ViewChild} from '@angular/core';
 import * as ClassicEditor from "../../../../ckeditor5/build/ckeditor";
 import {environment} from "../../../../environments/environment";
 import {BaseComponent} from "../../../@core/base.component";
-import {NbAccordionComponent, NbDatepickerComponent, NbDateTimePickerComponent, NbTagComponent, NbTagInputDirective} from "@nebular/theme";
+import {
+  NB_DATE_ADAPTER,
+  NbAccordionComponent,
+  NbDatepickerAdapter,
+  NbDateTimePickerComponent, NbSidebarService,
+  NbTagComponent,
+  NbTagInputDirective
+} from "@nebular/theme";
 import {FormControl} from "@angular/forms";
-import {CATEGORIES, POST_STORE, TAGS} from "../../../@core/app.interface.data";
+import {CATEGORIES, POST_STORE, POST_UPDATE, TAGS} from "../../../@core/app.interface.data";
 import {AppResponseDataOptions} from "../../../@core/app.data.options";
 import {debounceTime, distinctUntilChanged, filter, startWith, switchMap} from "rxjs/operators";
+import {DynamicScriptLoaderService} from "../../../@core/services/dynamic.script.loader.service";
+import {getUnixTime} from "date-fns";
 
 
 @Component({
@@ -18,8 +26,20 @@ import {debounceTime, distinctUntilChanged, filter, startWith, switchMap} from "
 })
 export class PostsActionComponent extends BaseComponent implements AfterViewInit {
 
-  @ViewChild('accordionComponent', {static: false}) accordion: NbAccordionComponent;
+  private accordion: NbAccordionComponent;
+
+  editorMode = "markdown";
+
+  @ViewChild('accordionComponent', {static: false}) set content(content: NbAccordionComponent) {
+    if(content) { // initially setter gets called with undefined
+      this.accordion = content;
+      this.accordion.openAll();
+      this.cd.detectChanges();
+    }
+  }
+
   @ViewChild('eyeButton', { read: ElementRef }) eyeButton:ElementRef;
+  id: number = 0;
   post: any = {
     post_title: "",
     post_excerpt: "",
@@ -39,6 +59,7 @@ export class PostsActionComponent extends BaseComponent implements AfterViewInit
     }
   };
   eye: string = "open";
+  setting: boolean = true;
   Editor = ClassicEditor;
   editor;
   editorOptions: any = {
@@ -48,6 +69,11 @@ export class PostsActionComponent extends BaseComponent implements AfterViewInit
           name: 'resizeImage:original',
           label: 'Original',
           value: null
+        },
+        {
+          name: 'resizeImage:20',
+          label: '20%',
+          value: '20'
         },
         {
           name: 'resizeImage:50',
@@ -88,6 +114,15 @@ export class PostsActionComponent extends BaseComponent implements AfterViewInit
   categories: any[] = [];
   @ViewChild(NbTagInputDirective, { read: ElementRef }) tagInput: ElementRef<HTMLInputElement>;
 
+  constructor(
+    private loadScript: DynamicScriptLoaderService,
+    private cd: ChangeDetectorRef,
+    private sidebarService: NbSidebarService,
+    @Inject(NB_DATE_ADAPTER) protected datepickerAdapters: NbDatepickerAdapter<any>[]
+  ) {
+    super();
+  }
+
   init() {
     this.inputFormControl.valueChanges.pipe(
       startWith(''),
@@ -104,7 +139,6 @@ export class PostsActionComponent extends BaseComponent implements AfterViewInit
         this.filteredTags$ = res.data.data;
       }
     });
-    this.loadScript.loadCKfinder();
     this.http.get(CATEGORIES).subscribe((res: AppResponseDataOptions) => {
       if (res.code == 200) {
         res.data.forEach((item) => {
@@ -116,13 +150,12 @@ export class PostsActionComponent extends BaseComponent implements AfterViewInit
     this.finderFileChoose.subscribe((res) => {
       this.post.meta.featured_media = res[0].url;
     });
-    setTimeout(() => this.sidebarService.toggle(false, 'menu-sidebar'), 0);
+    this.loadScript.loadCKfinder();
   }
 
   @ViewChild("dateTimePicker") datepicker: NbDateTimePickerComponent<any>;
   @ViewChild("inputBtnElement", {read: ElementRef}) inputBtnElement;
   ngAfterViewInit(): void {
-    this.accordion.openAll();
     this.datepicker.attach(this.inputBtnElement)
     this.datepicker.valueChange.subscribe((value) => {
       const datepickerAdapter = this.datepickerAdapters.find(({ picker }) => this.datepicker instanceof picker);
@@ -131,7 +164,6 @@ export class PostsActionComponent extends BaseComponent implements AfterViewInit
       this.datepicker.hide();
       this.post.post_date = value;
     });
-    this.cd.detectChanges();
   }
 
 
@@ -160,7 +192,6 @@ export class PostsActionComponent extends BaseComponent implements AfterViewInit
 
   onReady(editor) {
     this.editor = editor;
-    console.log(Array.from( editor.ui.componentFactory.names() ));
     editor.ui.getEditableElement().parentElement.insertBefore(
       editor.ui.view.toolbar.element,
       editor.ui.getEditableElement()
@@ -191,15 +222,31 @@ export class PostsActionComponent extends BaseComponent implements AfterViewInit
     if (this.eye == "private") {
       status = "private";
     }
+    if (this.post.post_date.length > 0) {
+      if (getUnixTime(new Date(this.post.post_date)) > this.appConfig.timestamp) {
+        status = "future";
+      }
+    }
     this.post.post_status = status;
-    this.http.post(POST_STORE, this.post).subscribe((res: AppResponseDataOptions) => {
+    let url = POST_STORE;
+    if (this.id > 0) {
+      url = POST_UPDATE.replace('{id}', this.id.toString());
+    }
+    this.http.post(url, this.post).subscribe((res: AppResponseDataOptions) => {
       this.toastService.showResponseToast(res.code, this.operationSubject(), res.message);
       this.submitted = false;
+      if (res.code === 200 && res.data.id) {
+        this.id = res.data.id;
+      }
     });
   }
 
   preview() {
-
+    if (this.id > 0) {
+      window.open(window.location.href + "/post/" + this.id + '?preview=true')
+    } else {
+      this.toastService.showToast('danger', "预览", "只有保存之后才可以预览");
+    }
   }
 
   commentStatus(status: boolean) {
@@ -235,5 +282,10 @@ export class PostsActionComponent extends BaseComponent implements AfterViewInit
     if ($event.isShown == false && this.post.password < 1 && this.eye == "password") {
       this.eye = "open";
     }
+  }
+
+  onSetting() {
+    this.setting = !this.setting;
+    this.sidebarService.toggle(this.setting, 'menu-sidebar');
   }
 }

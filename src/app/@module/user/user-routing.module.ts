@@ -11,17 +11,17 @@ const routes: Routes = [{
     {
       path: 'members',
       component: UserMemberComponent,
-      data: {'name': '会员管理'}
+      data: {'title': '会员管理'}
     },
     {
       path: 'member',
       component: ProfileComponent,
-      data: {'name': '会员信息'},
+      data: {'title': '会员信息'},
     },
     {
       path: 'member/:id',
       component: ProfileComponent,
-      data: {'name': '会员信息'},
+      data: {'title': '会员信息'},
     }
   ],
 }];

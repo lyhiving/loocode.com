@@ -11,25 +11,25 @@
                 <div class="tutorial card">
                     <div class="card-body p-lg-30">
                         <div class="mb-2 border-bottom">
-                            <h1 class="mb-4 h2">{{ $posts->post_title }}</h1>
+                            <h1 class="mb-4 h2">{{ $post->post_title }}</h1>
                             <div class="mb-4">
                             <span class="text-custom-white">
-                                <i class="theme-color">{{ $posts->author->name ?? "" }}</i>
-                                · {{ date('Y-m-d', strtotime($posts->post_modified)) }}
+                                <i class="theme-color">{{ $post->author->name ?? "" }}</i>
+                                · {{ date('Y-m-d', strtotime($post->post_modified)) }}
                             </span>
                             </div>
                         </div>
                         <div class="content">
-                            {!! str_replace('//image.', '//static.', $posts->post_content) !!}
+                            {!! str_replace('//image.', '//static.', $post->post_content) !!}
                         </div>
                         <div class="my-4 text-center">
-                            @foreach($posts->tags as $tag)<a href="/tag/{{ $tag }}" class="label label-pink mr-2">{{ $tag }}</a>@endforeach
+                            @foreach($post->tags as $tag)<a href="/tag/{{ $tag }}" class="label label-pink mr-2">{{ $tag }}</a>@endforeach
                         </div>
                         <div class="my-4 text-center">
                             <a href="javascript:" id="btn-like" class="btn btn-outline-pink rounded-1 px-4">
                                 <i class="fas fa-thumbs-up"></i>@lang('posts.like')
                             </a>
-                            @if(isset($posts->metas['_donation']))
+                            @if(isset($post->metas['_donation']))
                             <a href="javascript:" class="ml-2 btn btn-outline-green rounded-1 px-4" data-toggle="modal" data-target="#appreciate">
                                 @lang('posts.donation')
                             </a>
@@ -126,23 +126,23 @@
                             <div class="d-flex align-items-center mb-3">
                                 <picture class="rounded-circle mr-3">
                                     <img
-                                        @if(isset($posts->author->avatar) && $posts->author->avatar)
-                                        src="{{ $posts->author->avatar }}"
+                                        @if(isset($post->author->avatar) && $post->author->avatar)
+                                        src="{{ $post->author->avatar }}"
                                         @else
                                         src="{{ $static_domain }}/assets/images/default_avatar.png"
                                         @endif
                                         alt="avatar"
                                         class="rounded-circle" width="64" height="64">
                                 </picture>
-                                <div><h5 class="mb-0"><a href="javascript:" class="text-body">{{ $posts->author->name ?? ""  }}</a></h5></div>
+                                <div><h5 class="mb-0"><a href="javascript:" class="text-body">{{ $post->author->name ?? ""  }}</a></h5></div>
                             </div>
                             <p class="text-secondary text-truncate-2">全栈工程师</p>
                             <div class="d-flex align-items-center mb-3">
                                 <div class="mr-4">
-                                    <strong>{{$posts->metas['_lc_post_views']}}</strong><span class="text-secondary"> @lang('posts.view')</span>
+                                    <strong>{{$post->metas['_lc_post_views']}}</strong><span class="text-secondary"> @lang('posts.view')</span>
                                 </div>
                                 <div>
-                                    <strong>{{$posts->metas['_lc_post_like']}}</strong><span class="text-secondary"> @lang('posts.like')</span>
+                                    <strong>{{$post->metas['_lc_post_like']}}</strong><span class="text-secondary"> @lang('posts.like')</span>
                                 </div>
                             </div>
                             <button type="button" class="btn btn-pink btn-block">关注作者</button>
@@ -152,7 +152,7 @@
             </div>
         </div>
     </div>
-    @if(isset($posts->user->metas['alipayQr']) || isset($posts->user->metas['wechatQr']))
+    @if(isset($post->user->metas['alipayQr']) || isset($post->user->metas['wechatQr']))
     <div class="modal fade" id="appreciate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog  modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -164,19 +164,19 @@
                 </div>
                 <div class="modal-body text-center">
                     <ul class="list-inline">
-                        @if(isset($posts->user->metas['alipayQr']))
+                        @if(isset($post->user->metas['alipayQr']))
                         <li class="list-inline-item m-3">
                             <img style="border: 2px solid #449ee2"
                                  width="150"
-                                 src="{{ $static_domain }}{{ $posts->user->metas['alipayQr'] }}"
+                                 src="{{ $static_domain }}{{ $post->user->metas['alipayQr'] }}"
                                  alt="支付宝收款码">
                         </li>
                         @endif
-                        @if(isset($posts->user->metas['wechatQr']))
+                        @if(isset($post->user->metas['wechatQr']))
                         <li class="list-inline-item m-3">
                             <img style="border: 2px solid #53a849"
                                  width="150"
-                                 src="{{ $static_domain }}{{ $posts->user->metas['wechatQr'] }}"
+                                 src="{{ $static_domain }}{{ $post->user->metas['wechatQr'] }}"
                                  alt="微信收款码">
                         </li>
                         @endif

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {ModuleWithProviders, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ContentRoutingModule } from './content-routing.module';
@@ -10,6 +10,7 @@ import {CKEditorModule} from "@ckeditor/ckeditor5-angular";
 import { CategoryComponent } from './category/category.component';
 import { TagComponent } from './tag/tag.component';
 import { PostsActionComponent } from './posts-action/posts-action.component';
+import {MarkdownEditorModule} from "../../@theme/components/markdown-editor/markdown-editor.module";
 
 
 @NgModule({
@@ -20,12 +21,22 @@ import { PostsActionComponent } from './posts-action/posts-action.component';
     TagComponent,
     PostsActionComponent,
   ],
-    imports: [
-        CommonModule,
-        ContentRoutingModule,
-        ThemeModule,
-        Ng2SmartTableModule,
-        CKEditorModule,
-    ]
+  imports: [
+    CommonModule,
+    ContentRoutingModule,
+    ThemeModule,
+    Ng2SmartTableModule,
+    CKEditorModule,
+    MarkdownEditorModule,
+  ]
 })
-export class ContentModule { }
+export class ContentModule {
+  static forRoot(): ModuleWithProviders<ContentModule> {
+    return {
+      ngModule: ContentModule,
+      providers: [
+
+      ],
+    };
+  }
+}

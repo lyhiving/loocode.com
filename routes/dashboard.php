@@ -40,12 +40,12 @@ Route::middleware('auth:backend')->group(function() {
     Route::get('/tags', [TaxonomyController::class, 'tags']);
     Route::post('/tag/store', [TaxonomyController::class, 'storeTag']);
     Route::put('/tag/update/{id}', [TaxonomyController::class, 'updateTag']);
-    Route::delete('/tag/update/{id}', [TaxonomyController::class, 'deleteTag']);
+    Route::delete('/tag/delete/{id}', [TaxonomyController::class, 'deleteTag']);
 
     Route::get('/categories', [TaxonomyController::class, 'categories']);
     Route::post('/category/store', [TaxonomyController::class, 'storeCategory']);
     Route::put('/category/update/{id}', [TaxonomyController::class, 'updateCategory']);
-    Route::delete('/category/delete/{id}', [TaxonomyController::class, 'deleteTag']);
+    Route::delete('/category/delete/{id}', [TaxonomyController::class, 'deleteCategory']);
 
 });
 

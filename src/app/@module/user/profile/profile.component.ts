@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {USER_MEMBER_PROFILE, USER_UPDATE_MEMBER_META} from '../../../@core/app.interface.data';
 import {AppResponseDataOptions} from '../../../@core/app.data.options';
 import {BaseComponent} from '../../../@core/base.component';
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-member-profile',
@@ -13,6 +14,12 @@ export class ProfileComponent extends BaseComponent {
   items: any = {};
   searchValue: string;
   id = '0';
+
+  constructor(
+    private activateRoute: ActivatedRoute
+  ) {
+    super();
+  }
 
   init() {
     this.activateRoute.paramMap.subscribe(paramMap => {

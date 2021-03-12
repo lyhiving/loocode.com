@@ -21,6 +21,7 @@ import {ServerDataSource} from './services/server.data.source';
 import {ReplaySubject} from 'rxjs';
 import {DynamicScriptLoaderService} from './services/dynamic.script.loader.service';
 import {ConfigurationService} from './services/configuration.service';
+import {AppInjector} from "./app.injector";
 
 @Component({
   template: ``,
@@ -49,37 +50,23 @@ export abstract class BaseComponent implements OnInit {
   finderFileChoose = new EventEmitter<any>();
   appConfig: AppConfiguration;
 
-  constructor(
-      public activateRoute: ActivatedRoute,
-      public http: HttpClient,
-      public windowService: NbWindowService,
-      public toastService: ToastService,
-      public uploadService: UploadService,
-      public titleService: Title,
-      public formBuilder: FormBuilder,
-      public domSanitizer: DomSanitizer,
-      public loadScript: DynamicScriptLoaderService,
-      public dialogService: NbDialogService,
-      private config: ConfigurationService,
-      public cd: ChangeDetectorRef,
-      public sidebarService: NbSidebarService,
-      public router: Router,
-      @Inject(NB_DATE_ADAPTER) protected datepickerAdapters: NbDatepickerAdapter<any>[]
-  ) {
+  protected http: HttpClient;
+  protected windowService: NbWindowService;
+  protected toastService: ToastService;
+  protected dialogService: NbDialogService;
+
+  constructor() {
+    const injector = AppInjector.getInjector();
+    this.http = injector.get<HttpClient>(HttpClient);
+    this.windowService = injector.get<NbWindowService>(NbWindowService);
+    this.toastService = injector.get<ToastService>(ToastService);
+    this.dialogService = injector.get<NbDialogService>(NbDialogService);
+    this.appConfig = injector.get(ConfigurationService).appConfig;
   }
 
   ngOnInit(): void {
-    this.appConfig = this.config.appConfig;
     this.serviceSourceConf.subscribe((serviceSourceConf) => {
       this.source = new ServerDataSource(this.http, serviceSourceConf);
-    });
-    this.activateRoute.data.subscribe((data) => {
-      this.title = data.name;
-      this.titleService.setTitle(
-        this.title
-        + ' - ' +
-        environment.project_name
-      );
     });
     this.init();
   }

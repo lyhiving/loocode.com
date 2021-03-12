@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import {APP_INITIALIZER, LOCALE_ID, NgModule} from '@angular/core';
+import {APP_INITIALIZER, ApplicationRef, Injector, LOCALE_ID, NgModule} from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -11,6 +11,7 @@ import {AuthGuard} from "./@core/services/auth.guard";
 import {ConfigurationService} from "./@core/services/configuration.service";
 import {APP_BASE_HREF} from "@angular/common";
 import {HttpRequestInterceptor} from "./@core/http.request.interceptor";
+import {AppInjector} from "./@core/app.injector";
 
 const declarations = [
   AppComponent,
@@ -27,7 +28,7 @@ const declarations = [
     ThemeModule.forRoot(),
     CoreModule.forRoot()
   ],
-  bootstrap: [AppComponent],
+  // bootstrap: [AppComponent],
   providers: [
     { provide: LOCALE_ID, useValue: 'zh' },
     {
@@ -48,4 +49,11 @@ const declarations = [
   entryComponents: [
   ]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(private injector: Injector) {
+  }
+  ngDoBootstrap(applicationRef: ApplicationRef) {
+    AppInjector.setInjector(this.injector);
+    applicationRef.bootstrap(AppComponent);
+  }
+}

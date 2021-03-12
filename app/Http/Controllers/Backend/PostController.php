@@ -12,6 +12,7 @@ use Corcel\Model\Post;
 use Corcel\Model\Taxonomy;
 use Corcel\Model\Term;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 /**
  * Class PostsController
@@ -51,26 +52,25 @@ class PostController extends BackendController
     public function store(Request $request): Result
     {
         $data = $request->json()->all();
-        $data['post_author'] = isset($data['post_user']) ? (int) $data['post_user'] : auth('backend')->id();
+        $data['post_author'] = isset($data['post_user']) && $data['post_user'] ? (int) $data['post_user'] : auth('backend')->id();
         $data['to_ping'] = $data['pinged'] = $data['post_content_filtered'] = "";
+
+        Str::markdown($contents['content']);
         if (empty($data['post_date'])) {
             $data['post_date'] = now();
         }
         $post = new Post($data);
         $post->post_name = $data['post_name'] ?? $data['post_title'];
         $post->post_status = $data['post_status'];
+        $post->post_password = $data['password'];
+        $post->post_author = $data['post_author'];
         $post->save();
-        if ($post && $post->ID) {
-            $relationId = [];
-            if ($data['tags']) {
-                $relationId = $this->createTerms($data['tags'], 'post_tag');
-            }
-            if ($data['categories']) {
-                $relationId = array_merge($relationId, $this->createTerms($data['categories'], 'category'));
-            }
-            event(new PostEvent($post->ID, $relationId, $data['meta'], $post->post_type, 'create'));
+        if ($post->ID) {
+            $this->bindTagCategory($post->ID, $data['tags'], $data['categories'], $data['meta']);
         }
-        return Result::ok();
+        return Result::ok([
+            'id' => $post->ID,
+        ]);
     }
 
     /**
@@ -81,8 +81,43 @@ class PostController extends BackendController
     #[Route(title: "更新文章", parent: "所有文章")]
     public function update(int $id, Request $request): Result
     {
-
+        $data = $request->json()->all();
+        $post = Post::find($id);
+        if ($post == null) {
+            return Result::err(404, "文章不存在");
+        }
+        $post->post_title = $data['post_title'];
+        $post->post_content = $data['post_content'];
+        $post->post_name = $data['post_name'] ?? $data['post_title'];
+        $post->post_status = $data['post_status'];
+        $post->post_excerpt = $data['post_excerpt'];
+        $post->post_password = $data['password'];
+        $post->post_modified = now();
+        $post->post_modified_gmt = now();
+        $post->save();
+        if ($post->ID) {
+            $this->bindTagCategory($post->ID, $data['tags'], $data['categories'], $data['meta'], 'update');
+        }
         return Result::ok();
+    }
+
+    /**
+     * @param int $id
+     * @param array $tags
+     * @param array $categories
+     * @param array $meta
+     * @param string $action
+     */
+    private function bindTagCategory(int $id, array $tags, array $categories, array $meta = [], string $action = 'create')
+    {
+        $relationId = [];
+        if ($tags) {
+            $relationId = $this->createTerms($tags, 'post_tag');
+        }
+        if ($categories) {
+            $relationId = array_merge($relationId, $this->createTerms($categories, 'category'));
+        }
+        event(new PostEvent($id, $relationId, $meta, 'post', $action));
     }
 
 

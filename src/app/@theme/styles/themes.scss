@@ -1,13 +1,15 @@
 // @nebular theming framework
-@import '../../../../node_modules/@nebular/theme/styles/theming';
+@import '~@nebular/theme/styles/theming';
 // @nebular out of the box themes
-@import '../../../../node_modules/@nebular/theme/styles/themes';
+@import '~@nebular/theme/styles/themes';
 
 // material themes
 @import 'material/material-dark';
 @import 'material/material-light';
 
 // which themes you what to enable (empty to enable all)
+
+$nb-theme-process-mode: "lazy-process";
 
 $nb-themes: nb-register-theme((
   layout-padding-top: 2.25rem,

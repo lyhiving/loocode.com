@@ -12,17 +12,17 @@ const routes: Routes = [{
     {
       path: 'configuration',
       component: ConfigureComponent,
-      data: {'name': '站点配置'}
+      data: {'title': '站点配置'}
     },
     {
         path: 'managers',
         component: SystemManagerComponent,
-        data: {'name': '管理员'}
+        data: {'title': '管理员'}
     },
     {
       path: 'roles',
       component: RoleComponent,
-      data: {'name': '角色管理'}
+      data: {'title': '角色管理'}
     },
   ],
 }];
