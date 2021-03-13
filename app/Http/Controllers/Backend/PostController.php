@@ -45,6 +45,50 @@ class PostController extends BackendController
     }
 
     /**
+     * @param int $id
+     * @return Result
+     */
+    #[Route(title: "文章详情", parent: "所有文章")]
+    public function show(int $id): Result
+    {
+        $post = Post::find($id);
+        if ($post == null) {
+            return Result::err(404, "文章不存在");
+        }
+        $data = new \stdClass();
+        $data->post_title = $post->post_title;
+        $data->post_excerpt = $post->post_excerpt;
+        $data->post_content = $post->post_content;
+        $data->post_status = $post->post_status;
+        $data->post_type = $post->post_type;
+        $data->comment_status = $post->comment_status;
+        $data->ping_status = $post->ping_status;
+        $data->categories = [];
+        $data->tags = [];
+        $data->password = $post->post_password;
+        $data->post_date = $post->post_date;
+        $data->meta =  [
+            "keyword" =>  $post->meta->keyword,
+            "description" => $post->meta->description,
+            "featured_media" => $post->meta->featured_media,
+        ];
+        $terms = [];
+        if (($taxonomies = $post->taxonomies()->get())) {
+            foreach ($taxonomies as $taxonomy) {
+                if ($taxonomy->taxonomy == "post_tag") {
+                    $data->tags[] = $taxonomy->term_taxonomy_id;
+                    $terms[] = ["name" => $taxonomy->term->name, "id" => $taxonomy->term_taxonomy_id];
+                }
+                if ($taxonomy->taxonomy == "category") {
+                    $data->categories[] = $taxonomy->term_taxonomy_id;
+                }
+            }
+        }
+        $data->terms = $terms;
+        return Result::ok($data);
+    }
+
+    /**
      * @param Request $request
      * @return Result
      */
@@ -54,8 +98,6 @@ class PostController extends BackendController
         $data = $request->json()->all();
         $data['post_author'] = isset($data['post_user']) && $data['post_user'] ? (int) $data['post_user'] : auth('backend')->id();
         $data['to_ping'] = $data['pinged'] = $data['post_content_filtered'] = "";
-
-        Str::markdown($contents['content']);
         if (empty($data['post_date'])) {
             $data['post_date'] = now();
         }

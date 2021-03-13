@@ -21,6 +21,11 @@ const routes: Routes = [{
       data: {'title': '写文章'}
     },
     {
+      path: 'post-editing/:id',
+      component: PostsActionComponent,
+      data: {'title': '编辑文章'}
+    },
+    {
       path: 'category',
       component: CategoryComponent,
       data: {'title': '分类目录'}

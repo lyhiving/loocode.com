@@ -3,6 +3,7 @@ import {BaseComponent} from "../../../@core/base.component";
 import {TableSourceService} from "../../../@core/services/table.source.service";
 import {POSTS} from "../../../@core/app.interface.data";
 import {Router} from "@angular/router";
+import {Row} from "ng2-smart-table/lib/lib/data-set/row";
 
 @Component({
   selector: 'app-posts',
@@ -81,15 +82,11 @@ export class PostsComponent extends BaseComponent {
     this.router.navigateByUrl("/app/content/post-new");
   }
 
-  edit($event: any) {
-
+  edit($event: Row) {
+    this.router.navigateByUrl("/app/content/post-editing/"+$event.getData().id);
   }
 
   delete($event: any) {
-
-  }
-
-  action() {
 
   }
 }

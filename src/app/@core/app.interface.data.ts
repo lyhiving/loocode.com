@@ -6,6 +6,7 @@ export const CONFIGURATION: string = '/open/configuration';
 
 
 export const POSTS: string = '/posts';
+export const POST_SHOW: string = '/post/{id}';
 export const POST_STORE: string = '/post/store';
 export const POST_UPDATE: string = '/post/update/{id}';
 

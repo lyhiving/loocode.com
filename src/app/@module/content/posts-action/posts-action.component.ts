@@ -11,11 +11,13 @@ import {
   NbTagInputDirective
 } from "@nebular/theme";
 import {FormControl} from "@angular/forms";
-import {CATEGORIES, POST_STORE, POST_UPDATE, TAGS} from "../../../@core/app.interface.data";
+import {CATEGORIES, POST_SHOW, POST_STORE, POST_UPDATE, TAGS} from "../../../@core/app.interface.data";
 import {AppResponseDataOptions} from "../../../@core/app.data.options";
 import {debounceTime, distinctUntilChanged, filter, startWith, switchMap} from "rxjs/operators";
 import {DynamicScriptLoaderService} from "../../../@core/services/dynamic.script.loader.service";
 import {getUnixTime} from "date-fns";
+import {ActivatedRoute} from "@angular/router";
+import {forEachChild} from "@schematics/angular/third_party/github.com/Microsoft/TypeScript/lib/typescript";
 
 
 @Component({
@@ -118,6 +120,7 @@ export class PostsActionComponent extends BaseComponent implements AfterViewInit
     private loadScript: DynamicScriptLoaderService,
     private cd: ChangeDetectorRef,
     private sidebarService: NbSidebarService,
+    private activateRoute: ActivatedRoute,
     @Inject(NB_DATE_ADAPTER) protected datepickerAdapters: NbDatepickerAdapter<any>[]
   ) {
     super();
@@ -142,7 +145,7 @@ export class PostsActionComponent extends BaseComponent implements AfterViewInit
     this.http.get(CATEGORIES).subscribe((res: AppResponseDataOptions) => {
       if (res.code == 200) {
         res.data.forEach((item) => {
-          item.checked = false;
+          item.checked = this.post.categories.includes(item.term_taxonomy_id)
         });
         this.categories = res.data
       }
@@ -151,6 +154,25 @@ export class PostsActionComponent extends BaseComponent implements AfterViewInit
       this.post.meta.featured_media = res[0].url;
     });
     this.loadScript.loadCKfinder();
+    this.activateRoute.paramMap.subscribe(paramMap => {
+      if (paramMap.get('id')) {
+        this.http.get(POST_SHOW.replace("{id}", paramMap.get('id'))).subscribe((res: AppResponseDataOptions) => {
+          if (res.code !== 200) {
+            return;
+          }
+          this.id = +paramMap.get('id');
+          this.post = res.data;
+          res.data.terms.forEach((item) => {
+            this.tags.set(item.name, item.id);
+          });
+          const categories = this.categories;
+          categories.forEach((item) => {
+            item.checked = this.post.categories.includes(item.term_taxonomy_id)
+          });
+          this.categories = categories;
+        });
+      }
+    });
   }
 
   @ViewChild("dateTimePicker") datepicker: NbDateTimePickerComponent<any>;
@@ -208,13 +230,15 @@ export class PostsActionComponent extends BaseComponent implements AfterViewInit
       const iterator = this.tags.values()
       let v = iterator.next()
       while (v.value) {
-        this.post.tags.push(v.value)
+        if (!this.post.tags.includes(v.value)) {
+          this.post.tags.push(v.value)
+        }
         v = iterator.next()
       }
     }
     if (this.categories.length > 0) {
       this.categories.forEach((item) => {
-        if (item.checked) {
+        if (item.checked && !this.post.categories.includes(item.term_taxonomy_id)) {
           this.post.categories.push(item.term_taxonomy_id);
         }
       })

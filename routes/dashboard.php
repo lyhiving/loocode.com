@@ -33,6 +33,7 @@ Route::middleware('auth:backend')->group(function() {
     Route::post('/setting/store', [SettingController::class, 'store']);
     Route::post('/setting/update/{id}', [SettingController::class, 'update']);
     Route::get('/posts', [PostController::class, 'posts']);
+    Route::get('/post/{id}', [PostController::class, 'show']);
     Route::post('/post/store', [PostController::class, 'store']);
     Route::post('/post/update/{id}', [PostController::class, 'update']);
 
