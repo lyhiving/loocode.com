@@ -110,7 +110,7 @@ class PostController extends BackendController
             if ($toc) {
                 $data['meta']['toc'] = $toc;
             }
-            $post['post_content'] = $html;
+            $data['post_content'] = $html;
         }
         $post = new Post($data);
         $post->post_name = $data['post_name'] ?? $data['post_title'];
