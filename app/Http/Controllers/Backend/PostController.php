@@ -12,7 +12,10 @@ use Corcel\Model\Post;
 use Corcel\Model\Taxonomy;
 use Corcel\Model\Term;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use League\CommonMark\Environment;
+use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
+use League\CommonMark\Extension\TableOfContents\TableOfContentsExtension;
+use League\CommonMark\GithubFlavoredMarkdownConverter;
 
 /**
  * Class PostsController
@@ -58,7 +61,7 @@ class PostController extends BackendController
         $data = new \stdClass();
         $data->post_title = $post->post_title;
         $data->post_excerpt = $post->post_excerpt;
-        $data->post_content = $post->post_content;
+        $data->post_content = $post->meta->markdown ?? $post->post_content;
         $data->post_status = $post->post_status;
         $data->post_type = $post->post_type;
         $data->comment_status = $post->comment_status;
@@ -101,6 +104,14 @@ class PostController extends BackendController
         if (empty($data['post_date'])) {
             $data['post_date'] = now();
         }
+        if (!empty($post['post_content'])) {
+            [$html, $toc] = $this->markdown($data['post_content']);
+            $data['meta']['markdown'] = $data['post_content'];
+            if ($toc) {
+                $data['meta']['toc'] = $toc;
+            }
+            $post['post_content'] = $html;
+        }
         $post = new Post($data);
         $post->post_name = $data['post_name'] ?? $data['post_title'];
         $post->post_status = $data['post_status'];
@@ -127,6 +138,12 @@ class PostController extends BackendController
         $post = Post::find($id);
         if ($post == null) {
             return Result::err(404, "文章不存在");
+        }
+        if (!empty($post['post_content'])) {
+            [$html, $toc] = $this->markdown($data['post_content']);
+            $data['meta']['markdown'] = $data['post_content'];
+            $data['meta']['toc'] = $toc;
+            $data['post_content'] = $html;
         }
         $post->post_title = $data['post_title'];
         $post->post_content = $data['post_content'];
@@ -191,6 +208,43 @@ class PostController extends BackendController
             }
         }
         return $relationId;
+    }
+
+    /**
+     * @param string $content
+     * @return array
+     */
+    private function markdown(string $content): array
+    {
+        // Obtain a pre-configured Environment with all the CommonMark parsers/renderers ready-to-go
+        $environment = Environment::createCommonMarkEnvironment();
+        // Add the two extensions
+        $environment->addExtension(new HeadingPermalinkExtension());
+        $environment->addExtension(new TableOfContentsExtension());
+        $options = [
+            'table_of_contents' => [
+                'html_class' => 'table-of-contents',
+                'position' => 'placeholder',
+                'style' => 'bullet',
+                'min_heading_level' => 1,
+                'max_heading_level' => 6,
+                'normalize' => 'relative',
+                'placeholder' => '[TOC]',
+            ],
+        ];
+        $content = <<<EOF
+[TOC]
+<!-- table of contents -->
+$content
+EOF;
+        $converter = new GithubFlavoredMarkdownConverter($options, $environment);
+        $html = $converter->convertToHtml($content);
+        preg_match("/(.*)\s<!-- table of contents -->/ims", $html, $match);
+        $toc = $match[1] ?? "";
+        if (($len = strlen($toc)) > 0) {
+            $html = substr($html, $len);
+        }
+        return [$html, $toc];
     }
 
 }

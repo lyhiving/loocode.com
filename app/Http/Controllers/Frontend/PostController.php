@@ -10,6 +10,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use League\CommonMark\Environment;
+use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
+use League\CommonMark\Extension\TableOfContents\TableOfContentsExtension;
+use League\CommonMark\GithubFlavoredMarkdownConverter;
 use stdClass;
 
 /**
@@ -32,28 +36,7 @@ class PostController extends FrontendController
         }
         $sql = 'SELECT meta_key, meta_value FROM postmeta WHERE post_id = ?';
         $metas = DB::select($sql, [$id]);
-        $post->metas = [];
-        foreach ($metas as $item) {
-            $post->metas[$item->meta_key] = $item->meta_value;
-        }
-        if (!isset($post->metas['_lc_post_views'])) {
-            $post->metas['_lc_post_views'] = 0;
-        }
-        if (!isset($post->metas['_lc_post_like'])) {
-            $post->metas['_lc_post_like'] = 0;
-        }
-        if ($post->metas['_lc_post_views'] >= 1000) {
-            $post->metas['_lc_post_views'] = sprintf(
-                "%.1fk",
-                (int)$post->metas['_lc_post_views'] / 1000
-            );
-        }
-        if ($post->metas['_lc_post_like'] >= 1000) {
-            $post->metas['_lc_post_like'] = sprintf(
-                "%.1fk",
-                (int)$post->metas['_lc_post_like'] / 1000
-            );
-        }
+        $post->meta = $this->formatMeta($metas);
         $sql = <<<EOF
 SELECT t1.taxonomy, t2.object_id, t3.slug FROM term_taxonomy as t1
     LEFT JOIN term_relationships as t2 ON (t1.term_taxonomy_id=t2.term_taxonomy_id)
@@ -76,12 +59,7 @@ EOF;
         if (!$author) {
             $author = new stdClass();
         }
-        $author->metas = [];
-        if ($metas) {
-            foreach ($metas as $meta) {
-                $author->metas[$meta->meta_key] = $meta->meta_value;
-            }
-        }
+        $author->meta = $metas ? $this->formatMeta($metas) : [];
         $post->tags = count($taxonomy) > 0
             ? array_map(function ($item) {
                 if ($item->taxonomy == 'post_tag') {
@@ -91,14 +69,10 @@ EOF;
             }, $taxonomy)
             : [];
         $post->author = $author;
-        if ($id >= 10195) {
-            $post->post_content = Str::markdown($post->post_content);
-        }
-        $seo = $this->getSeo($post->post_title);
         return view("show", [
             'post' => $post,
             'comments' => $comments,
-            'seo' => $seo,
+            'seo' => $this->getSeo($post->post_title),
             'globalComment' => isset(self::$options['open_comment']) && self::$options['open_comment'] == "true"
         ]);
     }
@@ -230,8 +204,17 @@ EOF;
         } else {
             $sql = 'UPDATE postmeta SET meta_value = `meta_value` + 1 WHERE post_id = ? AND meta_key = ?';
         }
-        $data['code'] = 200;
         DB::statement($sql, $bindValues);
+        $bindValues = [$p->post_author, $metaKey];
+        $meta = DB::SelectOne('SELECT umeta_id FROM usermeta WHERE user_id = ? AND meta_key = ?', $bindValues);
+        if ($meta == null) {
+            $sql = 'INSERT INTO usermeta (user_id, meta_key, meta_value) VALUE (?, ?, ?)';
+            $bindValues[] = 1;
+        } else {
+            $sql = 'UPDATE usermeta SET meta_value = `meta_value` + 1 WHERE user_id = ? AND meta_key = ?';
+        }
+        DB::statement($sql, $bindValues);
+        $data['code'] = 200;
         return $response->setData($data);
     }
 
@@ -252,4 +235,34 @@ EOF;
         return DB::selectOne($sql, [$id]);
     }
 
+    /**
+     * @param array $metas
+     * @return array
+     */
+    private function formatMeta(array $metas)
+    {
+        $meta = [];
+        foreach ($metas as $item) {
+            $meta[$item->meta_key] = $item->meta_value;
+        }
+        if (!isset($meta['_lc_post_views'])) {
+            $meta['_lc_post_views'] = 0;
+        }
+        if (!isset($meta['_lc_post_like'])) {
+            $meta['_lc_post_like'] = 0;
+        }
+        if ($meta['_lc_post_views'] >= 1000) {
+            $meta['_lc_post_views'] = sprintf(
+                "%.1fk",
+                (int)$meta['_lc_post_views'] / 1000
+            );
+        }
+        if ($meta['_lc_post_like'] >= 1000) {
+            $meta['_lc_post_like'] = sprintf(
+                "%.1fk",
+                (int)$meta['_lc_post_like'] / 1000
+            );
+        }
+        return $meta;
+    }
 }

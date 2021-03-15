@@ -7,3 +7,16 @@
 .card {
     border: none;
 }
+.table-of-contents {
+  padding-left: 13px;
+}
+.table-of-contents li a {
+  font-weight: bold;
+  font-size: 14px;
+}
+.table-of-contents ul {
+  padding-left: 13px;
+}
+.table-of-contents ul a {
+  font-size: 12px;
+}

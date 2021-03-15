@@ -15,7 +15,8 @@
                             <div class="mb-4">
                             <span class="text-custom-white">
                                 <i class="theme-color">{{ $post->author->name ?? "" }}</i>
-                                · {{ date('Y-m-d', strtotime($post->post_modified)) }}
+                                · {{ date('Y年m月d日', strtotime($post->post_modified)) }}
+                                · 阅读 {{ $post->meta['_lc_post_views'] }}
                             </span>
                             </div>
                         </div>
@@ -29,7 +30,7 @@
                             <a href="javascript:" id="btn-like" class="btn btn-outline-pink rounded-1 px-4">
                                 <i class="fas fa-thumbs-up"></i>@lang('posts.like')
                             </a>
-                            @if(isset($post->metas['_donation']))
+                            @if(isset($post->meta['_donation']))
                             <a href="javascript:" class="ml-2 btn btn-outline-green rounded-1 px-4" data-toggle="modal" data-target="#appreciate">
                                 @lang('posts.donation')
                             </a>
@@ -119,9 +120,12 @@
                 </div>
                 @endif
             </div>
-            <div class="col-12 col-xl-3 col mt-4 mt-xl-0">
-                <div class="author">
-                    <div class="card">
+            <div class="col-xl-3 col mt-4 mt-xl-0">
+                <div class="widget">
+                    <div class="card widget">
+                        <div class="card-header">
+                            <h3 class="card-title">关于作者</h3>
+                        </div>
                         <div class="card-body">
                             <div class="d-flex align-items-center mb-3">
                                 <picture class="rounded-circle mr-3">
@@ -139,20 +143,32 @@
                             <p class="text-secondary text-truncate-2">全栈工程师</p>
                             <div class="d-flex align-items-center mb-3">
                                 <div class="mr-4">
-                                    <strong>{{$post->metas['_lc_post_views']}}</strong><span class="text-secondary"> @lang('posts.view')</span>
+                                    <span class="text-secondary"> @lang('posts.view')</span> <strong>{{$post->author->meta['_lc_post_views']}}</strong>
                                 </div>
                                 <div>
-                                    <strong>{{$post->metas['_lc_post_like']}}</strong><span class="text-secondary"> @lang('posts.like')</span>
+                                    <span class="text-secondary"> @lang('posts.like')</span> <strong>{{$post->author->meta['_lc_post_like']}}</strong>
                                 </div>
                             </div>
                             <button type="button" class="btn btn-pink btn-block">关注作者</button>
                         </div>
                     </div>
                 </div>
+                @if(isset($post->meta["toc"]) && $post->meta["toc"])
+                    <div class="widget" style="position: sticky;top: 0">
+                        <div class="card widget">
+                            <div class="card-header">
+                                <h3 class="card-title">文章目录</h3>
+                            </div>
+                            <div class="card-body">
+                                {!! $post->meta["toc"] !!}
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
-    @if(isset($post->user->metas['alipayQr']) || isset($post->user->metas['wechatQr']))
+    @if(isset($post->user->meta['alipayQr']) || isset($post->user->meta['wechatQr']))
     <div class="modal fade" id="appreciate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog  modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -164,19 +180,19 @@
                 </div>
                 <div class="modal-body text-center">
                     <ul class="list-inline">
-                        @if(isset($post->user->metas['alipayQr']))
+                        @if(isset($post->user->meta['alipayQr']))
                         <li class="list-inline-item m-3">
                             <img style="border: 2px solid #449ee2"
                                  width="150"
-                                 src="{{ $static_domain }}{{ $post->user->metas['alipayQr'] }}"
+                                 src="{{ $static_domain }}{{ $post->user->meta['alipayQr'] }}"
                                  alt="支付宝收款码">
                         </li>
                         @endif
-                        @if(isset($post->user->metas['wechatQr']))
+                        @if(isset($post->user->meta['wechatQr']))
                         <li class="list-inline-item m-3">
                             <img style="border: 2px solid #53a849"
                                  width="150"
-                                 src="{{ $static_domain }}{{ $post->user->metas['wechatQr'] }}"
+                                 src="{{ $static_domain }}{{ $post->user->meta['wechatQr'] }}"
                                  alt="微信收款码">
                         </li>
                         @endif
