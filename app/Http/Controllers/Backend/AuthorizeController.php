@@ -22,10 +22,10 @@ class AuthorizeController
 
     /**
      * @param Request $request
-     * @return Result
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      * @throws \Exception
      */
-    public function authenticate(Request $request): Result
+    public function authenticate(Request $request): \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
     {
         $body = $request->json()->all();
         /**
@@ -39,11 +39,11 @@ class AuthorizeController
          */
         $user = $guard->getProvider()->retrieveByCredentials($credentials);
         if ($user == null) {
-            return Result::err(404, "用户不存在");
+            return response(Result::err(404, "用户不存在"));
         }
         $isValid = $guard->getProvider()->validateCredentials($user, $credentials);
         if (!$isValid) {
-            return Result::err(600, "密码匹配失败");
+            return response(Result::err(600, "密码匹配失败"));
         }
         $config = Configuration::forSymmetricSigner(
             new Sha256(),
@@ -62,8 +62,8 @@ class AuthorizeController
             ->withClaim('email', $body['email'])
             ->withClaim('avatar', $user->avatar)
             ->getToken($config->signer(), $config->signingKey());
-        cookie('token', $token->toString(), 24 * 60, sameSite: 'None');
-        return Result::ok(['token' => $token->toString()]);
+        $cookie = cookie('token', $token->toString(), 24 * 60, sameSite: 'None');
+        return response(Result::ok(['token' => $token->toString()]))->cookie($cookie);
     }
 
 
