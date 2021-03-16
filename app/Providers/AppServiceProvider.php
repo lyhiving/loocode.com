@@ -33,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
                     "Please run `artisan vendor:publish --tag=ckfinder` command first."
                 );
             }
+            $ckfinderConfig['authentication'] = [$this, "ckfinderAuthentication"];
             $ckfinder = new CKFinder($ckfinderConfig);
             if (SymfonyKernel::MAJOR_VERSION === 4) {
                 $this->setupForV4Kernel($ckfinder);
@@ -78,5 +79,13 @@ class AppServiceProvider extends ServiceProvider
                 $ckfinder['resolver']
             );
         };
+    }
+
+    /**
+     * @return bool
+     */
+    protected function ckfinderAuthentication(): bool
+    {
+        return true;
     }
 }
