@@ -84,7 +84,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * @return bool
      */
-    protected function ckfinderAuthentication(): bool
+    public function ckfinderAuthentication(): bool
     {
         return true;
     }
