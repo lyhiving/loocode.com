@@ -12,6 +12,7 @@ use Corcel\Model\Term;
 use Corcel\Model\TermRelationship;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class CategoryController
@@ -183,18 +184,16 @@ class TaxonomyController extends BackendController
         if (empty($body['slug'])) {
             $body['slug'] = $body['name'];
         }
-        $term = new Term();
-        $term->name = $body['name'];
-        $term->slug = $body['slug'];
-        if (!$term->save()) {
-            return Result::err(500, "分类目录创建失败");
+        $term = Term::firstOrCreate(['name' => $body['name']], ['slug' => $body['slug']]);
+        if ($term->taxonomy != null && $term->taxonomy->taxonomy == $body['taxonomy']) {
+            return Result::ok(null, "添加成功");
         }
         $taxonomy = new Taxonomy();
         $taxonomy->taxonomy = $body['taxonomy'];
         $taxonomy->description = $body['description'] ?? "";
         $taxonomy->parent = $body['parent'] ?? 0;
         $term->taxonomy()->save($taxonomy);
-        return Result::ok();
+        return Result::ok(null, "添加成功");
     }
 
     /**
@@ -215,14 +214,14 @@ class TaxonomyController extends BackendController
         if ($taxonomy == null) {
             return Result::err(404);
         }
-        $term = new Term();
-        $term->name = $body['name'];
-        $term->slug = $body['slug'];
-        $taxonomy->term()->update($term);
         $taxonomy->description = $body['description'] ?? "";
         $taxonomy->parent = $body['parent'] ?? 0;
-        $taxonomy->update();
-        return Result::ok();
+        $term = Term::find($taxonomy->term_id);
+        $term->name = $body['name'];
+        $term->slug = $body['slug'];
+        $term->taxonomy()->save($taxonomy);
+        $term->save();
+        return Result::ok(null, "更新成功");
     }
 
     /**
@@ -233,13 +232,11 @@ class TaxonomyController extends BackendController
     {
         $taxonomy = Taxonomy::find($id);
         if ($taxonomy == null) {
-            return Result::err(404);
+            return Result::err(404, "资源不存在");
         }
         TermRelationship::where("term_taxonomy_id", $id)->delete();
-        $taxonomy->meta()->delete();
-        $taxonomy->term()->delete();
         $taxonomy->delete();
-        return Result::ok();
+        return Result::ok(null, "删除成功");
     }
 
 

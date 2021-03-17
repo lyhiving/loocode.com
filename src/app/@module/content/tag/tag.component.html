@@ -2,10 +2,13 @@
   <div class="col">
     <nb-card>
       <nb-card-header>
-          添加新{{ title }}
+        {{mode[currentMode]}}{{ title }}
+        <div class="float-right" *ngIf="tag.id > 0">
+          <button size="small" status="success" (click)="currentMode='create';this.tag = {}" nbButton><nb-icon icon="plus"></nb-icon></button>
+        </div>
       </nb-card-header>
       <nb-card-body>
-        <form #ngForm="ngForm" (ngSubmit)="create($event)">
+        <form #ngForm="ngForm" (ngSubmit)="action($event)">
           <div class="form-group">
             <label class="label" for="name">名称</label>
             <input
@@ -35,7 +38,7 @@
             <label class="label">描述只会在一部分主题中显示。</label>
           </div>
           <div class="form-group">
-            <button status="primary" size="small" nbButton [disabled]="submitted || !ngForm.valid">添加新{{title}}</button>
+            <button status="primary" size="small" nbButton [disabled]="submitted || !ngForm.valid">{{mode[currentMode]}}</button>
           </div>
         </form>
       </nb-card-body>
@@ -50,7 +53,6 @@
         <ng2-smart-table
           [settings]="settings"
           [source]="source"
-          (create)="create($event)"
           (edit)="edit($event)"
           (delete)="delete($event)"
         >

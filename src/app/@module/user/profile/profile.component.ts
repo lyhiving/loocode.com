@@ -18,7 +18,7 @@ export class ProfileComponent extends BaseComponent {
   constructor(
     private activateRoute: ActivatedRoute
   ) {
-    super();
+    super(activateRoute);
   }
 
   init() {

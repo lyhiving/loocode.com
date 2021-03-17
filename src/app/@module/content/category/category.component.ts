@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {TableSourceService} from "../../../@core/services/table.source.service";
-import {CATEGORIES, CATEGORY_STORE} from "../../../@core/app.interface.data";
+import {CATEGORIES, CATEGORY_DELETE, CATEGORY_STORE, CATEGORY_UPDATE, TAG_STORE, TAG_UPDATE} from "../../../@core/app.interface.data";
 import {BaseComponent} from "../../../@core/base.component";
 import {AppResponseDataOptions} from "../../../@core/app.data.options";
 
@@ -67,16 +67,14 @@ export class CategoryComponent extends BaseComponent {
       }
     },
   };
-  category: any = {
+  category: {[key: string]: any} = {
+    id: 0,
     name: "",
     slug: "",
     parent: 0,
     description: "",
-    taxonomy: "category"
   };
-
   categories: any[] = [];
-
   init() {
     this.serviceSourceConf.next(TableSourceService.getServerSourceConf(CATEGORIES));
     this.source.rawData.subscribe((res) => {
@@ -86,26 +84,49 @@ export class CategoryComponent extends BaseComponent {
     })
   }
 
-  create($event: any) {
+  action($event: any) {
     if (this.category.name.trim() == "") {
       return this.failureToast("名称不能为空");
     }
     this.submitted = true;
-    this.http.post(CATEGORY_STORE, this.category).subscribe((res: AppResponseDataOptions) => {
-      this.toastService.showResponseToast(res.code, this.operationSubject(), res.message);
+    this.category.taxonomy = "category";
+    let url = CATEGORY_STORE
+    if (this.category.id > 0) {
+      url = CATEGORY_UPDATE.replace("{id}", this.category.id.toString())
+    }
+    this.http.post(url, this.category).subscribe((res:AppResponseDataOptions) => {
+      this.toastService.showResponseToast(res.code, this.title, res.message);
       this.submitted = false;
       if (res.code == 200) {
         this.source.refresh();
       }
+    }, (error) => {
+      this.submitted = !this.submitted;
     });
   }
 
   edit($event: any) {
-
+    this.currentMode = 'editor';
+    const data = $event.data;
+    this.category = {
+      id: data.term_taxonomy_id,
+      name: data.term.name.replaceAll("— ", "").trim(),
+      slug: data.term.slug,
+      description: data.description,
+      parent: data.parent,
+    };
   }
 
   delete($event: any) {
-
+    const data = $event.data;
+    if (window.confirm("确定删除" + this.title + ": " + data.term.name.replaceAll("— ", "").trim())) {
+      this.http.delete(CATEGORY_DELETE.replace("{id}", data.term_taxonomy_id)).subscribe((res:AppResponseDataOptions) => {
+        this.toastService.showResponseToast(res.code, this.title, res.message);
+        if (res.code == 200) {
+          this.source.refresh();
+        }
+      });
+    }
   }
 
 }

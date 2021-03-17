@@ -17,7 +17,6 @@ import {debounceTime, distinctUntilChanged, filter, startWith, switchMap} from "
 import {DynamicScriptLoaderService} from "../../../@core/services/dynamic.script.loader.service";
 import {getUnixTime} from "date-fns";
 import {ActivatedRoute} from "@angular/router";
-import {forEachChild} from "@schematics/angular/third_party/github.com/Microsoft/TypeScript/lib/typescript";
 
 
 @Component({
@@ -123,7 +122,7 @@ export class PostsActionComponent extends BaseComponent implements AfterViewInit
     private activateRoute: ActivatedRoute,
     @Inject(NB_DATE_ADAPTER) protected datepickerAdapters: NbDatepickerAdapter<any>[]
   ) {
-    super();
+    super(activateRoute);
   }
 
   init() {
@@ -267,7 +266,7 @@ export class PostsActionComponent extends BaseComponent implements AfterViewInit
 
   preview() {
     if (this.id > 0) {
-      window.open(window.location.href + "/post/" + this.id + '?preview=true')
+      window.open(location.protocol + "//" + location.host + "/post/" + this.id + '?preview=true')
     } else {
       this.toastService.showToast('danger', "预览", "只有保存之后才可以预览");
     }

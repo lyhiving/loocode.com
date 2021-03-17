@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
 import {NbMenuItem} from '@nebular/theme';
 import {AppMenuItem, AppResponseDataOptions} from '../app.data.options';
 
@@ -58,7 +57,6 @@ export class MenuService {
               delete child.children; // 如果有这个字段，URL不会显示出来
           }
       }
-      console.log(child);
       return child;
   }
 }

@@ -68,11 +68,6 @@ export class PostsComponent extends BaseComponent {
       }
     },
   };
-  constructor(
-    private router: Router
-  ) {
-    super();
-  }
 
   init() {
     this.serviceSourceConf.next(TableSourceService.getServerSourceConf(POSTS));

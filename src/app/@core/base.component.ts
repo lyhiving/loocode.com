@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, Directive, EventEmitter, Inject, Injectable, OnInit, Output, TemplateRef} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, PRIMARY_OUTLET, Router, RoutesRecognized} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {
   NB_DATE_ADAPTER,
@@ -22,6 +22,7 @@ import {ReplaySubject} from 'rxjs';
 import {DynamicScriptLoaderService} from './services/dynamic.script.loader.service';
 import {ConfigurationService} from './services/configuration.service';
 import {AppInjector} from "./app.injector";
+import {filter, flatMap, map} from "rxjs/operators";
 
 @Component({
   template: ``,
@@ -33,7 +34,7 @@ export abstract class BaseComponent implements OnInit {
 
   title: string;
 
-  mode = {create: '创建', editor: '编辑', delete: '删除', preview: '预览'};
+  mode = {create: '添加', editor: '更新', delete: '删除', preview: '预览'};
 
   currentMode = 'create';
 
@@ -54,14 +55,18 @@ export abstract class BaseComponent implements OnInit {
   protected windowService: NbWindowService;
   protected toastService: ToastService;
   protected dialogService: NbDialogService;
+  protected router: Router;
 
-  constructor() {
+  constructor(
+    private readonly route: ActivatedRoute
+  ) {
     const injector = AppInjector.getInjector();
     this.http = injector.get<HttpClient>(HttpClient);
     this.windowService = injector.get<NbWindowService>(NbWindowService);
     this.toastService = injector.get<ToastService>(ToastService);
     this.dialogService = injector.get<NbDialogService>(NbDialogService);
-    this.appConfig = injector.get(ConfigurationService).appConfig;
+    this.appConfig = injector.get<ConfigurationService>(ConfigurationService).appConfig;
+    this.router = injector.get<Router>(Router);
   }
 
   ngOnInit(): void {
@@ -69,6 +74,9 @@ export abstract class BaseComponent implements OnInit {
       this.source = new ServerDataSource(this.http, serviceSourceConf);
     });
     this.init();
+    this.route.data.subscribe(data => {
+      this.title = data.title;
+    })
   }
 
   /**

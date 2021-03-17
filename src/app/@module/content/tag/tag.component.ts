@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import {Component, TemplateRef, ViewChild} from '@angular/core';
 import {TableSourceService} from "../../../@core/services/table.source.service";
-import {TAGS} from "../../../@core/app.interface.data";
+import {CATEGORY_DELETE, TAG_DELETE, TAG_STORE, TAG_UPDATE, TAGS} from "../../../@core/app.interface.data";
 import {BaseComponent} from "../../../@core/base.component";
+import {AppResponseDataOptions} from "../../../@core/app.data.options";
+import {Row} from "ng2-smart-table/lib/lib/data-set/row";
 
 @Component({
   selector: 'app-tag',
@@ -10,11 +12,13 @@ import {BaseComponent} from "../../../@core/base.component";
 })
 export class TagComponent extends BaseComponent {
 
-  tag = {
+  @ViewChild('updateWindow', {static: false}) storeWindow: TemplateRef<any>;
+
+  tag: {[key: string]: any} = {
+    id: 0,
     name: "",
     slug: "",
-    description: "",
-    taxonomy: "post_tag"
+    description: ""
   }
 
   settings = {
@@ -22,11 +26,6 @@ export class TagComponent extends BaseComponent {
       position: 'right',
       add: false,
       columnTitle: '操作',
-    },
-    add: {
-      addButtonContent: '<i class="nb-plus"></i>',
-      createButtonContent: '<i class="nb-checkmark"></i>',
-      cancelButtonContent: '<i class="nb-close"></i>',
     },
     edit: {
       editButtonContent: '<i class="nb-edit"></i>',
@@ -79,15 +78,43 @@ export class TagComponent extends BaseComponent {
     this.serviceSourceConf.next(TableSourceService.getServerSourceConf(TAGS));
   }
 
-  create($event: any) {
-
-  }
-
   edit($event: any) {
-
+    this.currentMode = "editor"
+    const data = $event.data
+    this.tag = {
+      id: data.term_taxonomy_id,
+      name: data.term.name,
+      slug: data.term.slug,
+      description: data.description,
+    };
   }
 
   delete($event: any) {
+    const data = $event.data;
+    if (window.confirm("确定删除" + this.title + ": " + data.term.name.replaceAll("— ", "").trim())) {
+      this.http.delete(TAG_DELETE.replace("{id}", data.term_taxonomy_id)).subscribe((res:AppResponseDataOptions) => {
+        this.toastService.showResponseToast(res.code, this.title, res.message);
+        if (res.code == 200) {
+          this.source.refresh();
+        }
+      });
+    }
+  }
 
+  action($event: any) {
+    if (this.tag.name.trim() == "") {
+      return this.toastService.showToast('danger', this.title, "名称不能为空");
+    }
+    this.tag.taxonomy = "post_tag";
+    let url = TAG_STORE
+    if (this.tag.id > 0) {
+      url = TAG_UPDATE.replace("{id}", this.tag.id.toString())
+    }
+    this.http.post(url, this.tag).subscribe((res:AppResponseDataOptions) => {
+      this.toastService.showResponseToast(res.code, this.title, res.message);
+      if (res.code == 200) {
+        this.source.refresh();
+      }
+    })
   }
 }
