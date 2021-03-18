@@ -244,6 +244,9 @@ EOF;
         if (($len = strlen($toc)) > 0) {
             $html = substr($html, $len);
         }
+        if ($toc) {
+            $toc = preg_replace("/\[\w+\](.*)/ims", "", $toc);
+        }
         return [$html, $toc];
     }
 
