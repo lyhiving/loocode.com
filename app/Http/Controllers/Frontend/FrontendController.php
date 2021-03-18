@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 use stdClass;
 
 class FrontendController extends Controller
@@ -16,6 +17,12 @@ class FrontendController extends Controller
      * @var array
      */
     static array $options = [];
+
+    public function __construct()
+    {
+        parent::__construct();
+
+    }
 
     /**
      * @param string $t
@@ -28,6 +35,18 @@ class FrontendController extends Controller
         if (empty(self::$options)) {
             self::$options = $this->getSystemOptions();
         }
+        $adOpen = self::$options['ad_open'] ?? "off";
+        View::share([
+            'static_domain' => config('app.asset_url'),
+            'links' => [],
+            'user' => request()->user(),
+            'menu' => [],
+            'options' => [
+                'site_url' => self::$options['site_url'] ?? "",
+                'site_title' => self::$options['site_title'] ?? "",
+                'ad_value' => $adOpen !== 'off' ? (self::$options[$adOpen . '_ad'] ?? '') : ''
+            ],
+        ]);
         $title = $t ? $t . ' - ' . self::$options['site_title']
             : self::$options['site_title'] .
             (self::$options['site_append_title'] ? ' - ' . self::$options['site_append_title'] : '');

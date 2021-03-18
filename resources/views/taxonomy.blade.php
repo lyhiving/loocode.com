@@ -32,6 +32,14 @@
                             </div>
                         </div>
                     </div>
+                    @if ($loop->index == 1)
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-format="fluid"
+                             data-ad-layout-key="-dy-6f+m7+bm-20a"
+                             data-ad-client="ca-pub-1413550160662632"
+                             data-ad-slot="8061439532"></ins>
+                    @endif
                 @endforeach
             </div>
             <div class="col-12 col-xl-3">

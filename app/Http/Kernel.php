@@ -2,10 +2,8 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\RedirectJsonIfAuthenticate;
-use App\Http\Middleware\ShareVariable;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Illuminate\Session\Middleware\StartSession;
 
@@ -42,7 +40,6 @@ class Kernel extends HttpKernel
             // \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             // \App\Http\Middleware\VerifyCsrfToken::class,
             // \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            ShareVariable::class,
         ],
 
         'api' => [

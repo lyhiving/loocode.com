@@ -18,8 +18,11 @@
     <meta name="Authorization" content="{{ $user->ID }}">
     @endif
     <!-- in your header -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.9.0/devicon.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/devicons/devicon@v2.9.0/devicon.min.css">
     @yield("header_css")
+    @if($options['ad_value'])
+    {!! $options['ad_value'] !!}
+    @endif
 </head>
 <body>
 <div class="site-wrapper">
