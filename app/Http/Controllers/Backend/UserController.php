@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Backend;
 use App\Attributes\Route;
 use App\Http\Result;
 use Corcel\Model\User;
+use Illuminate\Http\Request;
 
 /**
  * Class UserController
@@ -26,12 +27,17 @@ class UserController extends BackendController
     }
 
     /**
+     * @param Request $request
      * @return Result
      */
     #[Route(title: "会员列表", parent: "会员管理")]
-    public function members(): Result
+    public function members(Request $request): Result
     {
-        $users = User::paginate(30);
+        $users = User::paginate(
+            $request->query->getInt("data_per_page", 30),
+            ['*'],
+            'data_current_page',
+        );
         return Result::ok($users);
     }
 }

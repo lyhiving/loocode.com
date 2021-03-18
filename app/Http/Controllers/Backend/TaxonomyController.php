@@ -47,10 +47,21 @@ class TaxonomyController extends BackendController
     #[Route(title: "分类列表", parent: "分类目录")]
     public function categories(Request $request): Result
     {
+        if ($request->query->has('name_like')) {
+            $name = $request->query->get('name_like');
+        } else {
+            $name = $request->get('name');
+        }
+        $builder = Taxonomy::category();
+        if ($name) {
+            $builder = $builder->whereHas('term', function ($query) use ($name) {
+                $query->where('slug', 'like', '%' . $name . '%');
+            });
+        }
         /**
          * @var $categories Collection
          */
-        $categories = Taxonomy::category()->get();
+        $categories = $builder->get();
         $result = [];
         if ($categories->count() > 0) {
             $children = [];
@@ -71,7 +82,11 @@ class TaxonomyController extends BackendController
     #[Route(title: "标签列表", parent: "标签")]
     public function tags(Request $request): Result
     {
-        $name = $request->get('name');
+        if ($request->query->has('name_like')) {
+            $name = $request->query->get('name_like');
+        } else {
+            $name = $request->get('name');
+        }
         $tag = new Tag();
         if ($name) {
             $tag = $tag->whereHas('term', function ($query) use ($name) {
@@ -79,7 +94,11 @@ class TaxonomyController extends BackendController
             });
         }
         $tags = $tag->orderBy('term_taxonomy_id', 'desc')
-            ->paginate(30);
+            ->paginate(
+                $request->query->getInt("data_per_page", 30),
+                ['*'],
+                'data_current_page'
+            );
         return Result::ok($tags);
     }
 

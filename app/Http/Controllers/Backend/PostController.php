@@ -12,6 +12,7 @@ use Corcel\Model\Post;
 use Corcel\Model\Taxonomy;
 use Corcel\Model\Term;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use League\CommonMark\Environment;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 use League\CommonMark\Extension\TableOfContents\TableOfContentsExtension;
@@ -39,11 +40,24 @@ class PostController extends BackendController
 
 
     #[Route(title: "文章列表", parent: "所有文章")]
-    public function posts(): Result
+    public function posts(Request $request): Result
     {
         $posts = Post::select('id','post_author', 'post_title', 'post_status', 'post_modified', 'comment_count')
-            ->orderBy('id', 'DESC')
-            ->paginate(30);
+            ->orderBy('id', 'DESC');
+        if ($request->query->has('id_like')) {
+            $posts->where('ID',$request->query->get('id_like'));
+        }
+        if ($request->query->has('post_author_like')) {
+            $posts->where('post_author', $request->query->getInt('post_author_like'));
+        }
+        if ($request->query->has('post_title_like')) {
+            $posts->where('post_title', 'like', '%' . $request->query->get('post_title_like') . '%');
+        }
+        $posts = $posts->paginate(
+                $request->query->getInt("data_per_page", 30),
+                ['*'],
+                'data_current_page',
+            );
         return Result::ok($posts);
     }
 
