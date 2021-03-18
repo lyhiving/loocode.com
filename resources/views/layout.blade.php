@@ -7,6 +7,7 @@
     <meta name="keywords" content="{{ $seo->keyword }}" />
     <link href="/favicon.ico" rel="icon" sizes="32x32"/>
     <meta name="google-site-verification" content="HySQr9AQd4P4wZ8jK8glrbXDbN38fBpoLyXi50YxduU" />
+    <meta name="baidu-site-verification" content="code-TNCHrV5vi3" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#f4645f" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
