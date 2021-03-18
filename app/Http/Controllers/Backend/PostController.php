@@ -245,7 +245,7 @@ EOF;
             $html = substr($html, $len);
         }
         if ($toc) {
-            $toc = preg_replace("/\[[\w|\s]+\]\(.*\)/ims", "", $toc);
+            $toc = preg_replace("/\[[\w|\s]+\]\(.*\)/im", "", $toc);
         }
         return [$html, $toc];
     }
