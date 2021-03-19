@@ -60,7 +60,7 @@ class Route implements \JsonSerializable
     }
 
     /**
-     * @return array
+     * @return Route[]
      */
     public function &getChildren(): array
     {

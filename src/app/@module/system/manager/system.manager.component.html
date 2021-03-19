@@ -1,62 +1,114 @@
-<nb-card>
-  <nb-card-header>
-    {{ title }}
-  </nb-card-header>
-
-  <nb-card-body>
-    <ng2-smart-table
-            [settings]="settings"
-            [source]="source"
-            (create)="create($event)"
-            (edit)="edit($event)"
-            (delete)="delete($event)"
-    >
-    </ng2-smart-table>
-  </nb-card-body>
-</nb-card>
-<ng-template #storeWindow>
-  <div class="row">
-    <div class="col-lg-12">
-      <form>
-        <div class="form-group row">
-          <label for="inputEmail" class="label col-lg-2 col-form-label">邮箱</label>
-          <div class="col-lg-10">
-            <input type="email" nbInput fullWidth [(ngModel)]="manager.email" required="required" placeholder="必填" name="email"  id="inputEmail">
-          </div>
+<div class="row">
+  <div class="col">
+    <nb-card>
+      <nb-card-header>
+        {{mode[currentMode]}}{{ title }}
+        <div class="float-right" *ngIf="manager.ID > 0">
+          <button size="small" status="success" (click)="currentMode='create';manager = {};" nbButton><nb-icon icon="plus"></nb-icon></button>
         </div>
-        <div class="form-group row">
-          <label for="inputPassword" class="label col-lg-2 col-form-label">密码</label>
-          <div class="col-lg-10">
-            <input type="password"
-                   nbInput
-                   fullWidth
-                   name="password"
-                   [(ngModel)]="manager.password"
-                   required="required"
-                   placeholder="{{ this.currentMode == 'create' ? '必填' : '不修改密码保持为空即可' }}"
-                   id="inputPassword">
+      </nb-card-header>
+      <nb-card-body>
+        <form #ngForm="ngForm" (ngSubmit)="action($event)">
+          <div class="form-group row">
+            <label for="inputName" class="label col-lg-2 col-form-label">昵称</label>
+            <div class="col-lg-10">
+              <input type="text" minlength="6" maxlength="24" #name="ngModel" nbInput fullWidth [(ngModel)]="manager.user_login" required="required" placeholder="必填" name="login_name"  id="inputName">
+              <ng-container *ngIf="currentMode == 'create' && name.invalid && name.touched">
+                <p class="caption status-danger" *ngIf="name.errors?.required">
+                  昵称不能为空!
+                </p>
+                <p class="caption status-danger" *ngIf="name.errors?.minlength">
+                  最少6个字符
+                </p>
+                <p class="caption status-danger" *ngIf="name.errors?.maxlength">
+                  最多24个字符
+                </p>
+              </ng-container>
+            </div>
           </div>
-        </div>
-        <div class="form-group row">
-          <label for="inputRoles" class="label col-lg-2 col-form-label">角色</label>
-          <div class="col-lg-10">
-            <nb-select placeholder="请选择角色" filled status="danger" name="roles" id="inputRoles" multiple [(selected)]="manager.roles">
-              <nb-option *ngFor="let item of roles" [value]="item.id">{{ item.name }}</nb-option>
-            </nb-select>
+          <div class="form-group row">
+            <label for="inputEmail" class="label col-lg-2 col-form-label">邮箱</label>
+            <div class="col-lg-10">
+              <input
+                type="email"
+                #email="ngModel"
+                maxlength="128"
+                minlength="6"
+                nbInput fullWidth [(ngModel)]="manager.email" required="required" placeholder="必填" name="email"  id="inputEmail">
+              <ng-container *ngIf="currentMode == 'create' && email.invalid && email.touched">
+                <p class="caption status-danger" *ngIf="email.errors?.required">
+                  邮箱地址不能为空!
+                </p>
+                <p class="caption status-danger" *ngIf="email.errors?.minlength">
+                  最少6个字符
+                </p>
+                <p class="caption status-danger" *ngIf="email.errors?.maxlength">
+                  最多128个字符
+                </p>
+              </ng-container>
+            </div>
           </div>
-        </div>
-        <div class="form-group row">
-          <label for="inputAvatar" class="label col-lg-2 col-form-label">头像地址</label>
-          <div class="col-lg-10">
-            <input type="url" nbInput fullWidth name="avatar" [(ngModel)]="manager.avatar" required="required"   id="inputAvatar">
+          <div class="form-group row">
+            <label for="inputPassword" class="label col-lg-2 col-form-label">密码</label>
+            <div class="col-lg-10">
+              <input type="password"
+                     nbInput
+                     fullWidth
+                     name="password"
+                     [(ngModel)]="manager.password"
+                     #password="ngModel"
+                     [required]="currentMode=='create'"
+                     minlength="6"
+                     placeholder="{{ this.currentMode == 'create' ? '必填' : '不修改密码保持为空即可' }}"
+                     id="inputPassword">
+              <ng-container *ngIf="currentMode == 'create' && password.invalid && password.touched">
+                <p class="caption status-danger" *ngIf="password.errors?.required">
+                  密码不能为空!
+                </p>
+                <p class="caption status-danger" *ngIf="password.errors?.minlength">
+                  最少6位
+                </p>
+              </ng-container>
+            </div>
           </div>
-        </div>
-        <div class="form-group row">
-          <div class="offset-lg-3 col-lg-9">
-            <button type="submit" class="btn btn-primary" (click)="action()">{{ operationName() }}</button>
+          <div class="form-group row">
+            <label for="inputRoles" class="label col-lg-2 col-form-label">角色</label>
+            <div class="col-lg-10">
+              <nb-select placeholder="请选择角色" filled status="primary" id="inputRoles" multiple [(selected)]="manager.roles">
+                <nb-option *ngFor="let item of roles" [value]="item.id">{{ item.name }}</nb-option>
+              </nb-select>
+            </div>
           </div>
-        </div>
-      </form>
-    </div>
+          <div class="form-group row">
+            <label for="inputAvatar" class="label col-lg-2 col-form-label">头像地址</label>
+            <div class="col-lg-10">
+              <input type="url" nbInput fullWidth name="avatar" [(ngModel)]="manager.avatar" id="inputAvatar">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="offset-lg-3 col-lg-9">
+              <button nbButton status="primary" size="small" [disabled]="submitted || !ngForm.valid">{{ operationName() }}</button>
+            </div>
+          </div>
+        </form>
+      </nb-card-body>
+    </nb-card>
   </div>
-</ng-template>
+  <div class="col-7">
+    <nb-card>
+      <nb-card-header>
+        {{ title }}
+      </nb-card-header>
+
+      <nb-card-body>
+        <ng2-smart-table
+          [settings]="settings"
+          [source]="source"
+          (edit)="edit($event)"
+          (delete)="delete($event)"
+        >
+        </ng2-smart-table>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

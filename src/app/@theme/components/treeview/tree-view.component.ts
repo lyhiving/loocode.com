@@ -21,7 +21,7 @@ export class TreeViewComponent implements OnInit, OnChanges {
 
   constructor() { }
 
-  @Input() items: any[];
+  @Input() items: any[] = [];
 
   filterItems: TreeViewItem[] = [];
 
@@ -42,6 +42,7 @@ export class TreeViewComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    this.filterItems = [];
     const itemsChange = changes['items'];
     const options = changes['options'];
     if (isNil(options)) {
@@ -108,8 +109,6 @@ export class TreeViewComponent implements OnInit, OnChanges {
   }
   private concatSelection(items: TreeViewItem[], checked: TreeViewItem[], unchecked: TreeViewItem[]): { [k: string]: TreeViewItem[] } {
     for (const item of items) {
-      console.log(item);
-      console.log(item.checked);
       if (item.checked || item.checked === undefined) {
         checked.push(item.value);
       } else {

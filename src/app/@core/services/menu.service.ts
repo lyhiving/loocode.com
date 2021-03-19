@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {NbMenuItem} from '@nebular/theme';
 import {AppMenuItem, AppResponseDataOptions} from '../app.data.options';
+import {USER_MENU} from "../app.interface.data";
 
 @Injectable()
 export class MenuService {
@@ -15,7 +16,7 @@ export class MenuService {
   }
 
   getMenu(): Observable<NbMenuItem[]> {
-      return this.http.request('get','/open/menu', {body: {}, observe: 'response'})
+      return this.http.request('get',USER_MENU, {body: {}, observe: 'response'})
       .pipe(
           map((res) => {
             const response: AppResponseDataOptions = <AppResponseDataOptions> res.body;
@@ -37,8 +38,8 @@ export class MenuService {
           return;
       }
       const child: NbMenuItem = {
-        title: item.title,
-        icon: item.icon,
+        title: item.name,
+        icon: item.class,
         link: item.link,
         hidden: item.hidden
       };

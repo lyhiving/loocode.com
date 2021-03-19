@@ -22,7 +22,7 @@ const routes: Routes = [{
     {
       path: 'roles',
       component: RoleComponent,
-      data: {'title': '角色管理'}
+      data: {'title': '角色'}
     },
   ],
 }];

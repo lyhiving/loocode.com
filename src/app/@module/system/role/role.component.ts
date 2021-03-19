@@ -1,12 +1,11 @@
-import {Component, Input, TemplateRef, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import {TableSourceService} from '../../../@core/services/table.source.service';
-import {MENU_REFRESH, MENUS, ROLE_STORE, ROLES, USER_MANAGER_STORE} from '../../../@core/app.interface.data';
-import {AppResponseDataOptions, Role} from '../../../@core/app.data.options';
+import {MENU_REFRESH, MENUS, ROLE_STORE, ROLE_UPDATE, ROLES} from '../../../@core/app.interface.data';
+import {AppResponseDataOptions} from '../../../@core/app.data.options';
 import {Row} from 'ng2-smart-table/lib/lib/data-set/row';
 import {BaseComponent} from '../../../@core/base.component';
 import {mergeMap} from 'rxjs/operators';
 import {of} from 'rxjs';
-import {isArray, includes} from 'lodash';
 
 @Component({
   selector: 'app-role',
@@ -18,7 +17,7 @@ export class RoleComponent extends BaseComponent {
   settings = {
     actions: {
       position: 'right',
-      add: true,
+      add: false,
       columnTitle: '操作',
     },
     add: {
@@ -52,13 +51,7 @@ export class RoleComponent extends BaseComponent {
         sort: false,
         filter: true,
       },
-      createdDate: {
-        title: '创建时间',
-        type: 'string',
-        sort: false,
-        filter: false,
-      },
-      updatedDate: {
+      updated_date: {
         title: '更新时间',
         type: 'string',
         sort: false,
@@ -66,26 +59,21 @@ export class RoleComponent extends BaseComponent {
       }
     },
   };
-
   menus = [];
-
-  @ViewChild('storeWindow', {static: false}) protected storeWindow: TemplateRef<any>;
-
-  @Input() role: Role = {
+  role: {[key: string]: any} = {
+    id: 0,
     name: '',
-    permissions: [],
+    permission: [],
   };
 
   private selection(item: any, permissions: number[]) {
-    if (includes(permissions, item.id)) {
-      item.checked = true;
-    }
-    if (isArray(item.children) && item.children.length >  0) {
+    item.checked = permissions.includes(item.id)
+    if (Array.isArray(item.children) && item.children.length >  0) {
       let checked = null;
       for (const child of item.children) {
         if (checked === null) {
-          checked = includes(permissions, child.id);
-        } else if (checked !== includes(permissions, child.id)) {
+          checked = permissions.includes(child.id);
+        } else if (checked !== permissions.includes(child.id)) {
           checked = undefined;
         }
       }
@@ -95,9 +83,6 @@ export class RoleComponent extends BaseComponent {
       if (item.checked !== checked) {
         item.checked = checked;
       }
-    }
-
-    if (isArray(item.children) && item.children.length > 0) {
       for (const child of item.children) {
         this.selection(child, permissions);
       }
@@ -115,57 +100,34 @@ export class RoleComponent extends BaseComponent {
     });
   }
 
-  onCloseDialogCallback() {
-    this.role = {
-      name: '',
-      permissions: [],
-    };
-    this.menus.forEach((item) => {
-      this.resetSelection(item);
-    });
-  }
-
-  private resetSelection(item) {
-    item.checked = false;
-    if (isArray(item.children)) {
-      item.children.forEach((child) => {
-        this.resetSelection(child);
-      });
-    }
-  }
-
   edit($event: Row) {
+    this.currentMode = 'editor';
     this.role = $event.getData();
     this.menus.forEach((item) => {
-      this.selection(item, this.role.permissions);
+      this.selection(item, this.role.permission);
     });
-    this.popupOperationDialog('editor', 'col-lg-6');
-  }
-
-  create($event: any) {
-    this.popupOperationDialog('create', 'col-lg-6');
+    this.menus = [...this.menus]
   }
 
   delete($event: any) {
 
   }
 
-  action() {
+  action($event: any) {
     if (this.role.name.trim() === '') {
       return this.failureToast('名称不能为空');
     }
-    this.http.post(ROLE_STORE, this.role)
+    let url = ROLE_STORE;
+    if (this.role.id > 0) {
+      url = ROLE_UPDATE.replace('{id}', this.role.id.toString())
+    }
+    this.http.post(url, this.role)
       .subscribe((res: AppResponseDataOptions) => {
-        this.toastService.showResponseToast(res.code, this.operationSubject(), res.message);
+        this.toastService.showResponseToast(res.code, this.title, res.message);
         if (res.code !== 200) {
           return ;
         }
-        this.nbWindowRef.close();
-        if (this.role.id > 0) {
-          this.source.refresh();
-        } else {
-          this.source.append(res.data);
-        }
+        this.source.refresh();
       });
     return true;
   }
@@ -180,13 +142,13 @@ export class RoleComponent extends BaseComponent {
       })
     ).subscribe((res: AppResponseDataOptions) => {
       if (res.code === 200) {
-        this.menus = isArray(res.data) ? res.data : [];
+        this.menus = Array.isArray(res.data) ? res.data : [];
       }
       this.toastService.showResponseToast(res.code, '刷新菜单', res.message);
     });
   }
 
   permissionSelected(permissions: any[]) {
-    this.role.permissions = permissions;
+    this.role.permission = permissions;
   }
 }

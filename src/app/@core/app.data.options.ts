@@ -14,9 +14,9 @@ export interface AppConfiguration {
 }
 
 export interface AppMenuItem {
-  icon?: string;
-  title?: string;
-  path?: string;
+  class?: string;
+  name?: string;
+  url?: string;
   hidden?: boolean;
   sort?: number;
   link?: string;
@@ -80,19 +80,18 @@ export interface Item {
 
 
 export interface Manager {
-  id: number;
+  user_login?: string;
+  ID: number;
   email: string;
   password: string;
   avatar: string;
   roles: number[];
-  lastedIp: string;
-  lastedDate: string;
 }
 
 export interface  Role {
   id?: number;
   name: string;
-  permissions: number[];
+  permission: number[];
   createdDate?: string;
   updatedDate?: string;
 }

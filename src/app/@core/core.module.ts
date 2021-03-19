@@ -5,7 +5,6 @@ import {NbRoleProvider, NbSecurityModule} from '@nebular/security';
 
 import { of as observableOf } from 'rxjs';
 import {StateService} from './services/state.service';
-import {environment} from '../../environments/environment';
 import {AUTHORIZE_LOGIN, AUTHORIZE_LOGOUT, AUTHORIZE_REGISTER} from './app.interface.data';
 
 
@@ -42,7 +41,7 @@ export const NB_CORE_PROVIDERS = [
           endpoint: AUTHORIZE_REGISTER,
           method: 'post',
           redirect: {
-            success: '/',
+            success: '/#app',
             failure: null,
           },
           defaultErrors: ['Login/Email combination is not correct, please try again.'],
@@ -58,6 +57,12 @@ export const NB_CORE_PROVIDERS = [
           defaultErrors: ['Login/Email combination is not correct, please try again.'],
           defaultMessages: ['You have been successfully logged in.'],
         },
+        errors: {
+          key: 'data.errors',
+        },
+        messages: {
+          key: 'data.message',
+        }
       }),
     ],
     forms: {

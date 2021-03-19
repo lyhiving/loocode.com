@@ -250,3 +250,58 @@ create table social_accounts
 
 alter table `users` add column `avatar` varchar(255) COLLATE utf8mb4_unicode_520_ci  NOT NULL DEFAULT '' after `display_name`;
 alter table `users` add column `remember_token` varchar(255) COLLATE utf8mb4_unicode_520_ci  NOT NULL DEFAULT '' after `avatar`;
+
+CREATE TABLE IF NOT EXISTS `menus` (
+   `id` mediumint unsigned not null  auto_increment,
+   `parent_id` mediumint unsigned not null  default 0,
+   `name` varchar(128) not null COMMENT '名称',
+   `hidden` tinyint(3) not null default 0 COMMENT '显示状态, 0显示, 1隐藏',
+   `weight` mediumint(8) unsigned not null COMMENT '权重',
+   `class` varchar(64) not null  default  '' COMMENT '对应的css class',
+   `url` varchar(255) not null default '' COMMENT '后端路由地址',
+   `link` varchar(128) not null default '' COMMENT '对应的前端路由',
+   `created_date` datetime COMMENT '创建时间',
+   PRIMARY KEY (`id`),
+   KEY `idx_parent_id` (`parent_id`)
+) ENGINE=INNODB
+  CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_520_ci
+  COMMENT '菜单';
+
+CREATE TABLE IF NOT EXISTS `roles` (
+   `id` smallint unsigned not null auto_increment,
+   `name` varchar(64) not null COMMENT '角色名称',
+   `created_date` datetime not null ,
+   `updated_date` datetime not null ,
+   PRIMARY KEY (`id`)
+) ENGINE=INNODB
+  CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_520_ci
+  COMMENT '角色';
+
+
+CREATE TABLE IF NOT EXISTS `permissions` (
+  `id` int unsigned not null auto_increment,
+  `role_id` smallint unsigned not null COMMENT '角色ID',
+  `menu_id` mediumint unsigned not null COMMENT '菜单ID',
+  `created_date` datetime not null ,
+  PRIMARY KEY (`id`),
+  KEY `idx_role_id` (`role_id`)
+) ENGINE=INNODB
+  CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_520_ci
+  COMMENT '角色权限';
+
+CREATE TABLE IF NOT EXISTS `log_operations` (
+    `id` int(11) unsigned not null auto_increment,
+    `manager_id` mediumint(8)  unsigned  not null ,
+    `menu_id` int(11) unsigned  not null ,
+    `info` text,
+    `created_date` datetime,
+    primary key (`id`),
+    key `idx_mid` (`manager_id`)
+) ENGINE=INNODB
+  CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_520_ci
+  COMMENT '操作日志';
+

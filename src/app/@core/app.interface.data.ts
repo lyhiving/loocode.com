@@ -40,15 +40,17 @@ export const SYSTEM_CONFIGURE_INIT: string = '/setting/initialize';
 
 export const DASHBOARD: string = '/dashboard';
 
-export const SYSTEM_MANAGER: string = '/system/managers';
-export const USER_MANAGER_STORE: string = '/system/manager/store';
-export const USER_MANAGER_DELETE: string = '/system/manager/{id}/delete';
+export const MANAGERS: string = '/managers';
+export const MANAGER_STORE: string = '/manager/store';
+export const MANAGER_UPDATE: string = '/manager/update/{id}';
+export const MANAGER_DELETE: string = '/manager/delete/{id}';
 
-export const ROLES: string = '/system/roles';
-export const ALL_ROLES: string = '/system/all/roles';
-export const ROLE_STORE: string = '/system/role/store';
-export const ROLE_DELETE: string = '/system/role/{id}/delete';
+export const ROLES: string = '/roles';
+export const ROLE_STORE: string = '/role/store';
+export const ROLE_UPDATE: string = '/role/update/{id}';
+export const ROLE_DELETE: string = '/role/delete/{id}';
 
-export const MENUS: string = '/system/menus';
-export const MENU_REFRESH: string = '/system/menu/refresh';
+export const USER_MENU: string = '/open/user/menu';
+export const MENUS: string = '/open/menus';
+export const MENU_REFRESH: string = '/open/menu/refresh';
 

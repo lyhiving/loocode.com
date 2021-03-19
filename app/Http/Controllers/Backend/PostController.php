@@ -12,7 +12,6 @@ use Corcel\Model\Post;
 use Corcel\Model\Taxonomy;
 use Corcel\Model\Term;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use League\CommonMark\Environment;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 use League\CommonMark\Extension\TableOfContents\TableOfContentsExtension;
@@ -53,7 +52,7 @@ class PostController extends BackendController
         if ($request->query->has('post_title_like')) {
             $posts->where('post_title', 'like', '%' . $request->query->get('post_title_like') . '%');
         }
-        $posts = $posts->paginate(
+        $posts = $posts->without("meta")->paginate(
                 $request->query->getInt("data_per_page", 30),
                 ['*'],
                 'data_current_page',

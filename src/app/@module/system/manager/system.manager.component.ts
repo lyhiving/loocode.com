@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {TableSourceService} from '../../../@core/services/table.source.service';
-import {ALL_ROLES, SYSTEM_MANAGER, USER_MANAGER_DELETE, USER_MANAGER_STORE} from '../../../@core/app.interface.data';
+import {MANAGERS, MANAGER_DELETE, MANAGER_STORE, ROLES, MANAGER_UPDATE} from '../../../@core/app.interface.data';
 import {Row} from 'ng2-smart-table/lib/lib/data-set/row';
 import {AppResponseDataOptions, Manager} from '../../../@core/app.data.options';
 import {BaseComponent} from '../../../@core/base.component';
@@ -14,7 +14,7 @@ export class SystemManagerComponent extends BaseComponent {
   settings = {
     actions: {
       position: 'right',
-      add: true,
+      add: false,
       columnTitle: '操作',
     },
     add: {
@@ -36,10 +36,9 @@ export class SystemManagerComponent extends BaseComponent {
     },
     mode: 'external',
     columns: {
-      id: {
+      ID: {
         title: 'ID',
         type: 'number',
-        sort: true,
       },
       email: {
         title: '邮箱',
@@ -55,43 +54,35 @@ export class SystemManagerComponent extends BaseComponent {
         filter: false,
         sort: false,
       },
-      roleNames: {
+      role_name: {
         title: '角色',
         type: 'string',
         filter: false,
         sort: false,
       },
-      lastedDate: {
+      lasted_date: {
         title: '最后登录时间',
-        type: 'number',
+        type: 'string',
         sort: false,
-      },
-      lastedIp: {
-        title: '最后登录IP',
-        type: 'number',
-        sort: false,
+        filter: false,
       }
     },
   };
 
-
-  @ViewChild('storeWindow', {static: false}) protected storeWindow: TemplateRef<any>;
-
   @Input() manager: Manager = {
-    id: 0,
+    ID: 0,
+    user_login: '',
     email: '',
     password: '',
     avatar: '',
     roles: [],
-    lastedIp: '',
-    lastedDate: '',
   };
 
   roles = [];
 
   delete($event: Row) {
     if (confirm('确定删除---' + $event.getData().email)) {
-      this.http.request('post', USER_MANAGER_DELETE.replace('{id}', $event.getData().id) , {})
+      this.http.request('post', MANAGER_DELETE.replace('{id}', $event.getData().id) , {})
           .subscribe((res: AppResponseDataOptions) => {
             this.toastService.showResponseToast(res.code, '删除管理员', res.message);
             if (res.code === 0) {
@@ -103,16 +94,15 @@ export class SystemManagerComponent extends BaseComponent {
   }
 
   edit($event: Row) {
+    this.currentMode = 'editor';
     this.manager = $event.getData();
     console.log(this.manager);
-    this.popupOperationDialog('editor', 'col-lg-6');
   }
 
-  create($event: any) {
-    this.popupOperationDialog('create', 'col-lg-6');
-  }
-
-  action() {
+  action($event: any) {
+    if (this.manager.user_login.trim() === '') {
+      return this.failureToast('昵称不能为空');
+    }
     if (this.manager.email.trim() === '') {
       return this.failureToast('邮箱不能为空');
     }
@@ -123,41 +113,29 @@ export class SystemManagerComponent extends BaseComponent {
     if (this.manager.password && this.manager.password.length < 6) {
       return this.failureToast('密码不能小于6位数');
     }
-
-    this.http.request('post', USER_MANAGER_STORE, {body: this.manager})
+    this.submitted = true;
+    let url = MANAGER_STORE;
+    if (this.manager.ID > 0) {
+      url = MANAGER_UPDATE.replace('{id}', this.manager.ID.toString());
+    }
+    this.http.request('post', url, {body: this.manager})
       .subscribe((res: AppResponseDataOptions) => {
+        this.submitted = false;
         this.toastService.showResponseToast(res.code, this.operationSubject(), res.message);
         if (res.code !== 200) {
           return ;
         }
-        this.nbWindowRef.close();
-        if (this.manager.id > 0) {
-            this.source.refresh();
-        } else {
-            this.source.append(res.data);
-        }
+        this.source.refresh();
       });
     return true;
   }
 
   init() {
-    this.serviceSourceConf.next(TableSourceService.getServerSourceConf(SYSTEM_MANAGER));
-    this.http.get(ALL_ROLES).subscribe((res: AppResponseDataOptions) => {
+    this.serviceSourceConf.next(TableSourceService.getServerSourceConf(MANAGERS));
+    this.http.get(ROLES+'?data_per_page=1024').subscribe((res: AppResponseDataOptions) => {
       if (res.code === 200) {
-        this.roles = res.data;
+        this.roles = res.data.data;
       }
     });
-  }
-
-  onCloseDialogCallback() {
-    this.manager = {
-      id: 0,
-      email: '',
-      password: '',
-      avatar: '',
-      roles: [],
-      lastedIp: '',
-      lastedDate: '',
-    };
   }
 }

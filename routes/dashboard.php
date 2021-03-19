@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Backend\AuthorizeController;
+use App\Http\Controllers\Backend\ManagerController;
+use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\TaxonomyController;
 use App\Http\Controllers\Backend\CKFinderController;
 use App\Http\Controllers\Backend\PostController;
@@ -20,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('/authorize/register', [AuthorizeController::class, 'register']);
 Route::post('/authorize/login', [AuthorizeController::class, 'authenticate']);
 Route::post('/authorize/logout', [AuthorizeController::class, 'logout']);
 Route::get('/open/configuration', [OpenController::class, 'configuration']);
@@ -27,7 +30,10 @@ Route::get('/open/configuration', [OpenController::class, 'configuration']);
 Route::middleware('auth:backend')->group(function() {
     Route::any('/ckfinder/connector', [CKFinderController::class, 'request']);
     Route::get('/dashboard', [DashboardController::class, 'main']);
-    Route::get('/open/menu', [OpenController::class, 'menu']);
+    Route::get('/open/user/menu', [OpenController::class, 'userMenu']);
+    Route::get('/open/menus', [OpenController::class, 'menus']);
+    Route::post('/open/menu/refresh', [OpenController::class, 'menuRefresh']);
+
     Route::get('/user/members', [UserController::class, 'members']);
     Route::get('/settings', [SettingController::class, 'options']);
     Route::post('/setting/store', [SettingController::class, 'store']);
@@ -48,6 +54,16 @@ Route::middleware('auth:backend')->group(function() {
     Route::post('/category/update/{id}', [TaxonomyController::class, 'updateCategory']);
     Route::delete('/category/delete/{id}', [TaxonomyController::class, 'deleteCategory']);
 
+    Route::get('/managers', [ManagerController::class, 'members']);
+    Route::post('/manager/store', [ManagerController::class, 'store']);
+    Route::post('/manager/update/{id}', [ManagerController::class, 'update']);
+    Route::delete('/manager/delete/{id}', [ManagerController::class, 'delete']);
+
+
+    Route::get('/roles', [RoleController::class, 'roles']);
+    Route::post('/role/store', [RoleController::class, 'store']);
+    Route::post('/role/update/{id}', [RoleController::class, 'update']);
+    Route::delete('/role/delete/{id}', [RoleController::class, 'delete']);
 });
 
 

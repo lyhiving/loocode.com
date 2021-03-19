@@ -71,7 +71,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Shanghai',
 
     /*
     |--------------------------------------------------------------------------
@@ -127,6 +127,8 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'admin_id' => 1,
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -152,7 +154,7 @@ return [
         Illuminate\Database\DatabaseServiceProvider::class,
         Illuminate\Encryption\EncryptionServiceProvider::class,
         Illuminate\Filesystem\FilesystemServiceProvider::class,
-        // Illuminate\Foundation\Providers\FoundationServiceProvider::class,
+        Illuminate\Foundation\Providers\FoundationServiceProvider::class,
         Illuminate\Hashing\HashServiceProvider::class,
         // Illuminate\Mail\MailServiceProvider::class,
         // Illuminate\Notifications\NotificationServiceProvider::class,
@@ -163,7 +165,7 @@ return [
         // Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
         Illuminate\Session\SessionServiceProvider::class,
         Illuminate\Translation\TranslationServiceProvider::class,
-        // Illuminate\Validation\ValidationServiceProvider::class,
+        Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
         /*

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http;
 
 
+use JetBrains\PhpStorm\Pure;
 use JsonSerializable;
 use stdClass;
 
@@ -26,7 +27,13 @@ class Result implements JsonSerializable
      */
     private stdClass $result;
 
-    private function __construct(int $code, string $message, $data = null)
+    /**
+     * Result constructor.
+     * @param int $code
+     * @param string $message
+     * @param null $data
+     */
+    #[Pure] private function __construct(int $code, string $message, $data = null)
     {
         $this->result = new stdClass();
         $this->result->code = $code;
