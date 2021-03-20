@@ -27,7 +27,7 @@ Route::post('/authorize/login', [AuthorizeController::class, 'authenticate']);
 Route::post('/authorize/logout', [AuthorizeController::class, 'logout']);
 Route::get('/open/configuration', [OpenController::class, 'configuration']);
 
-Route::middleware('auth:backend')->group(function() {
+Route::middleware(['auth:backend', 'rbac'])->group(function() {
     Route::any('/ckfinder/connector', [CKFinderController::class, 'request']);
     Route::get('/dashboard', [DashboardController::class, 'main']);
     Route::get('/open/user/menu', [OpenController::class, 'userMenu']);
@@ -35,9 +35,11 @@ Route::middleware('auth:backend')->group(function() {
     Route::post('/open/menu/refresh', [OpenController::class, 'menuRefresh']);
 
     Route::get('/user/members', [UserController::class, 'members']);
+
     Route::get('/settings', [SettingController::class, 'options']);
     Route::post('/setting/store', [SettingController::class, 'store']);
-    Route::post('/setting/update/{id}', [SettingController::class, 'update']);
+    Route::post('/setting/update/{option}', [SettingController::class, 'update']);
+
     Route::get('/posts', [PostController::class, 'posts']);
     Route::get('/post/{id}', [PostController::class, 'show']);
     Route::post('/post/store', [PostController::class, 'store']);
@@ -56,14 +58,14 @@ Route::middleware('auth:backend')->group(function() {
 
     Route::get('/managers', [ManagerController::class, 'members']);
     Route::post('/manager/store', [ManagerController::class, 'store']);
-    Route::post('/manager/update/{id}', [ManagerController::class, 'update']);
-    Route::delete('/manager/delete/{id}', [ManagerController::class, 'delete']);
+    Route::post('/manager/update/{user}', [ManagerController::class, 'update']);
+    Route::delete('/manager/delete/{user}', [ManagerController::class, 'delete']);
 
 
     Route::get('/roles', [RoleController::class, 'roles']);
     Route::post('/role/store', [RoleController::class, 'store']);
-    Route::post('/role/update/{id}', [RoleController::class, 'update']);
-    Route::delete('/role/delete/{id}', [RoleController::class, 'delete']);
+    Route::post('/role/update/{role}', [RoleController::class, 'update']);
+    Route::delete('/role/delete/{role}', [RoleController::class, 'delete']);
 });
 
 

@@ -44,6 +44,7 @@ export class SystemManagerComponent extends BaseComponent {
         title: '邮箱',
         type: 'string',
         sort: false,
+        width: "20%"
       },
       avatar: {
         title: '头像',
@@ -82,10 +83,10 @@ export class SystemManagerComponent extends BaseComponent {
 
   delete($event: Row) {
     if (confirm('确定删除---' + $event.getData().email)) {
-      this.http.request('post', MANAGER_DELETE.replace('{id}', $event.getData().id) , {})
+      this.http.delete(MANAGER_DELETE.replace('{id}', $event.getData().ID))
           .subscribe((res: AppResponseDataOptions) => {
-            this.toastService.showResponseToast(res.code, '删除管理员', res.message);
-            if (res.code === 0) {
+            this.toastService.showResponseToast(res.code, this.title, res.message);
+            if (res.code === 200) {
               this.source.refresh();
             }
           });
@@ -96,7 +97,6 @@ export class SystemManagerComponent extends BaseComponent {
   edit($event: Row) {
     this.currentMode = 'editor';
     this.manager = $event.getData();
-    console.log(this.manager);
   }
 
   action($event: any) {

@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Attributes\Route;
 use App\Http\Result;
-use http\Params;
+use Corcel\Model\User;
 use Illuminate\Http\Request;
 
 /**
@@ -43,8 +43,21 @@ class ManagerController extends UserController
     }
 
     #[Route(title: "更新管理员", parent: "管理员")]
-    public function update(Request $request, int $id): Result
+    public function update(User $user, Request $request): Result
     {
-        return parent::update($request, $id);
+        return parent::update($user, $request);
+    }
+
+    /**
+     * @param User $user
+     * @return Result
+     * @throws \Exception
+     */
+    #[Route(title: "删除管理员", parent: "管理员")]
+    public function delete(User $user)
+    {
+        $user->meta()->delete();
+        $user->delete();
+        return Result::ok(null, '删除成功');
     }
 }

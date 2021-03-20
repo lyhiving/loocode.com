@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {TableSourceService} from '../../../@core/services/table.source.service';
-import {MENU_REFRESH, MENUS, ROLE_STORE, ROLE_UPDATE, ROLES} from '../../../@core/app.interface.data';
+import {MANAGER_DELETE, MENU_REFRESH, MENUS, ROLE_DELETE, ROLE_STORE, ROLE_UPDATE, ROLES} from '../../../@core/app.interface.data';
 import {AppResponseDataOptions} from '../../../@core/app.data.options';
 import {Row} from 'ng2-smart-table/lib/lib/data-set/row';
 import {BaseComponent} from '../../../@core/base.component';
@@ -110,7 +110,16 @@ export class RoleComponent extends BaseComponent {
   }
 
   delete($event: any) {
-
+    if (confirm('确定删除---' + $event.getData().name)) {
+      this.http.delete(ROLE_DELETE.replace('{id}', $event.getData().id))
+        .subscribe((res: AppResponseDataOptions) => {
+          this.toastService.showResponseToast(res.code, this.title, res.message);
+          if (res.code === 200) {
+            this.source.refresh();
+          }
+        });
+      return true;
+    }
   }
 
   action($event: any) {

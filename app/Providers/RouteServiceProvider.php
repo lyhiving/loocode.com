@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Role;
+use Corcel\Model\Option;
+use Corcel\Model\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -37,6 +40,9 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->configureRateLimiting();
 
+        Route::model('user', User::class);
+        Route::model('role', Role::class);
+        Route::model('option', Option::class);
         $this->routes(function () {
             $dashboardDomain = config("app.dashboard_domain");
             Route::prefix('api')
@@ -48,6 +54,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/web.php'));
             Route::domain($dashboardDomain)
                 ->prefix("backend")
+                ->middleware('backend')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/dashboard.php'));
         });

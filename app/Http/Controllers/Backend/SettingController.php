@@ -52,6 +52,7 @@ class SettingController extends BackendController
      * @param Request $request
      * @return Result
      */
+    #[Route(title: "添加配置", parent: "站点配置")]
     public function store(Request $request): Result
     {
         $body = json_decode($request->getContent());
@@ -67,17 +68,14 @@ class SettingController extends BackendController
     }
 
     /**
+     * @param Option $option
      * @param Request $request
-     * @param int $id
      * @return Result
      */
-    public function update(Request $request, int $id): Result
+    #[Route(title: "更新配置", parent: "站点配置")]
+    public function update(Option $option, Request $request): Result
     {
         $body = json_decode($request->getContent());
-        $option = Option::find($id);
-        if ($option == null) {
-            return Result::err(600, "配置不存在");
-        }
         $option->option_value = is_scalar($body->option_value) ? $body->option_value : json_encode($body->option_value);
         $option->update();
         return Result::ok(null, "更新成功");

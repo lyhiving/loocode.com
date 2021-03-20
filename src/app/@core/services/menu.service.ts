@@ -28,6 +28,7 @@ export class MenuService {
                 }
               });
             }
+            console.log(this.menu)
             return this.menu;
           })
       );
@@ -40,9 +41,12 @@ export class MenuService {
       const child: NbMenuItem = {
         title: item.name,
         icon: item.class,
-        link: item.link,
-        hidden: item.hidden
+        hidden: !!item.hidden,
+        selected: false,
       };
+      if (item.link) {
+        child.link = item.link;
+      }
       if (item.home) {
           child.home = true;
       }

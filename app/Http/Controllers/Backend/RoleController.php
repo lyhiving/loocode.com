@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Backend;
 
 
 use App\Attributes\Route;
-use App\Events\Post;
 use App\Http\Result;
 use App\Models\Permission;
 use App\Models\Role;
@@ -70,31 +69,40 @@ class RoleController extends BackendController
     }
 
     #[Route(title: "更新角色", parent: "角色", sort: 3)]
-    public function update(Request $request, int $id): Result
+    public function update(Role $role, Request $request): Result
     {
         $body = $request->json()->all();
         if (empty($body['name'])) {
             return Result::err(500, "名称不能为空");
         }
-        $role = Role::find($id);
-        if ($role == null) {
-            return Result::err(404, "角色不存在");
+        $nameRole = Role::where('name', $body['name'])->first();
+        if ($nameRole && $nameRole->id != $role->id) {
+            return Result::err(500, "存在相同名称角色");
         }
         if (empty($body['permission']) || !is_array($body['permission'])) {
             return Result::ok();
         }
+        $role->name = $body['name'];
         $role->permission()->delete();
         $permissions = [];
         foreach ($body['permission'] as $id) {
             $permissions[] = new Permission(["menu_id" => $id]);
         }
         $role->permission()->saveMany($permissions);
+        $role->save();
         return Result::ok(null, "更新成功");
     }
 
+    /**
+     * @param Role $role
+     * @return Result
+     * @throws \Exception
+     */
     #[Route(title: "删除角色", parent: "角色", sort: 4)]
-    public function delete(int $id): Result
+    public function delete(Role $role): Result
     {
+        $role->permission()->delete();
+        $role->delete();
         return Result::ok();
     }
 }

@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Backend;
 
 
+use App\Attributes\Route;
 use CKSource\CKFinder\CKFinder;
 use Illuminate\Http\Request;
 use Psr\Container\ContainerInterface;
@@ -13,6 +14,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  * Class CKFinderController
  * @package App\Http\Controllers\Backend
  */
+#[Route(title: "设置", sort: 111, icon: "settings-2")]
 class CKFinderController extends BackendController
 {
     /**
@@ -23,6 +25,7 @@ class CKFinderController extends BackendController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    #[Route(title: "文件管理", sort: 1, hidden: true)]
     public function request(ContainerInterface $container, Request $request)
     {
         /** @var CKFinder $connector */

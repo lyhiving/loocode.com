@@ -3,8 +3,10 @@
 namespace App\Http;
 
 use App\Http\Middleware\EncryptCookies;
+use App\Http\Middleware\RBAC;
 use App\Http\Middleware\RedirectJsonIfAuthenticate;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 
 class Kernel extends HttpKernel
@@ -46,6 +48,9 @@ class Kernel extends HttpKernel
             // 'throttle:api',
             // \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
+        'backend' => [
+             SubstituteBindings::class,
+        ]
     ];
 
     /**
@@ -57,6 +62,7 @@ class Kernel extends HttpKernel
      */
     protected $routeMiddleware = [
         'auth' => RedirectJsonIfAuthenticate::class,
+        'rbac' => RBAC::class,
         // 'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         // 'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         // 'can' => \Illuminate\Auth\Middleware\Authorize::class,

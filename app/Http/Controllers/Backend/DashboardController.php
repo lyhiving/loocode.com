@@ -19,6 +19,6 @@ class DashboardController extends BackendController
      */
     public function main(): Result
     {
-        return Result::ok();
+        return Result::ok([]);
     }
 }

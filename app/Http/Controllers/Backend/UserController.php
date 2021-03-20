@@ -83,16 +83,12 @@ class UserController extends BackendController
     }
 
     #[Route(title: "更新会员", parent: "会员管理")]
-    public function update(Request $request, int $id): Result
+    public function update(User $user, Request $request): Result
     {
         $body = $request->json()->all();
-        $user = User::where("user_email", $body['email'])->first();
-        if ($user && $user->ID != $id) {
+        $emailUser = User::where("user_email", $body['email'])->first();
+        if ($emailUser && $emailUser->ID != $user->ID) {
             return Result::err(500, "邮箱地址已存在");
-        }
-        $user = User::find($id);
-        if ($user == null) {
-            return Result::err(500, "用户不存在");
         }
         $user->user_login = $body['user_login'];
         if (!empty($body['password'])) {
@@ -108,5 +104,13 @@ class UserController extends BackendController
             $user->saveMeta('roles', json_encode($body['roles']));
         }
         return Result::ok(null, "更新成功");
+    }
+
+    #[Route(title: "删除会员", parent: "会员管理")]
+    public function delete(User $user)
+    {
+        $user->meta()->delete();
+        $user->delete();
+        return Result::ok(null, '删除成功');
     }
 }
