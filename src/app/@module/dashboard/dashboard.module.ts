@@ -8,7 +8,7 @@ import {UploadService} from '../../@core/services/upload.service';
 
 @NgModule({
   declarations: [
-    DashboardComponent
+    DashboardComponent,
   ],
   imports: [
     CommonModule,

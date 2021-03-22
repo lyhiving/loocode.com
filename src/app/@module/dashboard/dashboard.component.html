@@ -1,28 +1,14 @@
-<nb-card size="large">
-  <nb-tabset fullWidth (changeTab)="changeTab($event)">
+<div class="row">
+  <div class="{{item.class}}" *ngFor="let item of card">
+    <nb-card>
+      <nb-card-header>
+        {{item.title}}
+      </nb-card-header>
+      <nb-card-body>
+        <ng-template #ref></ng-template>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
 
-    <nb-tab tabTitle="今日数据">
-      <div class="chart-container">
-        <div class="summary-container">
-          <div class="col-lg-4 col-sm-2 text-center mb-4" *ngFor="let item of todaySummary">
-            <div class="pb-2">{{ item.name }}</div>
-            <div class="h2">{{ item.value }}</div>
-          </div>
-        </div>
-      </div>
-    </nb-tab>
-
-    <nb-tab tabTitle="昨日数据" [lazyLoad]="true">
-      <div class="chart-container">
-        <div class="summary-container">
-          <div class="col-lg-4 col-sm-2 text-center mb-4" *ngFor="let item of yesterdaySummary">
-            <div class="pb-2">{{ item.name }}</div>
-            <div class="h2">{{ item.value }}</div>
-          </div>
-        </div>
-      </div>
-    </nb-tab>
-
-  </nb-tabset>
-</nb-card>
 

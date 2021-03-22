@@ -28,7 +28,6 @@ export class MenuService {
                 }
               });
             }
-            console.log(this.menu)
             return this.menu;
           })
       );
