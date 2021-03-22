@@ -30,7 +30,7 @@ export const NB_CORE_PROVIDERS = [
           endpoint: AUTHORIZE_LOGIN,
           method: 'post',
           redirect: {
-            success: '/#app',
+            success: '/#/app/dashboard',
             failure: null,
           },
           defaultErrors: ['用户不存在', '用户密码验证失败.'],
@@ -41,7 +41,7 @@ export const NB_CORE_PROVIDERS = [
           endpoint: AUTHORIZE_REGISTER,
           method: 'post',
           redirect: {
-            success: '/#app',
+            success: '/#/app/dashboard',
             failure: null,
           },
           defaultErrors: ['Login/Email combination is not correct, please try again.'],
