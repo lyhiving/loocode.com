@@ -26,9 +26,9 @@ Route::post('/authorize/register', [AuthorizeController::class, 'register']);
 Route::post('/authorize/login', [AuthorizeController::class, 'authenticate']);
 Route::post('/authorize/logout', [AuthorizeController::class, 'logout']);
 Route::get('/open/configuration', [OpenController::class, 'configuration']);
-Route::get('/dashboard', [DashboardController::class, 'main']);
 
 Route::middleware(['auth:backend', 'rbac'])->group(function() {
+    Route::get('/dashboard', [DashboardController::class, 'main']);
     Route::any('/ckfinder/connector', [CKFinderController::class, 'request']);
     Route::get('/open/user/menu', [OpenController::class, 'userMenu']);
     Route::get('/open/menus', [OpenController::class, 'menus']);
