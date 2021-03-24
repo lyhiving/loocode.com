@@ -107,8 +107,4 @@ class SiteController extends BackendController
         }
         return Result::ok(null, "创建成功");
     }
-
-    public function t()
-    {
-    }
 }
