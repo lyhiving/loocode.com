@@ -1,0 +1,81 @@
+<div class="card-body">
+
+<form #ngForm="ngForm" (ngSubmit)="action($event)">
+  <div class="form-group row">
+    <label class="label col-form-label col-2" for="title">站点标题</label>
+    <div class="col-8">
+      <input
+        id="title"
+        name="name"
+        #name="ngModel"
+        [(ngModel)]="option.site_title"
+        [status]="name.dirty ? (name.invalid  ? 'danger' : 'success') : 'primary'"
+        status="primary" nbInput />
+      <label class="label col-form-label d-block">取个名子好难呀。</label>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="label col-form-label col-2" for="append_title">副标题</label>
+    <div class="col-8">
+      <input nbInput id="append_title" name="append_title" [(ngModel)]="option.site_append_title" status="primary" />
+      <label class="label col-form-label d-block">取个口号好难呀。</label>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="label col-form-label col-2" for="siteurl">站点地址</label>
+    <div class="col-10">
+      <input nbInput id="siteurl" name="siteurl" [(ngModel)]="option.site_url" status="primary" />
+      <label class="label col-form-label d-block">网站域名(http://example.com)。</label>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="label col-form-label col-2" for="site_static_url">静态地址</label>
+    <div class="col-10">
+      <input nbInput id="site_static_url" name="staic_url" [(ngModel)]="option.site_static_url" status="primary" />
+      <label class="label col-form-label d-block">静态资源文件地址(http://static.example.com)。</label>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="label col-form-label col-2" for="site_keyword">Keyword</label>
+    <div class="col-8">
+      <input nbInput id="site_keyword" name="site_keyword" [(ngModel)]="option.site_keyword" fullWidth status="primary" />
+      <label class="label col-form-label d-block">让更多的人搜索到你的站，你可以使用","分隔多个关键字</label>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="label col-form-label col-2" for="site_description">Description</label>
+    <div class="col-8">
+      <input nbInput id="site_description" name="site_description" [(ngModel)]="option.site_description" fullWidth status="primary" />
+      <label class="label col-form-label d-block">介绍下你的站。</label>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="label col-form-label col-2" for="timezone">时区</label>
+    <div class="col-8">
+      <input #autoInput
+             id="timezone"
+             nbInput
+             name="timezone"
+             [(ngModel)]="option.timezone"
+             type="text"
+             (input)="onChange()"
+             placeholder="选择时区"
+             status="primary"
+             [nbAutocomplete]="auto" />
+      <nb-autocomplete #auto (selectedChange)="onSelectionChange($event)">
+        <nb-option *ngFor="let option of filteredOptions$ | async" [value]="option">
+          {{ option }}
+        </nb-option>
+      </nb-autocomplete>
+      <label class="label col-form-label d-block">选择与您在同一时区的城市或一个UTC。</label>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="label col-form-label col-2"></label>
+    <div class="col-10">
+      <button status="primary" size="small" [disabled]="submitted || !ngForm.valid" nbButton>保存更改</button>
+    </div>
+  </div>
+</form>
+</div>

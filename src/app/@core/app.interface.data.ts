@@ -38,6 +38,12 @@ export const SYSTEM_CONFIGURE_STORE: string = '/setting/store';
 export const SYSTEM_CONFIGURE_UPDATE: string = '/setting/update/{id}';
 export const SYSTEM_CONFIGURE_INIT: string = '/setting/initialize';
 
+export const SITE_OPTIONS: string = '/site/options';
+export const SITE_OPTION_SAVE: string = '/site/option/save';
+export const SITE_AD_OPTIONS: string = '/site/ad/options';
+export const SITE_AD_OPTION_SAVE: string = '/site/ad/option/save';
+
+
 export const DASHBOARD: string = '/dashboard';
 
 export const MANAGERS: string = '/managers';

@@ -9,13 +9,17 @@ use Corcel\Model\Option;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Class GlobalController
+ * @package App\Http\Controllers\Backend
+ */
 #[Route(title: "设置", sort: 111, icon: "settings-2")]
-class SettingController extends BackendController
+class GlobalController extends BackendController
 {
     /**
      * @return Result
      */
-    #[Route(title: "站点配置", sort: 0, link: "/app/system/configuration")]
+    #[Route(title: "全局", sort: 0, link: "/app/system/configuration")]
     public function anchor(): Result
     {
         return Result::ok();
@@ -24,7 +28,7 @@ class SettingController extends BackendController
     /**
      * @return Result
      */
-    #[Route(title: "配置列表", parent: "站点配置")]
+    #[Route(title: "配置列表", parent: "全局")]
     public function options(): Result
     {
         $options = DB::table('options')->paginate(30);
@@ -52,7 +56,7 @@ class SettingController extends BackendController
      * @param Request $request
      * @return Result
      */
-    #[Route(title: "添加配置", parent: "站点配置")]
+    #[Route(title: "添加配置", parent: "全局")]
     public function store(Request $request): Result
     {
         $body = json_decode($request->getContent());
@@ -72,7 +76,7 @@ class SettingController extends BackendController
      * @param Request $request
      * @return Result
      */
-    #[Route(title: "更新配置", parent: "站点配置")]
+    #[Route(title: "更新配置", parent: "全局")]
     public function update(Option $option, Request $request): Result
     {
         $body = json_decode($request->getContent());

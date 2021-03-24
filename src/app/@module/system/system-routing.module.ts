@@ -4,6 +4,9 @@ import {SystemComponent} from './system.component';
 import {ConfigureComponent} from './configure/configure.component';
 import {SystemManagerComponent} from './manager/system.manager.component';
 import {RoleComponent} from './role/role.component';
+import {SiteComponent} from "./site/site.component";
+import {GeneralComponent} from "./site/general/general.component";
+import {AdComponent} from "./site/ad/ad.component";
 
 const routes: Routes = [{
   path: '',
@@ -12,7 +15,27 @@ const routes: Routes = [{
     {
       path: 'configuration',
       component: ConfigureComponent,
-      data: {'title': '站点配置'}
+      data: {'title': '全局'}
+    },
+    {
+      path: 'site',
+      component: SiteComponent,
+      data: {'title': '站点'},
+      children: [
+        {
+          path: '',
+          redirectTo: 'general',
+          pathMatch: 'full',
+        },
+        {
+          path: 'general',
+          component: GeneralComponent,
+        },
+        {
+          path: 'ad',
+          component: AdComponent
+        }
+      ]
     },
     {
         path: 'managers',

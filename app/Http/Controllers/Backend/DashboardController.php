@@ -15,7 +15,7 @@ use Symfony\Component\Process\Process;
  * Class DashboardController
  * @package App\Http\Controllers\Backend
  */
-#[Route(title: "面板", sort: 0, icon: "settings-2", link: "/app/dashboard", home: true)]
+#[Route(title: "面板", sort: 0, icon: "home", link: "/app/dashboard", home: true)]
 class DashboardController extends BackendController
 {
     /**

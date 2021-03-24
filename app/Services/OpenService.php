@@ -103,8 +103,9 @@ class OpenService extends BaseService
      *
      * @param array $menus
      * @param int $parentId
+     * @param array $collection
      */
-    private function saveMenu(array $menus, int $parentId = 0)
+    private function saveMenu(array $menus, int $parentId = 0, array &$collection = [])
     {
         foreach ($menus as $item) {
             $menu = Menu::where('name', $item->title)->first();
@@ -121,9 +122,15 @@ class OpenService extends BaseService
             if (!$menu->save()) {
                 continue;
             }
+            $collection[] = $menu->id;
             if (count($item->children) > 0) {
-                $this->saveMenu($item->children, $menu->id);
+                $this->saveMenu($item->children, $menu->id, $collection);
             }
+        }
+        if ($parentId == 0 && $collection) {
+            Menu::whereNotIn('id', $collection)->delete();
+            Permission::whereNotIn('menu_id', $collection)->delete();
+
         }
     }
 

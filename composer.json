@@ -14,6 +14,7 @@
         "ext-pdo": "*",
         "ext-redis": "*",
         "ext-gd": "*",
+        "ext-ffi": "*",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",

@@ -13,7 +13,7 @@ const routes: Routes = [{
     {
       path: 'posts',
       component: PostsComponent,
-      data: {title: '文章', name: "aaaaa"}
+      data: {title: '文章'}
     },
     {
       path: 'post-new',

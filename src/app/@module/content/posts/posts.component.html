@@ -1,7 +1,11 @@
 <nb-card>
   <nb-card-header>
     {{ title }}
-    ccc
+    <div class="float-right">
+      <button size="small" status="success" (click)="create(null)" nbButton>
+        发布主题<nb-icon icon="plus"></nb-icon>
+      </button>
+    </div>
   </nb-card-header>
 
   <nb-card-body>

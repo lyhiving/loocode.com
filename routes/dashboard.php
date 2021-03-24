@@ -4,12 +4,13 @@ declare(strict_types=1);
 use App\Http\Controllers\Backend\AuthorizeController;
 use App\Http\Controllers\Backend\ManagerController;
 use App\Http\Controllers\Backend\RoleController;
+use App\Http\Controllers\Backend\SiteController;
 use App\Http\Controllers\Backend\TaxonomyController;
 use App\Http\Controllers\Backend\CKFinderController;
 use App\Http\Controllers\Backend\PostController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\OpenController;
-use App\Http\Controllers\Backend\SettingController;
+use App\Http\Controllers\Backend\GlobalController;
 use App\Http\Controllers\Backend\TagController;
 use App\Http\Controllers\Backend\UserController;
 use Illuminate\Support\Facades\Route;
@@ -36,9 +37,16 @@ Route::middleware(['auth:backend', 'rbac'])->group(function() {
 
     Route::get('/user/members', [UserController::class, 'members']);
 
-    Route::get('/settings', [SettingController::class, 'options']);
-    Route::post('/setting/store', [SettingController::class, 'store']);
-    Route::post('/setting/update/{option}', [SettingController::class, 'update']);
+    Route::get('/settings', [GlobalController::class, 'options']);
+    Route::post('/setting/store', [GlobalController::class, 'store']);
+    Route::post('/setting/update/{option}', [GlobalController::class, 'update']);
+
+    Route::get('/site/options', [SiteController::class, 'options']);
+    Route::post('/site/option/save', [SiteController::class, 'saveGeneral']);
+
+    Route::get('/site/ad/options', [SiteController::class, 'adOptions']);
+    Route::post('/site/ad/option/save', [SiteController::class, 'saveAd']);
+
 
     Route::get('/posts', [PostController::class, 'posts']);
     Route::get('/post/{id}', [PostController::class, 'show']);
