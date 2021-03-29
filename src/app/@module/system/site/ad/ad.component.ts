@@ -18,7 +18,9 @@ export class AdComponent implements OnInit {
   ) { }
   ngOnInit(): void {
     this.http.get(SITE_AD_OPTIONS).subscribe((res:AppResponseDataOptions) => {
-      this.option = res.data;
+      if (res.code === 200) {
+        this.option = res.data;
+      }
     });
   }
   action($event: any) {

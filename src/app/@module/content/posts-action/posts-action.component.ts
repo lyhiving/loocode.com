@@ -126,6 +126,7 @@ export class PostsActionComponent extends BaseComponent implements AfterViewInit
   }
 
   init() {
+    this.editorMode = this.appConfig.editor || 'markdown';
     this.inputFormControl.valueChanges.pipe(
       startWith(''),
       filter(value => value != ""),

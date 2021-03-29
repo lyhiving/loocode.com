@@ -10,7 +10,8 @@ export interface WindowContent {
 }
 
 export interface AppConfiguration {
-  timestamp?: number
+  timestamp?: number;
+  editor?: string;
 }
 
 export interface AppMenuItem {

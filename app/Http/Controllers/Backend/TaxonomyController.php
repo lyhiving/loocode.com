@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\DB;
  * Class CategoryController
  * @package App\Http\Controllers\Backend
  */
-#[Route(title: "文章", icon: "file")]
+#[Route(title: "文章", icon: "file-text")]
 class TaxonomyController extends BackendController
 {
 

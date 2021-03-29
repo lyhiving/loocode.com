@@ -17,14 +17,14 @@ use Illuminate\Support\Str;
  * Class UserController
  * @package App\Http\Controllers\Backend
  */
-#[Route(title: "账户", sort: 100, icon: "person")]
+#[Route(title: "用户", sort: 100, icon: "person")]
 class UserController extends BackendController
 {
 
     /**
      * @return Result
      */
-    #[Route(title: "会员管理", sort: 0, link: "/app/user/members")]
+    #[Route(title: "所有用户", sort: 0, link: "/app/user/members")]
     public function anchor(): Result
     {
         return Result::ok();
@@ -34,7 +34,7 @@ class UserController extends BackendController
      * @param Request $request
      * @return Result
      */
-    #[Route(title: "会员列表", parent: "会员管理")]
+    #[Route(title: "会员列表", parent: "所有用户")]
     public function members(Request $request): Result
     {
         $users = User::paginate(
@@ -58,7 +58,7 @@ class UserController extends BackendController
         return Result::ok($users);
     }
 
-    #[Route(title: "添加会员", parent: "会员管理")]
+    #[Route(title: "添加会员", parent: "所有用户")]
     public function store(Request $request): Result
     {
         $body = $request->json()->all();
@@ -82,7 +82,7 @@ class UserController extends BackendController
         return Result::ok(null, "添加成功");
     }
 
-    #[Route(title: "更新会员", parent: "会员管理")]
+    #[Route(title: "更新会员", parent: "所有用户")]
     public function update(User $user, Request $request): Result
     {
         $body = $request->json()->all();
@@ -106,7 +106,7 @@ class UserController extends BackendController
         return Result::ok(null, "更新成功");
     }
 
-    #[Route(title: "删除会员", parent: "会员管理")]
+    #[Route(title: "删除会员", parent: "所有用户")]
     public function delete(User $user)
     {
         $user->meta()->delete();

@@ -21,7 +21,7 @@ use League\CommonMark\GithubFlavoredMarkdownConverter;
  * Class PostsController
  * @package App\Http\Controllers\Backend
  */
-#[Route(title: "文章", sort: 1, icon: "file")]
+#[Route(title: "文章", sort: 1, icon: "file-text")]
 class PostController extends BackendController
 {
 

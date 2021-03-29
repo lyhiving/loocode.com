@@ -24,6 +24,14 @@ const routes: Routes = [{
     {
       path: 'content',
       loadChildren: () => import('./content/content.module').then(m => m.ContentModule.forRoot().ngModule),
+    },
+    {
+      path: 'page',
+      loadChildren: () => import('./page/page.module').then(m => m.PageModule),
+    },
+    {
+      path: 'decoration',
+      loadChildren: () => import('./decoration/decoration.module').then(m => m.DecorationModule),
     }
   ],
 }];
