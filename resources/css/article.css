@@ -1,14 +1,15 @@
-@import "~highlight.js/styles/monokai-sublime.css";
-@import "~toastr/build/toastr.css";
+@import "~github-markdown-css";
 
-.p-lg-30 {
-    padding: 1.875rem;
+.markdown-body ol {
+  list-style: decimal;
 }
-.card {
-    border: none;
+.markdown-body ul {
+  list-style: disc;
 }
+
 .table-of-contents {
   padding-left: 13px;
+  list-style: disc;
 }
 .table-of-contents li a {
   font-weight: bold;
@@ -16,6 +17,7 @@
 }
 .table-of-contents ul {
   padding-left: 13px;
+  list-style: circle;
 }
 .table-of-contents ul a {
   font-size: 12px;

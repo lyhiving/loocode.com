@@ -1,67 +1,61 @@
-@extends("layout")
+@extends("themes.default.layout")
 @section("header_css")
     <link rel="stylesheet" type="text/css" href="{{ mix("/assets/css/filepond.css")  }}"/>
 @endsection
 
 @section("content")
-    <div class="container my-5">
-        <div class="row bg-white">
-            <div class="col-md-3 d-md-block d-none">
-                <header>
-                    <div class="mb-3 pt-3">
-                        <h3 class="font-weight-bold">设置</h3>
-                    </div>
-                </header>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item border-0">
-                        <i class="iconfont icon-email font-size-18"></i>
+    <div class="container w-3/4 mx-auto my-5">
+        <div class="flex flex-wrap px-4 ">
+            <div class="w-full md:w-3/12 px-4 px-6 bg-white">
+                <div class="mb-3 pt-3">
+                    <h3 class="font-bold text-2xl">设置</h3>
+                </div>
+                <ul class="flex flex-row md:flex-col">
+                    <li class="text-xl py-2">
+                        <i class="iconfont icon-email"></i>
                         <a href="#email">邮箱</a>
                     </li>
-                    <li class="list-group-item border-0">
-                        <i class="iconfont icon-account font-size-18"></i>
+                    <li class="text-xl py-2">
+                        <i class="iconfont icon-account"></i>
                         <a href="#account">账户</a>
                     </li>
-                    <li class="list-group-item border-0">
-                        <i class="iconfont icon-security font-size-18"></i>
+                    <li class="text-xl py-2">
+                        <i class="iconfont icon-security"></i>
                         <a href="#security">安全</a>
                     </li>
-                    <li class="list-group-item border-0">
-                        <i class="iconfont icon-account font-size-18"></i>
+                    <li class="text-xl py-2">
+                        <i class="iconfont icon-account"></i>
                         <a href="#third">第三方</a>
                     </li>
                 </ul>
             </div>
-            <div class="col-md-9 col-12">
-                <header>
-                    <div class="mb-3 pt-3">
-                        <h3 id="email">邮箱设置</h3>
-                    </div>
-                </header>
-                <ul class="list-group list-group-flush mb-5 list-bordered">
-                    <li class="list-group-item border-0 py-6">
+            <div class="flex-1 w-full bg-white">
+                <div class="mb-3 pt-3">
+                    <h3 id="email" class="font-medium text-xl">邮箱设置</h3>
+                </div>
+                <ul class="border-t border-gray-200">
+                    <li class="px-5 py-6">
                         <div class="pb-md-0 pb-3">
-                            <div class="h5">你的邮箱</div>
-                            <div class="mt-3 d-flex">
-                                <label class="form-label">
-                                    <input class="form-control border-0" disabled id="email-text" placeholder="example@gmail.com"
+                            <div class="text-lg font-medium">你的邮箱</div>
+                            <div class="mt-3 flex flex-wrap items-center">
+                                <label>
+                                    <input class="focus:border-red-500 focus:ring-red-500 focus:border-2 bg-gray-200 rounded-md" disabled id="email-text" placeholder="example@gmail.com"
                                            type="email" value="{{ $user->user_email }}"/>
                                 </label>
-                                <div class="email-btn-container">
-                                    <button class="btn btn-pink ml-2" id="btn-email">修改邮箱</button>
+                                <div>
+                                    <button class="bg-red-500 text-white font-bold ml-2 py-1 px-2 rounded-md" id="btn-email">修改邮箱</button>
                                 </div>
                             </div>
                         </div>
                     </li>
                 </ul>
-                <header>
-                    <div class="mb-3">
-                        <h3 id="account">账户</h3>
-                    </div>
-                </header>
-                <ul class="list-group list-group-flush list-bordered">
-                    <li class="list-group-item border-0 py-6 d-flex justify-content-between">
-                        <div class="pb-md-0 pb-3">
-                            <div class="h5">
+                <div class="mb-3">
+                    <h3 id="account" class="font-medium text-xl">账户</h3>
+                </div>
+                <ul class="border-t border-gray-200">
+                    <li class="flex flex-wrap py-6 px-5 justify-between">
+                        <div class="pb-md-0 pb-3 flex-1">
+                            <div class="text-lg font-medium">
                                 支付宝二维码
                             </div>
                             <div class="mt-3">
@@ -76,8 +70,8 @@
                             </div>
                             @endif
                         </div>
-                        <div class="d-flex position-relative">
-                            <div class="pond">
+                        <div class="flex flex-1 relative">
+                            <div class="w-full">
                                 <input type="file"
                                        class="filepond"
                                        name="alipayQr"
@@ -88,9 +82,9 @@
                             </div>
                         </div>
                     </li>
-                    <li class="list-group-item border-0 py-6 d-flex justify-content-between">
-                        <div class="pb-md-0 pb-3">
-                            <div class="h5">
+                    <li class="flex flex-wrap py-6 px-5 justify-between">
+                        <div class="pb-md-0 pb-3 flex-1">
+                            <div class="text-lg font-medium">
                                 微信二维码
                             </div>
                             <div class="mt-3">
@@ -105,8 +99,8 @@
                             </div>
                             @endif
                         </div>
-                        <div class="d-flex position-relative">
-                            <div class="pond">
+                        <div class="flex relative flex-1">
+                            <div class="w-full">
                                 <input type="file"
                                    class="filepond"
                                    name="wechatQr"
@@ -121,7 +115,6 @@
             </div>
         </div>
     </div>
-
 @endsection
 @section("footer_js")
     <script type="text/javascript" src="{{ mix("/assets/js/user.js") }}"></script>

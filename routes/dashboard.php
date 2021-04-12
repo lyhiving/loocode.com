@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Backend\AuthorizeController;
+use App\Http\Controllers\Backend\DecorationController;
 use App\Http\Controllers\Backend\ManagerController;
 use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\SiteController;
@@ -74,6 +75,14 @@ Route::middleware(['auth:backend', 'rbac'])->group(function() {
     Route::post('/role/store', [RoleController::class, 'store']);
     Route::post('/role/update/{role}', [RoleController::class, 'update']);
     Route::delete('/role/delete/{role}', [RoleController::class, 'delete']);
+
+    Route::get('/navigate/struct/data', [DecorationController::class, 'navigateStructData']);
+    Route::get('/navigate/{id}', [DecorationController::class, 'navigate']);
+    Route::post('/navigate/save', [DecorationController::class, 'saveNavigate']);
+    Route::delete('/navigate/{id}/delete', [DecorationController::class, 'deleteNavigate']);
+
+    Route::get('/themes', [DecorationController::class, 'themes']);
+
 });
 
 

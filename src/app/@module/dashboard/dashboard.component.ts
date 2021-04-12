@@ -2,7 +2,7 @@ import {
   AfterViewInit,
   Compiler,
   Component,
-  ComponentFactory, ComponentRef, Injector, Input,
+  ComponentFactory, Injector, Input,
   NgModule,
   NgModuleRef, OnDestroy,
   QueryList,
@@ -15,7 +15,6 @@ import {BaseComponent} from '../../@core/base.component';
 import {ActivatedRoute, RouterModule} from "@angular/router";
 import {CommonModule} from "@angular/common";
 import {ThemeModule} from "../../@theme/theme.module";
-import {forEachChild} from "@schematics/angular/third_party/github.com/Microsoft/TypeScript/lib/typescript";
 import {LocalDataSource, Ng2SmartTableModule} from "ng2-smart-table";
 
 

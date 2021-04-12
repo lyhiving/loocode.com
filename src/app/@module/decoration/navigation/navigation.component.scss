@@ -1,0 +1,67 @@
+@import '../../../@theme/styles/themes';
+
+@include nb-install-component {
+  .node_container {
+    padding: nb-theme(accordion-padding);
+    border-width: nb-theme(accordion-header-border-width);
+    border-style: nb-theme(accordion-header-border-style);
+    border-color: nb-theme(accordion-header-border-color);
+
+    & {
+      .cdk-drag-placeholder {
+        display: none;
+      }
+      .cdk-drag-preview {
+        box-sizing: border-box;
+        box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2),
+        0 8px 10px 1px rgba(0, 0, 0, 0.14),
+        0 3px 14px 2px rgba(0, 0, 0, 0.12);
+        background: #fff;
+        opacity: 0.3;
+      }
+
+      .drop-inside {
+        border-top-width: nb-theme(accordion-header-border-width);
+        border-top-style: nb-theme(accordion-header-border-style);
+        border-top-color: nb-theme(accordion-header-border-color);
+      }
+
+      .drop-before {
+        border-top-width: nb-theme(accordion-header-border-width);
+        border-top-style: nb-theme(accordion-header-border-style);
+        border-top-color: nb-theme(accordion-header-border-color);
+      }
+
+      .drop-after {
+        border-bottom-width: nb-theme(accordion-header-border-width);
+        border-bottom-style: nb-theme(accordion-header-border-style);
+        border-bottom-color: nb-theme(accordion-header-border-color);
+      }
+
+      .node-item {
+        margin: 5px;
+        background-color: nb-theme(accordion-item-background-color);
+        cursor: move;
+        border-width: nb-theme(accordion-header-border-width);
+        border-style: nb-theme(accordion-header-border-style);
+        border-color: nb-theme(accordion-header-border-color);
+      }
+
+      .node-children {
+        position: relative;
+        transition: height 0.2s;
+        margin-left: 40px;
+      }
+      .item-notes {
+        margin-left:20px;
+        color:#aaa;
+      }
+    }
+    nb-icon {
+      cursor: pointer !important;
+    }
+    nb-accordion-item-header {
+      cursor: move;
+    }
+  }
+}

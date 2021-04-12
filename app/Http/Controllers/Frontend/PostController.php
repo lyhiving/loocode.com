@@ -65,7 +65,7 @@ EOF;
             }, $taxonomy)
             : [];
         $post->author = $author;
-        return view("show", [
+        return view($this->theme . ".show", [
             'post' => $post,
             'comments' => $comments,
             'seo' => $this->getSeo($post->post_title),
@@ -104,7 +104,7 @@ EOF;
                 $item->metas = $postMeta[$item->id] ?? [];
             }
         }
-        return view("taxonomy", [
+        return view($this->theme . ".taxonomy", [
             'taxonomy' => $name,
             'posts' => $posts,
             'seo' => $this->getSeo($name),

@@ -15,6 +15,7 @@ yarn-error.log
 .vscode
 /public/mix-manifest.json
 /public/assets
+/public/hot
 /dist
 /dashboard
 key.pem

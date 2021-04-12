@@ -21,7 +21,7 @@ class UserController extends FrontendController
      */
     public function setting(): View
     {
-        return view('user/setting', [
+        return view($this->theme . '.user.setting', [
             'seo' => $this->getSeo(),
         ]);
     }

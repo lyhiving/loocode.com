@@ -27,5 +27,7 @@
     "posts.comment_placeholder": "Say something?",
     "posts.prev": "Previous",
     "posts.next": "Next",
-    "posts.view": "View"
+    "posts.view": "View",
+    "pagination.previous": "&laquo; Previous",
+    "pagination.next": "Next &raquo;"
 }

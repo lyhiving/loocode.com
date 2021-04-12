@@ -20,12 +20,14 @@
     "about.title": "关于我们",
     "about.contact": "联系我们",
     "links": "友情链接",
-    "login_tips": "目前不支持自助注册，请选择任意第三方登录",
+    "login_tips": "选择任意第三方登录",
     "posts.like": "获赞",
     "posts.donation": "打赏",
     "posts.comment": "留言",
     "posts.comment_placeholder": "你想说点什么?",
     "posts.prev": "上一篇",
     "posts.next": "下一篇",
-    "posts.view": "文章被阅读"
+    "posts.view": "文章被阅读",
+    "pagination.previous": "&laquo; 上一页",
+    "pagination.next": "下一页 &raquo;"
 }

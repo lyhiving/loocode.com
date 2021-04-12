@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="zh_CN" class="text-gray-700 bg-gray-100 font-sans">
 <head>
     <meta charset="UTF-8" />
     <title>{{ $seo->title }}</title>
@@ -24,15 +24,16 @@
     {!! $options['ad_value'] !!}
     @endif
 </head>
-<body>
-<div class="site-wrapper">
-    @include("header")
+<body x-data="{login: false}" x-on:login.window="login = $event.detail.open">
+<div class="w-full">
+    @include("default.header")
     @yield("content")
-    @include("footer")
+    @include("default.footer")
 </div>
-<div class="cd-top-trigger">
-    <i class="iconfont icon-Top"></i>
+<div id="fly-rocket" class="fixed bottom-12 right-12 text-red-500 bg-white rounded-full cursor-pointer">
+    <i class="iconfont icon-Top text-6xl"></i>
 </div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js"></script>
 <script type="text/javascript" src="{{ mix("/assets/js/manifest.js") }}"></script>
 <script type="text/javascript" src="{{ mix("/assets/js/vendor.js") }}"></script>
 <script type="text/javascript" src="{{ mix("/assets/js/app.js") }}"></script>

@@ -7,15 +7,18 @@ import {ThemeComponent} from "./theme/theme.component";
 const routes: Routes = [
   {
     path: "navigation",
-    component: NavigationComponent
+    component: NavigationComponent,
+    data: {title: "导航"}
   },
   {
     path: "widget",
-    component: WidgetComponent
+    component: WidgetComponent,
+    data: {title: "小挂件"}
   },
   {
     path: "theme",
-    component: ThemeComponent
+    component: ThemeComponent,
+    data: {title: "主题"}
   },
 ];
 

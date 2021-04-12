@@ -1,1 +1,13 @@
-<p>theme works!</p>
+<div class="row">
+  <div class="col-3" *ngFor="let theme of themes">
+    <nb-card>
+      <nb-card-header>{{theme.name}}</nb-card-header>
+      <nb-card-body>
+        <img alt="{{theme.name}}" src="{{theme.image}}"  *ngIf="theme.image" width="100%"/>
+      </nb-card-body>
+      <nb-card-footer class="d-flex justify-content-end">
+        <button nbButton status="primary" (click)="enable(theme.token)" [disabled]="theme.enable">{{ theme.enable ? '已启用' : '启用' }}</button>
+      </nb-card-footer>
+    </nb-card>
+  </div>
+</div>

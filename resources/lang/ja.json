@@ -27,5 +27,7 @@
     "posts.comment_placeholder": "何か言う?",
     "posts.prev": "前へ",
     "posts.next": "次へ",
-    "posts.view": "ブラウズ"
+    "posts.view": "ブラウズ",
+    "pagination.previous": "&laquo; 前のページ",
+    "pagination.next": "次のページ &raquo;"
 }

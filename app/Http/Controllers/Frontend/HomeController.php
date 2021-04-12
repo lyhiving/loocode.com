@@ -30,9 +30,10 @@ class HomeController extends FrontendController
 SELECT
     COUNT(t1.id) AS cnt
 FROM posts as t1 LEFT JOIN users as t2 ON(t1.post_author=t2.id)
-WHERE t1.post_status = 'publish' AND t1.post_type = 'post' ORDER BY t1.post_date DESC, t1.id DESC
+WHERE (t1.post_status = 'publish' OR (t1.post_status = 'future' AND t1.post_date <= ? )) AND t1.post_type = 'post' ORDER BY t1.post_date DESC, t1.id DESC
 EOF;
-        $total = DB::selectOne($sql)->cnt ?? 0;
+        $now = now();
+        $total = DB::selectOne($sql, [$now])->cnt ?? 0;
         $items = [];
         $currentPage = Paginator::resolveCurrentPage('p');
         $prePage = 30;
@@ -41,9 +42,9 @@ EOF;
     SELECT
         t1.id, t1.post_title, t1.post_author, t1.post_modified, t2.display_name as name, t2.avatar, t1.post_excerpt, t1.post_type
     FROM posts as t1 LEFT JOIN users as t2 ON(t1.post_author=t2.id)
-    WHERE t1.post_status = 'publish' AND t1.post_type = 'post' ORDER BY t1.post_date DESC, t1.id DESC LIMIT ?, ?
+    WHERE (t1.post_status = 'publish' OR (t1.post_status = 'future' AND t1.post_date <= ? )) AND t1.post_type = 'post' ORDER BY t1.post_date DESC, t1.id DESC LIMIT ?, ?
     EOF;
-            $items = DB::select($sql, [$currentPage * $prePage - $prePage, $prePage]);
+            $items = DB::select($sql, [$now, $currentPage * $prePage - $prePage, $prePage]);
             if ($items) {
                 $objectIdSets = array_map(function ($item) {return $item->id;}, $items);
                 [$postMeta, $postTag] = $this->getIdSetsMetesAndTaxonomy($objectIdSets);
@@ -66,7 +67,7 @@ EOF;
                 ]
             ]
         );
-        return view('index', [
+        return view($this->theme . '.index', [
             'posts' => $paginator,
             'hotPosts' => $this->getHot(),
             'seo'   => $this->getSeo(),

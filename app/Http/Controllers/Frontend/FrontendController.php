@@ -18,10 +18,17 @@ class FrontendController extends Controller
      */
     static array $options = [];
 
+    public string $theme = 'default';
+
     public function __construct()
     {
         parent::__construct();
-
+        if (empty(self::$options)) {
+            self::$options = $this->getSystemOptions();
+        }
+        if (isset(self::$options['theme'])) {
+            $this->theme = self::$options['theme'] ?? 'default';
+        }
     }
 
     /**
@@ -32,9 +39,7 @@ class FrontendController extends Controller
      */
     protected function getSeo(string $t = '', string $k = '', string $d = ''): stdClass
     {
-        if (empty(self::$options)) {
-            self::$options = $this->getSystemOptions();
-        }
+
         $adOpen = self::$options['ad_open'] ?? "off";
         View::share([
             'static_domain' => config('app.asset_url'),

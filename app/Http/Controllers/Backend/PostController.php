@@ -42,7 +42,7 @@ class PostController extends BackendController
     public function posts(Request $request): Result
     {
         $posts = Post::select('id','post_author', 'post_title', 'post_status', 'post_modified', 'comment_count')
-            ->orderBy('id', 'DESC');
+            ->type('post')->orderBy('id', 'DESC');
         if ($request->query->has('id_like')) {
             $posts->where('ID',$request->query->get('id_like'));
         }
@@ -117,7 +117,7 @@ class PostController extends BackendController
         if (empty($data['post_date'])) {
             $data['post_date'] = now();
         }
-        if (!empty($post['post_content'])) {
+        if (!empty($data['post_content'])) {
             [$html, $toc] = $this->markdown($data['post_content']);
             $data['meta']['markdown'] = $data['post_content'];
             if ($toc) {

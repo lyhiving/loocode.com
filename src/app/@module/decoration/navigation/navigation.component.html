@@ -1,1 +1,227 @@
-<p>navigation works!</p>
+<div class="row">
+  <div class="col-12">
+    <nb-card>
+      <nb-card-body>
+        <div class="d-flex align-items-center">
+          <div *ngIf="menu.length > 0" class="d-flex align-items-center">
+            <span>
+              选择要编辑的导航：
+            </span>
+            <nb-select [(ngModel)]="editorId">
+              <nb-option *ngFor="let m of menu" [value]="m.term_taxonomy_id">{{m.term.name}}</nb-option>
+            </nb-select>
+            <button class="mx-2" nbButton status="primary" [disabled]="editorId < 1" (click)="editor()">编辑</button>
+            <span>或</span>
+          </div>
+          <span>
+            <a href="javascript:" (click)="create()">创建新导航</a>。不要忘了保存您的修改！
+          </span>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div class="col-5">
+    <nb-card>
+      <nb-card-header>
+        添加导航项
+      </nb-card-header>
+      <nb-card-body>
+        <nb-accordion class="interface-complementary-area" multi="true">
+          <nb-accordion-item>
+            <nb-accordion-item-header>
+              页面
+            </nb-accordion-item-header>
+            <nb-accordion-item-body>
+              <form>
+                <div class="form-group">
+                  <nb-tabset>
+                    <nb-tab tabTitle="最近">
+                      <div class="d-flex flex-column">
+                        <nb-checkbox [checked]="p.checked" (checkedChange)="checked($event, i, 'page')" *ngFor="let p of page; let i = index;">{{p.post_title}}</nb-checkbox>
+                      </div>
+                    </nb-tab>
+                    <nb-tab tabTitle="搜索">
+                      <label>
+                        <input nbInput status="primary" fullWidth>
+                      </label>
+                    </nb-tab>
+                  </nb-tabset>
+                </div>
+                <div class="form-group text-right">
+                  <button nbButton [disabled]="page.length < 1" status="primary" (click)="addToNav('page')">添加到导航</button>
+                </div>
+              </form>
+            </nb-accordion-item-body>
+          </nb-accordion-item>
+          <nb-accordion-item>
+            <nb-accordion-item-header>
+              文章
+            </nb-accordion-item-header>
+            <nb-accordion-item-body>
+              <form>
+                <div class="form-group">
+                  <nb-tabset>
+                    <nb-tab tabTitle="最近">
+                      <div class="d-flex flex-column">
+                        <nb-checkbox [checked]="p.checked" (checkedChange)="checked($event, i, 'post')"  *ngFor="let p of post;let i = index;">{{p.post_title}}</nb-checkbox>
+                      </div>
+                    </nb-tab>
+                    <nb-tab tabTitle="搜索">
+                      <label>
+                        <input nbInput status="primary" fullWidth>
+                      </label>
+                    </nb-tab>
+                  </nb-tabset>
+                </div>
+                <div class="form-group text-right">
+                  <button nbButton [disabled]="post.length < 1" status="primary" (click)="addToNav('post')">添加到导航</button>
+                </div>
+              </form>
+            </nb-accordion-item-body>
+          </nb-accordion-item>
+          <nb-accordion-item>
+            <nb-accordion-item-header>
+              自定义链接
+            </nb-accordion-item-header>
+            <nb-accordion-item-body>
+              <form #customForm="ngForm">
+                <div class="form-group row">
+                  <label for="custom_link" class="label col-sm-3 col-form-label">链接</label>
+                  <div class="col-sm-9">
+                    <input id="custom_link" required name="link" [(ngModel)]="custom.link" placeholder="https://"  fullWidth status="primary" nbInput>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="custom_link_name" class="label col-sm-3 col-form-label">链接名称</label>
+                  <div class="col-sm-9">
+                    <input id="custom_link_name" required name="link_name" [(ngModel)]="custom.name" fullWidth status="primary" nbInput>
+                  </div>
+                </div>
+                <div class="form-group text-right">
+                  <button nbButton status="primary" [disabled]="!customForm.valid" (click)="addToNav('custom')">添加到导航</button>
+                </div>
+              </form>
+            </nb-accordion-item-body>
+          </nb-accordion-item>
+          <nb-accordion-item>
+            <nb-accordion-item-header>
+              分类标签
+            </nb-accordion-item-header>
+            <nb-accordion-item-body>
+              <form>
+                <div class="form-group">
+                  <nb-tabset>
+                    <nb-tab tabTitle="分类">
+                      <div class="d-flex flex-column">
+                        <nb-checkbox [checked]="p.checked" *ngFor="let p of category; let i = index;" (checkedChange)="checked($event, i, 'category')">{{p.term.name}}</nb-checkbox>
+                      </div>
+                    </nb-tab>
+                    <nb-tab tabTitle="搜索">
+                      <label>
+                        <input nbInput status="primary" fullWidth>
+                      </label>
+                    </nb-tab>
+                  </nb-tabset>
+                </div>
+                <div class="form-group text-right">
+                  <button nbButton status="primary" [disabled]="category.length < 1" (click)="addToNav('category')">添加到导航</button>
+                </div>
+              </form>
+            </nb-accordion-item-body>
+          </nb-accordion-item>
+        </nb-accordion>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div class="col-7">
+    <form #navForm="ngForm" (ngSubmit)="save()">
+      <nb-card>
+      <nb-card-header>
+        导航结构
+      </nb-card-header>
+      <nb-card-body>
+          <div class="form-group row">
+            <label for="nav_name" class="label col-sm-2 col-form-label">菜单名称</label>
+            <div class="col-sm-10">
+              <input id="nav_name"
+                     required="required"
+                     name="navName"
+                     [status]="navName.dirty ? (navName.invalid  ? 'danger' : 'success') : 'primary'"
+                     [(ngModel)]="nav.name"
+                     #navName="ngModel"
+                     status="primary" nbInput>
+              <ng-container *ngIf="navName.invalid && navName.touched">
+                <p class="caption status-danger" *ngIf="navName.errors?.required">
+                  名称不能为空!
+                </p>
+              </ng-container>
+            </div>
+          </div>
+          <p>拖放各个项目到您喜欢的顺序，点击右侧的箭头可进行更详细的设置。</p>
+
+          <div class="node_container" cdkDropList [cdkDropListData]="nodes"
+               [id]="'main'"
+               (cdkDropListDropped)="drop($event)"
+               [cdkDropListSortingDisabled]="true">
+            <div *ngFor="let node of nodes" cdkDrag [cdkDragData]="node.id"
+                 (cdkDragMoved)="dragMoved($event)">
+              <ng-container *ngTemplateOutlet="tmplNode,context:{node:node}"></ng-container>
+            </div>
+          </div>
+      </nb-card-body>
+      <nb-card-footer>
+        <div class="d-flex justify-content-between">
+          <button nbButton status="danger" [disabled]="nav.id < 1" (click)="delete()">删除导航</button>
+          <button type="submit" nbButton status="primary" [disabled]="!navForm.valid">保存导航</button>
+        </div>
+      </nb-card-footer>
+    </nb-card>
+    </form>
+  </div>
+</div>
+
+<ng-template #tmplNode let-node="node">
+  <div class="node-item" [attr.data-id]="node.id" [attr.id]="'node-'+node.id">
+    <nb-accordion>
+      <nb-accordion-item>
+        <nb-accordion-item-header class="justify-content-between">
+          <div>
+            {{node.name}}
+          </div>
+          <div class="mr-4">
+            {{typeMapName[node.type]}}
+          </div>
+        </nb-accordion-item-header>
+        <nb-accordion-item-body>
+          <ng-container >
+            <form>
+              <div class="form-group" *ngIf="node.type == 'link'">
+                <label for="custom_link_id_{{node.id}}" class="label">URL</label>
+                <input id="custom_link_id_{{node.id}}" [value]="node.url" #urlInput (keyup)="change(urlInput.value, node.id, 'url')" nbInput fullWidth status="primary" />
+              </div>
+              <div class="form-group">
+                <label for="custom_link_name_{{node.id}}" class="label">导航名称</label>
+                <input id="custom_link_name_{{node.id}}" [value]="node.name"  #input (keyup)="change(input.value, node.id, 'name')" nbInput fullWidth status="primary" />
+              </div>
+              <div>
+                <button nbButton size="tiny" status="danger" (click)="remove(node.id)">移除</button>
+                &nbsp;|&nbsp;
+                <button nbButton size="tiny" status="primary">取消</button>
+              </div>
+            </form>
+          </ng-container>
+        </nb-accordion-item-body>
+      </nb-accordion-item>
+    </nb-accordion>
+    <div *ngIf="node.children.length > 0" class="node-children"
+         cdkDropList [cdkDropListData]="node.children"
+         [id]="node.id"
+         (cdkDropListDropped)="drop($event)"
+         [cdkDropListSortingDisabled]="true">
+      <div *ngFor="let child of node.children" cdkDrag [cdkDragData]="child.id"
+           (cdkDragMoved)="dragMoved($event)">
+        <ng-container *ngTemplateOutlet="tmplNode,context:{node:child}"></ng-container>
+      </div>
+    </div>
+  </div>
+</ng-template>

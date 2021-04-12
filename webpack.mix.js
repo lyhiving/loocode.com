@@ -1,7 +1,5 @@
 const mix = require('laravel-mix');
 
-// const path = require("path");
-
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -14,45 +12,39 @@ const mix = require('laravel-mix');
  */
 
 //设置库的别名
-mix.webpackConfig({
-    resolve: {
-        alias: {
-            "social-share.js": "social-share.js/dist/js/social-share.min",
-            "jquery": 'jquery/dist/jquery.slim',
-        }
-    }
-});
+// mix.webpackConfig({
+//   resolve: {
+//     alias: {
+//       "social-share.js": "social-share.js/dist/js/social-share.min",
+//       "jquery": 'jquery/dist/jquery.slim',
+//     }
+//   }
+// });
 
-mix.setPublicPath('dist');
+if (mix.inProduction()) {
+  mix.setPublicPath('dist');
+} else {
+  mix.setPublicPath('public');
+}
 
 //合并文件，分离库和页面JS
-mix.js('resources/js/app.js', "./dist/assets/js/app.js")
-    .js('resources/js/posts.js', "./dist/assets/js/article.js")
-    .js('resources/js/user.js', "./dist/assets/js/user.js")
-    .styles([
-        "node_modules/bootstrap/dist/css/bootstrap.css",
-        "node_modules/social-share.js/dist/css/share.min.css",
-        "resources/css/app.css",
-    ], "./dist/assets/css/app.css")
-    .css("resources/css/article.css", "dist/assets/css/article.css")
-    .styles([
-        "node_modules/filepond/dist/filepond.css",
-    ], "./dist/assets/css/filepond.css")
+mix.js('resources/js/app.js', "assets/js/app.js")
+    .js('resources/js/posts.js', "assets/js/article.js")
+    .js('resources/js/user.js', "assets/js/user.js")
+    .postCss('resources/css/app.css', 'assets/css/app.css', [
+      require("tailwindcss"),
+    ])
+    .css("resources/css/article.css", "assets/css/article.css")
+    .css("node_modules/filepond/dist/filepond.css", "assets/css/filepond.css")
     .copyDirectory(
         ['resources/images/'],
-        './dist/assets/images/'
+        'dist/assets/images/'
     )
-    .copyDirectory(
-        [
-            "node_modules/social-share.js/dist/fonts",
-        ],
-        './dist/assets/fonts/'
-    )
-    .extract(['jquery', 'popper.js', 'bootstrap', 'superagent', 'social-share.js'])
-    .autoload({
-        //设置自动加载全局
-        jquery: ['$', 'window.jQuery', 'jQuery'],
-    });
+    .extract([])
+    // .autoload({
+    //     //设置自动加载全局
+    //     jquery: ['$', 'window.jQuery', 'jQuery'],
+    // });
 
 if (mix.inProduction()) {
     mix.version();
