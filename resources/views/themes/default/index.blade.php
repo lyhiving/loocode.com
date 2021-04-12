@@ -49,7 +49,7 @@
                             <ul>
                                 @foreach($hotPosts as $posts)
                                 <li class="text-gray-600 py-2 font-medium">
-                                    <span>{{ $loop->iteration }}.</span><a data-content="💙" class="hover:underlin   e" href="/post/{{ $posts->id }}">{{ $posts->post_title}}</a>
+                                    <span>{{ $loop->iteration }}.</span><a class="hover:underline" href="/post/{{ $posts->id }}">{{ $posts->post_title}}</a>
                                 </li>
                                 @endforeach
                             </ul>
