@@ -1,4 +1,4 @@
-@extends("themes.default.layout")
+@extends("default.layout")
 @section("header_css")
     <link rel="stylesheet" type="text/css" href="{{ mix("/assets/css/filepond.css")  }}"/>
 @endsection
