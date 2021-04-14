@@ -30,8 +30,4 @@ export class AdComponent implements OnInit {
       this.toast.showResponseToast(res.code, '广告与统计', res.message);
     }, _ => this.submitted = false);
   }
-
-  adOpen($event: any) {
-    this.option.ad_open = $event ? 'on' : 'off';
-  }
 }

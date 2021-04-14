@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Attributes\Route;
+use App\Helpers\Helper;
 use App\Http\Result;
 use Corcel\Model\Option;
 use Illuminate\Http\Request;
@@ -33,19 +34,21 @@ class GlobalController extends BackendController
     {
         $options = DB::table('options')->paginate(30);
         foreach ($options as $option) {
-            $option->option_value = $this->formatConfigureValue($option->option_value);
+            $value = Helper::formatValue($option->option_value);
             $option->type = 5;
-            if (is_bool($option->option_value)) {
+            if (is_bool($value)) {
                 $option->type = 1;
             }
-            if (is_object($option->option_value)) {
+            if (is_object($value)) {
                 $option->type = 3;
+                $option->option_value = $value;
             }
-            if (is_array($option->option_value)) {
+            if (is_array($value)) {
                 $option->type = 2;
-                if (is_object($option->option_value[0])) {
+                if (is_object($value[0])) {
                     $option->type = 4;
                 }
+                $option->option_value = $value;
             }
             $option->description = "";
         }
@@ -67,7 +70,7 @@ class GlobalController extends BackendController
         if ($item) {
             return Result::err(603, "已存在相同名称配置");
         }
-        Option::add($body->option_name, $body->option_value);
+        Option::add($body->option_name, is_scalar($body->option_value) ? $body->option_value : json_encode($body->option_value));
         return Result::ok(null, "创建成功");
     }
 
@@ -84,27 +87,5 @@ class GlobalController extends BackendController
         $option->update();
         return Result::ok(null, "更新成功");
     }
-
-    /**
-     * @param string $value
-     * @return mixed
-     */
-    public function formatConfigureValue(string $value): mixed
-    {
-        if ($value === 'true') {
-            $formatValue = true;
-        } elseif ($value === 'false') {
-            $formatValue = false;
-        } elseif (in_array(substr($value, 0, 1), ['[', '{'])) {
-            $formatValue = json_decode($value);
-        } elseif (is_numeric($value)) {
-            $formatValue = (int)$value;
-        } else {
-            $formatValue = $value;
-        }
-        return $formatValue;
-    }
-
-
 
 }

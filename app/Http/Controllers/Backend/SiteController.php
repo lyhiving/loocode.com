@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 
 
 use App\Attributes\Route;
+use App\Helpers\Helper;
 use App\Http\Result;
 use Corcel\Model\Option;
 use Illuminate\Http\Request;
@@ -28,7 +29,9 @@ class SiteController extends BackendController
     private array $defaultAdNames = [
         'google_ad',
         'baidu_ad',
-        'ad_open',
+        'google_ad_open',
+        'baidu_ad_open',
+
         'baidu_analysis',
         'google_analysis',
         'cnzz_analysis',
@@ -75,9 +78,15 @@ class SiteController extends BackendController
     #[Route(title: "广告统计配置", parent: "站点")]
     public function adOptions(): Result
     {
-        return Result::ok(
-            Option::asArray($this->defaultAdNames),
-        );
+        $options = Option::asArray($this->defaultAdNames);
+        foreach ($this->defaultAdNames as $name) {
+            if (!isset($options[$name])) {
+                $options[$name] = null;
+            } else {
+                $options[$name] = Helper::formatValue($options[$name]);
+            }
+        }
+        return Result::ok($options);
     }
 
     /**
@@ -101,7 +110,10 @@ class SiteController extends BackendController
         foreach ($options as $optionName) {
             if (isset($body[$optionName])) {
                 Option::updateOrCreate(['option_name' => $optionName], [
-                    'option_value' => $body[$optionName],
+                    'option_value' =>
+                        is_bool($body[$optionName])
+                            ? [true => 'true', false => 'false'][$body[$optionName]]
+                            : (is_array($body[$optionName]) ? json_encode($body[$optionName]) : $body[$optionName]),
                 ]);
             }
         }

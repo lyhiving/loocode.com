@@ -8,6 +8,7 @@
     <link href="/favicon.ico" rel="icon" sizes="32x32"/>
     <meta name="google-site-verification" content="HySQr9AQd4P4wZ8jK8glrbXDbN38fBpoLyXi50YxduU" />
     <meta name="baidu-site-verification" content="code-TNCHrV5vi3" />
+    <meta name="baidu_union_verify" content="9a195a5285bf05966b08bb34cdbe62fa">
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#f4645f" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
@@ -20,9 +21,6 @@
     <!-- in your header -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/devicons/devicon@v2.9.0/devicon.min.css">
     @yield("header_css")
-    @if($options['ad_value'])
-    {!! $options['ad_value'] !!}
-    @endif
 </head>
 <body x-data="{login: false}" x-on:login.window="login = $event.detail.open">
 <div class="w-full">
@@ -37,6 +35,7 @@
 <script type="text/javascript" src="{{ mix("/assets/js/manifest.js") }}"></script>
 <script type="text/javascript" src="{{ mix("/assets/js/vendor.js") }}"></script>
 <script type="text/javascript" src="{{ mix("/assets/js/app.js") }}"></script>
+@include('default.ad_analysis')
 @yield("footer_js")
 </body>
 </html>

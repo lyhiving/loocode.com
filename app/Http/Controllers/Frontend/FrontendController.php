@@ -39,8 +39,6 @@ class FrontendController extends Controller
      */
     protected function getSeo(string $t = '', string $k = '', string $d = ''): stdClass
     {
-
-        $adOpen = self::$options['ad_open'] ?? "off";
         View::share([
             'static_domain' => config('app.asset_url'),
             'links' => [],
@@ -49,8 +47,18 @@ class FrontendController extends Controller
             'options' => [
                 'site_url' => self::$options['site_url'] ?? "",
                 'site_title' => self::$options['site_title'] ?? "",
-                'ad_value' => $adOpen !== 'off' ? (self::$options[$adOpen . '_ad'] ?? '') : ''
             ],
+            'ad' => [
+                'google' => !empty(self::$options['google_ad']) && isset(self::$options['google_ad_open']) && self::$options['google_ad_open'] === 'true'
+                    ? self::$options['google_ad'] : '',
+                'baidu'  => !empty(self::$options['baidu_ad']) && isset(self::$options['baidu_ad_open']) && self::$options['baidu_ad_open'] === 'true'
+                    ? self::$options['baidu_ad'] : '',
+            ],
+            'analysis' => [
+                'google' => self::$options['google_analysis'] ?? '',
+                'baidu'  => self::$options['baidu_analysis'] ?? '',
+                'cnzz'   => self::$options['cnzz_analysis'] ?? '',
+            ]
         ]);
         $title = $t ? $t . ' - ' . self::$options['site_title']
             : self::$options['site_title'] .

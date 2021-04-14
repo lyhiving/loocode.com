@@ -8,21 +8,25 @@
     <div class="form-group row">
       <label class="label col-form-label col-2" for="google">Google</label>
       <div class="col-10">
-        <input id="google" name="google" size="large" status="primary" nbInput [(ngModel)]="option.google_ad" />
+        <div class="d-flex align-items-center">
+          <input id="google" name="google" size="large" status="primary" nbInput [(ngModel)]="option.google_ad" />
+          <nb-toggle class="mx-4" name="google_ad_open" status="success" [(ngModel)]="option.google_ad_open" [checked]="option.google_ad_open">
+            {{option.google_ad_open ? '关闭' : '开启'}}
+          </nb-toggle>
+        </div>
         <label class="label col-form-label d-block">Google广告标识</label>
       </div>
     </div>
     <div class="form-group row">
       <label class="label col-form-label col-2" for="baidu">百度</label>
       <div class="col-10">
-        <input id="baidu" name="baidu" status="primary" nbInput [(ngModel)]="option.baidu_ad" />
+        <div class="d-flex align-items-center">
+          <input id="baidu" name="baidu" status="primary" nbInput [(ngModel)]="option.baidu_ad" />
+          <nb-toggle class="mx-4" name="baidu_ad_open" status="success" [(ngModel)]="option.baidu_ad_open" [checked]="option.baidu_ad_open">
+            {{option.baidu_ad_open ? '关闭' : '开启'}}
+          </nb-toggle>
+        </div>
         <label class="label col-form-label d-block">百度广告标识</label>
-      </div>
-    </div>
-    <div class="form-group row">
-      <label class="label col-form-label col-2" for="">开启广告</label>
-      <div class="col-10">
-        <nb-toggle status="success" [checked]="option.ad_open == 'on'" (checkedChange)="adOpen($event)">开启</nb-toggle>
       </div>
     </div>
     <div class="header">
