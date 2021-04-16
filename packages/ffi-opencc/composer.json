@@ -1,5 +1,5 @@
 {
-    "name": "meshell/ffi-opencc",
+    "name": "tianliangzhou/ffi-opencc",
     "description": "Quickly convert Chinese (simplified) to chinese (traditional)",
     "type": "library",
     "license": "MIT",

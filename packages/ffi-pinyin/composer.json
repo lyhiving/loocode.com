@@ -1,5 +1,5 @@
 {
-    "name": "meshell/ffi-pinyin",
+    "name": "tianliangzhou/ffi-pinyin",
     "description": "Quickly convert Chinese to chinese pinyin",
     "type": "library",
     "license": "MIT",
