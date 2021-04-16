@@ -21,3 +21,4 @@ yarn-error.log
 key.pem
 cert.pem
 /src/ckeditor5/node_modules
+monorepo-builder.php

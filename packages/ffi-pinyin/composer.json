@@ -16,7 +16,7 @@
     },
     "autoload": {
       "psr-4": {
-        "FastFFI\\Pinyin\\": "src"
+        "FastFFI\\Pinyin\\": "src/"
       }
     }
 }

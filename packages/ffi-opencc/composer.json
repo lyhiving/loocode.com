@@ -16,7 +16,7 @@
     },
     "autoload": {
       "psr-4": {
-        "FastFFI\\Opencc\\": "src"
+        "FastFFI\\Opencc\\": "src/"
       }
     }
 }
