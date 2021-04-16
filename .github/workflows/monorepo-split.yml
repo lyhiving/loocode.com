@@ -53,7 +53,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         with:
           package-directory: 'packages/${{ matrix.package }}'
-          split-repository-organization: 'meshell'
+          split-repository-organization: 'TianLiangZhou'
           split-repository-name: '${{ matrix.package }}'
           user-name: "tianliangzhou"
           user-email: "mfkgdyve@gmail.org"
