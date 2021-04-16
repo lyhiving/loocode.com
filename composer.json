@@ -77,8 +77,8 @@
         ]
     },
     "replace": {
-        "meshell/ffi-opencc": "self.version",
-        "meshell/ffi-pinyin": "self.version"
+        "tianliangzhou/ffi-opencc": "self.version",
+        "tianliangzhou/ffi-pinyin": "self.version"
     },
     "minimum-stability": "stable",
     "prefer-stable": true
