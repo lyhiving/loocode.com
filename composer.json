@@ -55,7 +55,9 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "CKSource\\CKFinder\\": "ckfinder/src/"
+            "CKSource\\CKFinder\\": "packages/ckfinder/src/",
+            "FastFFI\\Opencc\\": "packages/ffi-opencc/src/",
+            "FastFFI\\Pinyin\\": "packages/ffi-pinyin/src/"
         }
     },
     "autoload-dev": {

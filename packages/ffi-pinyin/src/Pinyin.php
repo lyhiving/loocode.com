@@ -1,5 +1,5 @@
 <?php
-namespace FastFFI;
+namespace FastFFI\Pinyin;
 
 use FFI;
 use RuntimeException;
@@ -21,6 +21,9 @@ class Pinyin
      */
     private function __construct()
     {
+        if (ini_get('ffi.enable') == false) {
+            throw new RuntimeException("请设置php.ini中的ffi.enable参数");
+        }
         $this->ffi = $this->makeFFI();
     }
 
@@ -132,7 +135,11 @@ class Pinyin
         if (PHP_INT_SIZE !== 8) {
             throw new RuntimeException('不支持32位系统，请自行编译lib文件');
         }
-        $filepath = __DIR__ . '/../lib/libffi_pinyin.' . PHP_SHLIB_SUFFIX;
+        $suffix = PHP_SHLIB_SUFFIX;
+        if (PHP_OS == 'Darwin') {
+            $suffix = 'dylib';
+        }
+        $filepath = __DIR__ . '/../lib/libffi_pinyin.' . $suffix;
         if (file_exists($filepath)) {
             return realpath($filepath);
         }

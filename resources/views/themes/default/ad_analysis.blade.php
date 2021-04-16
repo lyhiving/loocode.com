@@ -2,7 +2,7 @@
     <script data-ad-client="{{$ad['google']}}" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 @endif
 @if($ad['baidu'])
-
+    <script type="text/javascript" src="//cpro.baidustatic.com/cpro/ui/cm.js" async="async" defer="defer"></script>
 @endif
 @if($analysis['google'])
     <!-- Global site tag (gtag.js) - Google Analytics -->
