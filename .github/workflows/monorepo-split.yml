@@ -55,6 +55,6 @@ jobs:
           package-directory: 'packages/${{ matrix.package }}'
           split-repository-organization: 'TianLiangZhou'
           split-repository-name: '${{ matrix.package }}'
-          user-name: "tianliangzhou"
-          user-email: "mfkgdyve@gmail.org"
+          user-name: "TianLiangZhou"
+          user-email: "mfkgdyve456@126.com"
           branch: "master"
