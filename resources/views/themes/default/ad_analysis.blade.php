@@ -11,7 +11,7 @@
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', {{$analysis['google']}});
+        gtag('config', '{{$analysis['google']}}');
     </script>
 @endif
 @if($analysis['cnzz'])

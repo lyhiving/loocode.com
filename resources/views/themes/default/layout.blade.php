@@ -31,9 +31,9 @@
 <div id="fly-rocket" class="fixed bottom-12 right-12 text-red-500 bg-white rounded-full cursor-pointer">
     <i class="iconfont icon-Top text-6xl"></i>
 </div>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js"></script>
 <script type="text/javascript" src="{{ mix("/assets/js/manifest.js") }}"></script>
 <script type="text/javascript" src="{{ mix("/assets/js/vendor.js") }}"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.8.2/dist/alpine.min.js"></script>
 <script type="text/javascript" src="{{ mix("/assets/js/app.js") }}"></script>
 @include('default.ad_analysis')
 @yield("footer_js")

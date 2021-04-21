@@ -33,6 +33,9 @@
             </div>
             <div class="mx-2 md:mx-0">
                 <ul class="flex items-center">
+                    <li class="mx-4">
+                        <a href="/tools">工具</a>
+                    </lic>
                     @if($user)
                         <li>
                             <a href="/user/setting">@lang('setting')</a>

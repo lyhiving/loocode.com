@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Frontend\PostController;
+use App\Http\Controllers\Frontend\ToolController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,3 +18,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/post/view/{id}', [PostController::class, "view"])->where('id', '[0-9]+');
+
+Route::post('/tool/convert', [ToolController::class, "convert"]);

@@ -56,7 +56,8 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "FastFFI\\Opencc\\": "packages/ffi-opencc/src/",
-            "FastFFI\\Pinyin\\": "packages/ffi-pinyin/src/"
+            "FastFFI\\Pinyin\\": "packages/ffi-pinyin/src/",
+            "FastFFI\\LAC\\": "packages/ffi-lac/src/"
         }
     },
     "autoload-dev": {
@@ -78,7 +79,8 @@
     },
     "replace": {
         "meshell/ffi-opencc": "self.version",
-        "meshell/ffi-pinyin": "self.version"
+        "meshell/ffi-pinyin": "self.version",
+        "meshell/ffi-lac": "self.version"
     },
     "minimum-stability": "stable",
     "prefer-stable": true

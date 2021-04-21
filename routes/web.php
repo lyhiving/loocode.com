@@ -6,6 +6,7 @@ use App\Http\Controllers\Frontend\DeprecatedController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\OauthController;
 use App\Http\Controllers\Frontend\PostController;
+use App\Http\Controllers\Frontend\ToolController;
 use App\Http\Controllers\Frontend\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +44,11 @@ Route::prefix("user")->middleware(["auth"])->group(function() {
 });
 
 Route::get("/search", [HomeController::class, 'search']);
+
+Route::get("/tools", [ToolController::class, 'index']);
+Route::get("/tool/pinyin/chinese-to-pinyin", [ToolController::class, 'tool']);
+Route::get("/tool/opencc/simplified-chinese-to-traditional-chinese", [ToolController::class, 'tool']);
+Route::get("/tool/lac/chinese-word-segmentation", [ToolController::class, 'tool']);
 
 /**
  * @deprecated

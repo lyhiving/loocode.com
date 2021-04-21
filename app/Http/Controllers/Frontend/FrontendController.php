@@ -39,7 +39,7 @@ class FrontendController extends Controller
      */
     protected function getSeo(string $t = '', string $k = '', string $d = ''): stdClass
     {
-        View::share([
+        $global = [
             'static_domain' => config('app.asset_url'),
             'links' => [],
             'user' => request()->user(),
@@ -59,7 +59,8 @@ class FrontendController extends Controller
                 'baidu'  => self::$options['baidu_analysis'] ?? '',
                 'cnzz'   => self::$options['cnzz_analysis'] ?? '',
             ]
-        ]);
+        ];
+        View::share($global);
         $title = $t ? $t . ' - ' . self::$options['site_title']
             : self::$options['site_title'] .
             (self::$options['site_append_title'] ? ' - ' . self::$options['site_append_title'] : '');
